@@ -1,0 +1,78 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup semaphoreui
+  #
+  # semaphore - https://hub.docker.com/r/semaphoreui/semaphore
+  # mysql - https://hub.docker.com/_/mysql
+  # ---------------------------------------------
+  
+  mysql:
+    #image:          mysql:8.0.33
+    image:          mysql:8.3.0
+    container_name: mysql-ansiblesemaphore
+    restart:        unless-stopped
+    
+    networks:
+      backend:
+
+    environment:
+      TZ: ${ENV_TZ:?err}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: semaphore_db
+      MYSQL_USER: semaphore_user
+      MYSQL_PASSWORD: ${ENV_SEMAPHOREUI_MYSQL_PASSWORD:?err}
+
+    volumes:
+      - ./data/host/mysql:/var/lib/mysql
+
+  semaphoreui:
+    #image:          semaphoreui/semaphore:v2.8.90
+    image:          semaphoreui/semaphore:v2.9.64
+    container_name: ansiblesemaphore
+    restart:        unless-stopped
+
+    user: "${ENV_DOCKER_UID}:${ENV_DOCKER_GID}"
+
+    networks:
+      frontend:
+      backend: 
+
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+
+    environment:
+      SEMAPHORE_DB_USER: semaphore_user
+      SEMAPHORE_DB_PASS: ${ENV_SEMAPHOREUI_MYSQL_PASSWORD:?err}
+      SEMAPHORE_DB_HOST: mysql # for postgres, change to: postgres
+      SEMAPHORE_DB_PORT: 3306 # change to 5432 for postgres
+      SEMAPHORE_DB_DIALECT: mysql
+      SEMAPHORE_DB: semaphore_db
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+      SEMAPHORE_ADMIN_PASSWORD: ${ENV_SEMAPHOREUI_ADMIN_PASSWORD:?err}
+      SEMAPHORE_ADMIN_NAME: admin
+      SEMAPHORE_ADMIN_EMAIL: admin@localhost
+      SEMAPHORE_ADMIN: admin
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${ENV_SEMAPHOREUI_ACCESS_KEY_ENCRYPTION:?err}
+      ANSIBLE_HOST_KEY_CHECKING: false  # (optional) change to true if you want to enable host key checking
+
+    volumes:
+      # Pass local timezone information to the container
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+      - /srv/ansible-homelab/:/srv/ansible-homelab:ro
+
+      #- ./data/host/semaphoreui/inventory/:/inventory:ro
+      - ./data/host/semaphoreui/authorized-keys/:/authorized-keys:ro
+      - ./data/host/semaphoreui/config/:/etc/semaphore:rw
+
+    depends_on:
+      - mysql # for postgres, change to: postgres
+ 
+networks:
+  frontend:
+  backend:
+    internal: true
