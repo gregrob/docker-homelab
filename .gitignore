@@ -1,0 +1,7 @@
+# Ignore password files
+**/secrets/*.pwd
+**/secrets/*.secret
+**/secrets/*.vault
+
+# Ignore temp folder
+temp/
