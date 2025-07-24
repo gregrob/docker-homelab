@@ -27,8 +27,7 @@ services:
       - ./data/host/mysql:/var/lib/mysql
 
   semaphoreui:
-    #image:          semaphoreui/semaphore:v2.8.90
-    image:          semaphoreui/semaphore:v2.9.64
+    image:          semaphoreui/semaphore:v2.15.0
     container_name: ansiblesemaphore
     restart:        unless-stopped
 
@@ -63,11 +62,10 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
-      - /srv/ansible-homelab/:/srv/ansible-homelab:ro
-
-      #- ./data/host/semaphoreui/inventory/:/inventory:ro
-      - ./data/host/semaphoreui/authorized-keys/:/authorized-keys:ro
-      - ./data/host/semaphoreui/config/:/etc/semaphore:rw
+      # semaphore specific volumes
+      - ./data/host/semaphoreui/data:/var/lib/semaphore:rw
+      - ./data/host/semaphoreui/config:/etc/semaphore:rw
+      - ./data/host/semaphoreui/tmp:/tmp/semaphore:rw
 
     depends_on:
       - mysql # for postgres, change to: postgres

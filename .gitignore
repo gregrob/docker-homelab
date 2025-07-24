@@ -7,11 +7,11 @@
 temp/
 
 # semaphoreui host specific
-docker/semaphoreui/data/host/semaphoreui/authorized-keys/*
+docker/semaphoreui/data/host/semaphoreui/data/*
 docker/semaphoreui/data/host/semaphoreui/config/*
-docker/semaphoreui/data/host/semaphoreui/inventory/*
-docker/semaphoreui/data/host/semaphoreui/mysql/*
-!docker/semaphoreui/data/host/semaphoreui/authorized-keys/.gitkeep
+docker/semaphoreui/data/host/semaphoreui/tmp/*
+docker/semaphoreui/data/host/mysql/*
+!docker/semaphoreui/data/host/semaphoreui/data/.gitkeep
 !docker/semaphoreui/data/host/semaphoreui/config/.gitkeep
-!docker/semaphoreui/data/host/semaphoreui/inventory/.gitkeep
+!docker/semaphoreui/data/host/semaphoreui/tmp/.gitkeep
 !docker/semaphoreui/data/host/mysql/.gitkeep
