@@ -8,9 +8,9 @@ services:
   # ---------------------------------------------
   
   mysql:
-    #image:          mysql:8.0.33
-    image:          mysql:8.3.0
-    container_name: mysql-ansiblesemaphore
+    #image:          mysql:8.4.6
+    image:          mysql:9.4.0
+    container_name: semaphoreui-mysql
     restart:        unless-stopped
     
     networks:
@@ -27,11 +27,11 @@ services:
       - ./data/host/mysql:/var/lib/mysql
 
   semaphoreui:
-    image:          semaphoreui/semaphore:v2.15.0
-    container_name: ansiblesemaphore
+    image:          semaphoreui/semaphore:v2.15.4
+    container_name: semaphoreui
     restart:        unless-stopped
 
-    user: "${ENV_DOCKER_UID}:${ENV_DOCKER_GID}"
+    user: "${ENV_DOCKER_UID}:${ENV_DOCKER_GID}"  # required for container to access host files
 
     networks:
       frontend:
@@ -66,6 +66,9 @@ services:
       - ./data/host/semaphoreui/data:/var/lib/semaphore:rw
       - ./data/host/semaphoreui/config:/etc/semaphore:rw
       - ./data/host/semaphoreui/tmp:/tmp/semaphore:rw
+
+      # ansible repo
+      - /srv/ansible-homelab:/srv/ansible-homelab:ro
 
     depends_on:
       - mysql # for postgres, change to: postgres
