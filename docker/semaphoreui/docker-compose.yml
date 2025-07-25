@@ -31,8 +31,6 @@ services:
     container_name: semaphoreui
     restart:        unless-stopped
 
-    user: "${ENV_DOCKER_UID}:${ENV_DOCKER_GID}"  # required for container to access host files
-
     networks:
       frontend:
       backend: 
