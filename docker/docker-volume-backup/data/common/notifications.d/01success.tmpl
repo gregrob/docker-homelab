@@ -1,0 +1,13 @@
+{{ define "title_success" -}}
+Successfull backup - {{ .Stats.BackupFile.Name }}
+{{- end }}
+
+{{ define "body_success" -}}
+▶️ Start time: {{ .Stats.StartTime | formatTime }}
+⏹️ End time: {{ .Stats.EndTime | formatTime }}
+⌛ Took time: {{ .Stats.TookTime }}
+🛑 Stopped containers: {{ .Stats.Containers.Stopped }}/{{ .Stats.Containers.All }} ({{ .Stats.Containers.StopErrors }} errors)
+⚖️ Backup size: {{ .Stats.BackupFile.Size | formatBytesBin }} / {{ .Stats.BackupFile.Size | formatBytesDec }}
+🗑️ Pruned backups: {{ .Stats.Storages.Local.Pruned }}/{{ .Stats.Storages.Local.Total }} ({{ .Stats.Storages.Local.PruneErrors }} errors)
+📁 Backup file: {{ .Stats.BackupFile.Name }}
+{{- end }}

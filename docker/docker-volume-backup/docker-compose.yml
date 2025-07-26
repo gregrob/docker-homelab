@@ -1,0 +1,89 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup docker-volume-backup
+  #
+  # https://hub.docker.com/r/offen/docker-volume-backup
+  # ---------------------------------------------
+  docker-volume-backup:
+    #image:          offen/docker-volume-backup:v2.22.1
+    #image:          offen/docker-volume-backup:v2.25.1
+    #image:          offen/docker-volume-backup:v2.39.1
+    image:          offen/docker-volume-backup:v2.43.0
+    container_name: docker-volume-backup
+    restart:        unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      frontend:
+
+    environment:
+      # Greedy exclusion of the folder /backup/my-app-backup/backup
+      # Use https://regex101.com/ with Goland to derive expression
+      #- BACKUP_EXCLUDE_REGEXP=\/backup\/my-app-backup\/backup\/.*$
+      - BACKUP_EXCLUDE_REGEXP=\/backup\/my-app-backup\/docker-homelab\/docker\/docker-volume-backup\/data\/host\/backups\/.*$
+
+      # Include hostname in backup file name
+      - BACKUP_FILENAME=$ENV_HOSTNAME-backup-%Y-%m-%dT%H-%M-%S.tar.gz
+
+      # Backups run on the given cron schedule in `busybox` flavor. If no
+      # value is set, `@daily` will be used. If you do not want the cron
+      # to ever run, use `0 0 5 31 2 ?`.
+      # Now moved to /data/common to handle multiple schedules
+      #- BACKUP_CRON_EXPRESSION=*/5 * * * *
+
+      # Notifications (email, Slack, etc.) can be sent out when a backup run finishes.
+      # Configuration is provided as a comma-separated list of URLs as consumed
+      # by `shoutrrr`: https://containrrr.dev/shoutrrr/v0.5/services/overview/
+      # The content of such notifications can be customized. Dedicated documentation
+      # on how to do this can be found in the README. When providing multiple URLs or
+      # an URL that contains a comma, the values can be URL encoded to avoid ambiguities.
+      # The below URL demonstrates how to send an email using the provided SMTP
+      # configuration and credentials.
+      - NOTIFICATION_URLS=smtp://${ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL:?gmail email required}:${ENV_DOCKER_VOLUME_BACKUP_GMAIL_APP_PASSWORD:?gmail app password required}@smtp.gmail.com:587/?fromAddress=${ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL:?gmail email required}&toAddresses=${ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO:?email to required}
+
+      # By default, notifications would only be sent out when a backup run fails
+      # To receive notifications for every run, set `NOTIFICATION_LEVEL` to `info`
+      # instead of the default `error`.
+      # 13-07-2024 - set to info so manually calling backup also sends mail
+      - NOTIFICATION_LEVEL=info
+
+    # Uncomment both lines to immediately trigger a single backup
+    #restart:    "no"
+    #entrypoint: backup
+
+    volumes:
+      # Backup data
+      - /srv:/backup/my-app-backup:ro
+      
+      # Mounting the Docker socket allows the script to stop and restart
+      # the container during backup. You can omit this if you don't want
+      # to stop the container
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+      # If you mount a local directory or volume to `/archive` a local
+      # copy of the backup will be stored there. You can override the
+      # location inside of the container by setting `BACKUP_ARCHIVE`.
+      # You can omit this if you do not want to keep local backups.
+      - ./data/host/backups:/archive
+
+      # Multiple backup schedules
+      - ./data/common/conf.d:/etc/dockervolumebackup/conf.d
+
+      # Custom notifications
+      - ./data/common/notifications.d:/etc/dockervolumebackup/notifications.d
+
+      # Pass local timezone information to the container
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    labels:
+      # Example label to generate a list of files to be deleted
+      #- docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>7" | xargs -t -I {} echo /archive/{} > /archive/delete_list.txt'      
+      #- docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>7" | xargs -t -I {} rm -rf /archive/{}'
+      - docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>${ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS:?number of backups to keep required}" | xargs -t -I {} rm -rf /archive/{}'
+
+networks:
+  frontend:

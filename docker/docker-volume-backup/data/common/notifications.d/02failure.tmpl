@@ -1,0 +1,11 @@
+{{ define "title_failure" -}}
+Failed backup - source in log
+{{- end }}
+
+{{ define "body_failure" -}}
+▶️ Start time: {{ .Stats.StartTime | formatTime }}
+⏹️ End time: {{ .Stats.EndTime | formatTime }}
+⌛ Took time: {{ .Stats.TookTime }}
+❌ Failure: {{ .Error}}
+📁 Log: {{ .Stats.LogOutput }}
+{{- end }}

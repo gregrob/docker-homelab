@@ -6,6 +6,10 @@
 # Ignore temp folder
 temp/
 
+# docker-volume-backup host specific
+docker/docker-volume-backup/data/host/backups/*
+!docker/docker-volume-backup/data/host/backups/.gitkeep
+
 # semaphoreui host specific
 docker/semaphoreui/data/host/semaphoreui/data/*
 docker/semaphoreui/data/host/semaphoreui/config/*
