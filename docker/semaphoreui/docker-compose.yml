@@ -54,6 +54,7 @@ services:
       SEMAPHORE_ADMIN: admin
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${ENV_SEMAPHOREUI_ACCESS_KEY_ENCRYPTION:?err}
       ANSIBLE_HOST_KEY_CHECKING: false  # (optional) change to true if you want to enable host key checking
+      SEMAPHORE_SCHEDULE_TIMEZONE: ${ENV_TZ:?err} # Set the timezone for scheduling tasks
 
     volumes:
       # Pass local timezone information to the container
