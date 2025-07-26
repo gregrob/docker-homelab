@@ -25,6 +25,12 @@ then
 
     echo ""
 
+    echo "Volumes for SemaphoreUI need to have the correct owner and group set - 1001:root"
+    echo "Please execute the following commands to set up volume permissions:"
+    echo "sudo chown 1001:root ./data/host/semaphoreui/config"
+    echo "sudo chown 1001:root ./data/host/semaphoreui/data"
+    echo "sudo chown 1001:root ./data/host/semaphoreui/tmp"
+
 else
     echo "FAIL: Please call script with - source ./$(basename "${BASH_SOURCE[0]}")"
 
