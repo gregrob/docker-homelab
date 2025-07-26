@@ -6,10 +6,8 @@ services:
   # https://hub.docker.com/r/offen/docker-volume-backup
   # ---------------------------------------------
   docker-volume-backup:
-    #image:          offen/docker-volume-backup:v2.22.1
-    #image:          offen/docker-volume-backup:v2.25.1
-    #image:          offen/docker-volume-backup:v2.39.1
-    image:          offen/docker-volume-backup:v2.43.0
+    #image:          offen/docker-volume-backup:v2.43.0
+    image:          offen/docker-volume-backup:v2.43.4
     container_name: docker-volume-backup
     restart:        unless-stopped
 
