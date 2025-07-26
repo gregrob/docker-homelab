@@ -68,6 +68,9 @@ services:
       # ansible repo
       - /srv/ansible-homelab:/srv/ansible-homelab:ro
 
+      # ansible keys
+      - ./data/host/semaphoreui/keys:/srv/ansible-keys:ro
+
     depends_on:
       - mysql # for postgres, change to: postgres
  

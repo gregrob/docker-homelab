@@ -29,6 +29,7 @@ then
     echo "Please execute the following commands to set up volume permissions:"
     echo "sudo chown 1001:root ./data/host/semaphoreui/config"
     echo "sudo chown 1001:root ./data/host/semaphoreui/data"
+    echo "sudo chown 1001:root ./data/host/semaphoreui/keys"
     echo "sudo chown 1001:root ./data/host/semaphoreui/tmp"
 
 else
