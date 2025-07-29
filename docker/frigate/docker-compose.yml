@@ -1,0 +1,84 @@
+services:
+  # ------------------------------------------------
+  # Setup Frigate
+  #
+  # https://github.com/blakeblackshear/frigate/pkgs/container/frigate
+  # https://github.com/blakeblackshear/frigate
+  # ------------------------------------------------
+  frigate:
+    #image:          blakeblackshear/frigate:0.11.1
+    #image:          ghcr.io/blakeblackshear/frigate:0.12.0
+    #image:          ghcr.io/blakeblackshear/frigate:0.12.1
+    #image:          ghcr.io/blakeblackshear/frigate:0.13.1
+    #image:          ghcr.io/blakeblackshear/frigate:0.14.0-rc2
+    #image:          ghcr.io/blakeblackshear/frigate:0.14.0
+    #image:          ghcr.io/blakeblackshear/frigate:0.14.1
+    #image:          ghcr.io/blakeblackshear/frigate:0.15.0
+    image:          ghcr.io/blakeblackshear/frigate:0.15.1
+    container_name: frigate
+    restart:        unless-stopped
+
+    privileged: true
+
+    cap_add:
+      - CAP_PERFMON
+      #- CAP_SYS_ADMIN
+
+    #group_add:
+    #  - '44' # group id of /dev/dri/card1
+    #  - '104' # group id of /dev/dri/renderD128
+   
+    #network_mode:   bridge  
+    ports:
+      - "8971:8971" # Authenticated UI and API access without TLS. Reverse proxies should use this port
+      # As the following port is unauthenticated, only expose to backend
+      - "${ENV_HOST_IP_FRIGATE_BACKEND:?backend ip required}:5000:5000" # Internal unauthenticated access - Expose carefully - Exposed for Home Assistant
+      - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
+
+
+    # Update for your cameras based on calculation below (default was 64mb)
+    # (width * height * 1.5 * 9 + 270480)/1048576 = <shm size in mb>
+    # Each 1280x720 feed takes around 12.12mb - 12.12mb x 10cameras = 121.23mb
+    #shm_size: "64mb"
+    #shm_size: "128mb" 
+    #shm_size: "256mb"
+
+    # 29/09/2024 - After some days start receiving Fatal Python error: Bus error
+    # As per the recomendation at https://github.com/blakeblackshear/frigate/discussions/14028
+    # This has been increased from 256mb to 1024mb
+    # Aparently will be resolved in the next revision of frigate (current is 0.14.1)
+    shm_size: "1024mb"
+
+    devices:
+      # /dev/bus/usb:/dev/bus/usb # passes the USB Coral, needs to be modified for other versions
+      - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
+      - /dev/dri/card1
+      - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
+    
+    volumes:
+      # Pass local timezone information to the container
+      #- /etc/timezone:/etc/timezone:ro # this setting causes a "WARNING : Using utc for maintenance due to missing or incorrect timezone set"
+      - /etc/localtime:/etc/localtime:ro # only pass this for timezone as per 0.13.1 documentation
+
+      # As at frigate 0.13.1 /config/ needs to be mounted as a whole and read/write
+      - ./data/host/db:/db                                     # database location as defined in the config.yml
+      - ./data/host/config:/config                             # dynamic configuration
+      - ./data/common/config/config.yml:/config/config.yml  # static read only config, consider read/write so can update in gui
+
+      - /mnt/frigate-data/media:/media/frigate
+      
+      # Optional: 1GB of memory, reduces SSD/SD Card wear
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+
+    environment:
+      FRIGATE_UNIFI_PROTECT_IP_ADDRESS: ${ENV_FRIGATE_HOST_UNIFI_PROTECT_IP_ADDRESS:?ubiquiti protect ip address required}
+      FRIGATE_MQTT_USER: ${ENV_FRIGATE_HOST_MQTT_USER:?mqtt user name required}
+      FRIGATE_MQTT_PASSWORD: ${ENV_FRIGATE_HOST_MQTT_PASSWORD:?mqtt user password required}
+
+networks:
+  frontend:

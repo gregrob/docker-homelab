@@ -10,6 +10,12 @@ temp/
 docker/docker-volume-backup/data/host/backups/*
 !docker/docker-volume-backup/data/host/backups/.gitkeep
 
+# frigate-host host specific
+docker/frigate/data/host/db/*
+docker/frigate/data/host/config/*
+!docker/frigate/data/host/db/.gitkeep
+!docker/frigate/data/host/config/.gitkeep
+
 # semaphoreui host specific
 docker/semaphoreui/data/host/semaphoreui/data/*
 docker/semaphoreui/data/host/semaphoreui/config/*
