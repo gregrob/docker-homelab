@@ -472,6 +472,10 @@ cameras:
         loitering_time: 0
         objects: person
 
+    objects:
+      filters:
+        person:
+          mask: 0.36,0.128,0.474,0.127,0.483,0.359,0.388,0.352
   side_front:
     enabled: true
     ffmpeg:
