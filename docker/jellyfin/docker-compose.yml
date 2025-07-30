@@ -1,0 +1,50 @@
+---
+services:
+  # ------------------------------------------------
+  # Setup Jellyfin
+  #
+  # https://hub.docker.com/r/jellyfin/jellyfin
+  # https://github.com/jellyfin/jellyfin
+  # ------------------------------------------------
+  jellyfin:
+    #image:          jellyfin/jellyfin:10.8.9
+    #image:          jellyfin/jellyfin:10.8.10
+    #image:          jellyfin/jellyfin:10.9.10
+    #image:          jellyfin/jellyfin:10.9.11
+    #image:          jellyfin/jellyfin:10.10.3
+    image:          jellyfin/jellyfin:10.10.7
+    container_name: jellyfin
+    restart:        unless-stopped
+    network_mode:   host # host for DLNA
+    
+    user: $ENV_DOCKER_UID:$ENV_DOCKER_GID
+    group_add:
+      - "104" # /dev/dri/renderD128
+      - "44"  # /dev/dri/card0
+      - "110000" # /mnt/...
+       
+    volumes:
+      # Pass local timezone information to the container
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+      - ./data/host/cache:/config
+      - ./data/host/config:/cache
+      
+      # NAS data store
+      - /mnt/data:/mnt/data
+
+      # Libraries
+      - /mnt/media:/mnt/media:ro
+      - /mnt/photo-library:/mnt/photo-library:ro
+      - /mnt/video:/mnt/video:ro
+
+      - /mnt/downloads/movies:/mnt/downloads/movies:ro
+      - /mnt/downloads/tv:/mnt/downloads/tv:ro
+      
+    devices:     
+      - /dev/dri:/dev/dri # hw transcoding
+      #- /dev/dri/renderD128:/dev/dri/renderD128 # hw transcoding
+
+    environment:
+      JELLYFIN_PublishedServerUrl: http://jellyfin.max.lan:8096
