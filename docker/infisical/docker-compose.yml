@@ -1,0 +1,122 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup infisical
+  #
+  # postgres - https://hub.docker.com/_/postgres
+  # redis - https://hub.docker.com/_/redis
+  # infisical - https://hub.docker.com/r/infisical/infisical
+  # 
+  # ---------------------------------------------
+
+  db-migration:
+    image:          infisical/infisical:${ENV_INFISICAL_TAG:-v0.77.0-postgres}
+    container_name: infisical-db-migration
+    # no restart policy - backend checks this process sucessfully completed
+    
+    networks:
+      backend: 
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      DB_CONNECTION_URI: postgres://${ENV_POSTGRES_USER}:${ENV_POSTGRES_PASSWORD}@postgres:5432/${ENV_POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+      SITE_URL: http://${ENV_HOST:?hostname required}:80
+      ENCRYPTION_KEY: ${ENV_ENCRYPTION_KEY:?encryption key required}
+      AUTH_SECRET: ${ENV_AUTH_SECRET:?auth secret required}
+
+    command: npm run migration:latest
+
+  backend:
+    image:          infisical/infisical:${ENV_INFISICAL_TAG:-v0.77.0-postgres}
+    container_name: infisical-backend
+    restart:        unless-stopped
+
+    networks:
+      backend:
+      frontend:
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      db-migration:
+        condition: service_completed_successfully
+
+    ports:
+      - 80:8080
+
+    environment:
+      NODE_ENV: production
+      DB_CONNECTION_URI: postgres://${ENV_POSTGRES_USER}:${ENV_POSTGRES_PASSWORD}@postgres:5432/${ENV_POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+      SITE_URL: http://${ENV_HOST:?hostname required}:80
+      ENCRYPTION_KEY: ${ENV_ENCRYPTION_KEY:?encryption key required}
+      AUTH_SECRET: ${ENV_AUTH_SECRET:?auth secret required}
+
+      SMTP_HOST: ${ENV_INFISICAL_EMAIL_HOST:?email host required}
+      SMTP_USERNAME: ${ENV_INFISICAL_EMAIL_USERNAME:?email username required}
+      SMTP_PASSWORD: ${ENV_INFISICAL_EMAIL_PASSWORD:?email username required}
+      SMTP_PORT: ${ENV_INFISICAL_EMAIL_PORT:?email port required}
+      SMTP_FROM_ADDRESS: ${ENV_INFISICAL_EMAIL_FROM:?email from address required}
+      SMTP_FROM_NAME: ${ENV_INFISICAL_EMAIL_NAME:?email name required}
+
+  redis:
+    image:          docker.io/library/redis:7.2.5-alpine3.20
+    container_name: infisical-redis
+    restart:        unless-stopped
+
+    networks:
+      backend:
+      frontend:
+
+    ports:
+     - 6379:6379
+
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+
+    command: --save 60 1 --loglevel warning
+
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    
+    volumes:
+      - ./data/host/redis:/data # no :Z as it is strictly not shared between containers
+
+  postgres:
+    image:          docker.io/library/postgres:14-alpine
+    container_name: infisical-postgres
+    restart:        unless-stopped
+
+    networks:
+      backend:
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+
+    environment:
+      POSTGRES_USER: ${ENV_POSTGRES_USER:?database username required}
+      POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD:?database password required}
+      POSTGRES_DB: ${ENV_POSTGRES_DB:?database name required}
+      PGDATA: /var/lib/postgresql/data/infisical
+
+    volumes:
+      - ./data/host/db-data:/var/lib/postgresql/data # no :Z as it is strictly not shared between containers
+
+networks:
+  backend:
+    internal: true
+  frontend:

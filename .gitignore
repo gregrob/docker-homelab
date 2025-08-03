@@ -16,6 +16,12 @@ docker/frigate/data/host/config/*
 !docker/frigate/data/host/db/.gitkeep
 !docker/frigate/data/host/config/.gitkeep
 
+# infisical host specific
+docker/infisical/data/host/db-data/*
+docker/infisical/data/host/redis/*
+!docker/infisical/data/host/db-data/.gitkeep
+!docker/infisical/data/host/redis/.gitkeep
+
 # jellyfin hostspecific
 docker/jellyfin/data/host/cache/*
 docker/jellyfin/data/host/config/*
