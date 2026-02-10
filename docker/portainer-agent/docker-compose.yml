@@ -7,7 +7,8 @@ services:
   # https://hub.docker.com/r/portainer/agent
   # ----------------------------------------
   portainer-agent:
-    image:          portainer/agent:2.32.0
+    #image:          portainer/agent:2.32.0
+    image:          portainer/agent:2.33.7
     container_name: portainer-agent
     restart:        unless-stopped
        
