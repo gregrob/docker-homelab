@@ -22,7 +22,7 @@ docker/infisical/data/host/redis/*
 !docker/infisical/data/host/db-data/.gitkeep
 !docker/infisical/data/host/redis/.gitkeep
 
-# jellyfin hostspecific
+# jellyfin host specific
 docker/jellyfin/data/host/cache/*
 docker/jellyfin/data/host/config/*
 !docker/jellyfin/data/host/cache/.gitkeep
@@ -39,3 +39,7 @@ docker/semaphoreui/data/host/mysql/*
 !docker/semaphoreui/data/host/semaphoreui/keys/.gitkeep
 !docker/semaphoreui/data/host/semaphoreui/tmp/.gitkeep
 !docker/semaphoreui/data/host/mysql/.gitkeep
+
+# spoolman host specific
+docker/spoolman/data/host/spoolman/*
+!docker/spoolman/data/host/spoolman/.gitkeep
