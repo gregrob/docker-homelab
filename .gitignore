@@ -6,6 +6,12 @@
 # Ignore temp folder
 temp/
 
+# bambuddy host specific
+docker/bambuddy/data/host/data/*
+docker/bambuddy/data/host/logs/*
+!docker/bambuddy/data/host/data/.gitkeep
+!docker/bambuddy/data/host/logs/.gitkeep
+
 # docker-volume-backup host specific
 docker/docker-volume-backup/data/host/backups/*
 !docker/docker-volume-backup/data/host/backups/.gitkeep
