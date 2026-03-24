@@ -12,6 +12,10 @@ docker/bambuddy/data/host/logs/*
 !docker/bambuddy/data/host/data/.gitkeep
 !docker/bambuddy/data/host/logs/.gitkeep
 
+# bambuddy host specific
+docker/bambustudio/data/host/config/*
+!docker/bambustudio/data/host/config/.gitkeep
+
 # docker-volume-backup host specific
 docker/docker-volume-backup/data/host/backups/*
 !docker/docker-volume-backup/data/host/backups/.gitkeep

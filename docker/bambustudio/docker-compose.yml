@@ -1,0 +1,27 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup bambustudio
+  #
+  # https://hub.docker.com/r/linuxserver/bambustudio
+  # ---------------------------------------------
+  
+  bambustudio:
+    image:          lscr.io/linuxserver/bambustudio:02.05.00
+    container_name: bambustudio
+    restart:        unless-stopped
+    
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+      TZ: ${ENV_TZ:?err}
+      DARK_MODE: true      
+
+    shm_size: "1gb"
+
+    volumes:
+      - ./data/host/config:/config
