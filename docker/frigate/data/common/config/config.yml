@@ -613,7 +613,7 @@ cameras:
   #  ui:
   #    order: 11
 
-version: 0.16-0
+version: 0.17-0
 semantic_search:
   enabled: false
   model_size: small
