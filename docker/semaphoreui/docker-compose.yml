@@ -9,7 +9,8 @@ services:
   
   mysql:
     #image:          mysql:8.4.6
-    image:          mysql:9.4.0
+    #image:          mysql:9.4.0
+    image:          mysql:9.6.0
     container_name: semaphoreui-mysql
     restart:        unless-stopped
     
@@ -27,7 +28,8 @@ services:
       - ./data/host/mysql:/var/lib/mysql
 
   semaphoreui:
-    image:          semaphoreui/semaphore:v2.15.4
+    #image:          semaphoreui/semaphore:v2.15.4
+    image:          semaphoreui/semaphore:v2.17.28
     container_name: semaphoreui
     restart:        unless-stopped
 
