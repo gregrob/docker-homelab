@@ -12,7 +12,8 @@ then
     echo "----------------------------------------------"
     
     #export ENV_INFISICAL_TAG="v0.77.0-postgres"
-    export ENV_INFISICAL_TAG="v0.128.0-postgres"
+    #export ENV_INFISICAL_TAG="v0.128.0-postgres"
+    export ENV_INFISICAL_TAG="v0.158.22"
     echo "Exported ENV_INFISICAL_TAG=$ENV_INFISICAL_TAG"
 
     export ENV_POSTGRES_USER="infisical"

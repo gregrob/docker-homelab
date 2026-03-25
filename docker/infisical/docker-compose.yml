@@ -7,28 +7,14 @@ services:
   # redis - https://hub.docker.com/_/redis
   # infisical - https://hub.docker.com/r/infisical/infisical
   # 
+  # Recomendations for package versions:
+  #  https://infisical.com/docs/self-hosting/deployment-options/native/linux-package/installation
+  #  As at 25-March-2026 - PostgreSQL v14 and up, Redis V6.x or 7.x
+  #
+  # Database migration steps for postgres 18 and beyond:
+  #  https://medepros.ca/blog/upgrading-to-postgresql-18-in-docker-a-crucial-change-you-need-to-be-aware-of/
+  #
   # ---------------------------------------------
-
-  db-migration:
-    image:          infisical/infisical:${ENV_INFISICAL_TAG:-v0.77.0-postgres}
-    container_name: infisical-db-migration
-    # no restart policy - backend checks this process sucessfully completed
-    
-    networks:
-      backend: 
-    
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-    environment:
-      DB_CONNECTION_URI: postgres://${ENV_POSTGRES_USER}:${ENV_POSTGRES_PASSWORD}@postgres:5432/${ENV_POSTGRES_DB}
-      REDIS_URL: redis://redis:6379
-      SITE_URL: http://${ENV_HOST:?hostname required}:80
-      ENCRYPTION_KEY: ${ENV_ENCRYPTION_KEY:?encryption key required}
-      AUTH_SECRET: ${ENV_AUTH_SECRET:?auth secret required}
-
-    command: npm run migration:latest
 
   backend:
     image:          infisical/infisical:${ENV_INFISICAL_TAG:-v0.77.0-postgres}
@@ -44,8 +30,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-      db-migration:
-        condition: service_completed_successfully
 
     ports:
       - 80:8080
@@ -66,7 +50,8 @@ services:
       SMTP_FROM_NAME: ${ENV_INFISICAL_EMAIL_NAME:?email name required}
 
   redis:
-    image:          docker.io/library/redis:7.2.5-alpine3.20
+    #image:          docker.io/library/redis:7.2.5-alpine3.20
+    image:          docker.io/library/redis:7.4.8-alpine3.21
     container_name: infisical-redis
     restart:        unless-stopped
 
@@ -93,7 +78,8 @@ services:
       - ./data/host/redis:/data # no :Z as it is strictly not shared between containers
 
   postgres:
-    image:          docker.io/library/postgres:14-alpine
+    #image:          docker.io/library/postgres:14-alpine
+    image:          docker.io/library/postgres:18.3-alpine3.23
     container_name: infisical-postgres
     restart:        unless-stopped
 
@@ -111,10 +97,11 @@ services:
       POSTGRES_USER: ${ENV_POSTGRES_USER:?database username required}
       POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD:?database password required}
       POSTGRES_DB: ${ENV_POSTGRES_DB:?database name required}
-      PGDATA: /var/lib/postgresql/data/infisical
+      # Remove for new handling in V18
+      #PGDATA: /var/lib/postgresql/data/infisical
 
     volumes:
-      - ./data/host/db-data:/var/lib/postgresql/data # no :Z as it is strictly not shared between containers
+      - ./data/host/db-data:/var/lib/postgresql # no :Z as it is strictly not shared between containers
 
 networks:
   backend:
