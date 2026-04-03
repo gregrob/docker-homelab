@@ -11,10 +11,12 @@ detectors:
     type: openvino
     device: GPU # or NPU
 
+  # M.2 Coral
   #coral-pci1:
   #  type: edgetpu
   #  device: pci
 
+  # USB Coral
   #coral-usb1:
   #  type: edgetpu
   #  device: usb
@@ -50,13 +52,17 @@ ffmpeg:
 detect:
   # width of the frame for the input with the detect role (default: 1280)
   # Use native stream
-  #width: 1280
+  # Drop from 1280 to save CPU and because the model input is 300x300
+  width: 640
   # height of the frame for the input with the detect role (default: 720)
   # Use native stream
-  #height: 720
+  # Drop from 720 to save CPU and because the model input is 300x300
+  height: 360
   # desired fps for your camera for the input with the detect role (default: 5)
   # NOTE: Recommended value of 5. Ideally, try and reduce your FPS on the camera.
-  fps: 5
+  #fps: 5
+  # Droped from 5 to save CPU
+  fps: 4
   # Optional: enables detection for the camera (default: True)
   # This value can be set via MQTT and will be updated in startup based on retained value
   enabled: true
