@@ -1,0 +1,21 @@
+---
+services:
+
+  # -----------------------------------------
+  # Setup nginx hello demo
+  #
+  # https://hub.docker.com/r/nginxdemos/hello
+  # -----------------------------------------
+  nginx_hello:
+    image:          nginxdemos/hello:0.4
+    container_name: nginx-hello
+    restart:        unless-stopped
+
+    hostname:       nginx-hello.$ENV_HOSTNAME
+    network_mode:   bridge
+
+    ports:
+      - "85:80/tcp"
+
+    environment:
+      - TZ=$ENV_TZ
