@@ -25,6 +25,11 @@ then
 
     echo ""
 
+    echo "To test that our VPN is correctly routing our QBittorrent traffic, we can download a test torrent and check our IP."
+    echo "Use https://www.whatismyip.net/tools/torrent-ip-checker/ for this."
+
+    echo ""
+
 else
     echo "FAIL: Please call script with - source ./env.sh"
 
