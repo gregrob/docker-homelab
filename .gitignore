@@ -26,6 +26,20 @@ docker/frigate/data/host/config/*
 !docker/frigate/data/host/db/.gitkeep
 !docker/frigate/data/host/config/.gitkeep
 
+# gluetun host specific
+docker/gluetun/data/host/gluetun-001/gluetun/*
+docker/gluetun/data/host/gluetun-001/tmp/*
+docker/gluetun/data/host/gluetun-002/gluetun/*
+docker/gluetun/data/host/gluetun-002/tmp/*
+docker/gluetun/data/host/qbittorrent-prv/config/*
+docker/gluetun/data/host/qbittorrent-pub/config/*
+!docker/gluetun/data/host/gluetun-001/gluetun/.gitkeep
+!docker/gluetun/data/host/gluetun-001/tmp/.gitkeep
+!docker/gluetun/data/host/gluetun-002/gluetun/.gitkeep
+!docker/gluetun/data/host/gluetun-002/tmp/.gitkeep
+!docker/gluetun/data/host/qbittorrent-prv/config/.gitkeep
+!docker/gluetun/data/host/qbittorrent-pub/config/.gitkeep
+
 # infisical host specific
 docker/infisical/data/host/db-data/*
 docker/infisical/data/host/redis/*

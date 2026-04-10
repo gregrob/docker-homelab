@@ -1,0 +1,145 @@
+---
+
+# ------------------------------------------------
+# YAML Anchor: Common gluetun configuration
+# 
+# This defines shared configuration that gets reused 
+# across multiple gluetun instances using <<: *gluetun-common
+#
+# https://hub.docker.com/r/qmcgaw/gluetun
+# https://github.com/qdm12/gluetun
+# ------------------------------------------------
+x-gluetun-common: &gluetun-common
+  
+  image:   qmcgaw/gluetun:v3.41.1
+  
+  restart: unless-stopped
+  
+  cap_add:
+    - NET_ADMIN
+  
+  devices:
+    - /dev/net/tun:/dev/net/tun
+  
+  # Nested anchor for environment variables - reused with <<: *gluetun-common-env
+  environment: &gluetun-common-env
+    PUID:                 ${ENV_DOCKER_UID:?err}
+    PGID:                 ${ENV_DOCKER_GID:?err}
+    TZ:                   ${ENV_TZ:?err}
+    VPN_SERVICE_PROVIDER: protonvpn
+    VPN_TYPE:             wireguard
+    SERVER_COUNTRIES:     Switzerland
+    HTTPPROXY:            on
+    PORT_FORWARD_ONLY:    on
+    VPN_PORT_FORWARDING:  on
+
+# ------------------------------------------------
+# YAML Anchor: Common qBittorrent configuration
+# 
+# This defines shared configuration that gets reused 
+# across multiple qBittorrent instances using <<: *qbittorrent-common
+#
+# https://hub.docker.com/r/linuxserver/qbittorrent
+# ------------------------------------------------
+x-qbittorrent-common: &qbittorrent-common
+  image:   linuxserver/qbittorrent:5.1.4
+  
+  restart: unless-stopped
+  
+  # Nested anchor for environment variables - reused with <<: *qbittorrent-common-env
+  environment: &qbittorrent-common-env
+    PUID: ${ENV_DOCKER_UID:?err}
+    PGID: ${ENV_DOCKER_GID:?err}
+    TZ:   ${ENV_TZ:?err}
+
+
+
+services:
+  # ------------------------------------------------
+  # Setup gluetun instances
+  # ------------------------------------------------
+  gluetun-001:
+    <<: *gluetun-common
+    container_name: gluetun-001
+
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+
+      - ${ENV_QBITTORRENT_UI_PORT_PUB:?err}:${ENV_QBITTORRENT_UI_PORT_PUB:?err} # for qbittorrent
+
+    volumes:
+      - ./data/host/gluetun-001/gluetun:/gluetun
+      - ./data/host/gluetun-001/tmp:/tmp/gluetun
+
+    environment:
+      <<: *gluetun-common-env
+      WIREGUARD_PRIVATE_KEY:            ${ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_001:?err}
+      
+      VPN_PORT_FORWARDING_UP_COMMAND:   /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PUB}/api/v2/app/setPreferences'
+      VPN_PORT_FORWARDING_DOWN_COMMAND: /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":0,\"current_network_interface\":\"lo\"}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PUB}/api/v2/app/setPreferences'
+
+  gluetun-002:
+    <<: *gluetun-common
+    container_name: gluetun-002
+
+    ports:
+      - 8889:8888/tcp # HTTP proxy
+      - 8389:8388/tcp # Shadowsocks
+      - 8389:8388/udp # Shadowsocks
+
+      - ${ENV_QBITTORRENT_UI_PORT_PRV:?err}:${ENV_QBITTORRENT_UI_PORT_PRV:?err} # for qbittorrent
+
+    volumes:
+      - ./data/host/gluetun-002/gluetun:/gluetun
+      - ./data/host/gluetun-002/tmp:/tmp/gluetun
+
+    environment:
+      <<: *gluetun-common-env
+      WIREGUARD_PRIVATE_KEY:            ${ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_002:?err}
+      
+      VPN_PORT_FORWARDING_UP_COMMAND:   /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PRV}/api/v2/app/setPreferences'
+      VPN_PORT_FORWARDING_DOWN_COMMAND: /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":0,\"current_network_interface\":\"lo\"}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PRV}/api/v2/app/setPreferences'
+
+  # ------------------------------------------------
+  # Setup qBittorrent
+  # ------------------------------------------------
+  qbittorrent-pub:
+    <<: *qbittorrent-common
+    container_name: qbittorrent-pub
+    
+    network_mode:   "service:gluetun-001"
+    
+    depends_on:
+      gluetun-001:
+        condition: service_healthy
+        restart: true
+
+    volumes:
+      - ./data/host/qbittorrent-pub/config:/config
+      - /mnt/downloads/qbittorrent-pub:/downloads
+      
+    environment:
+      <<: *qbittorrent-common-env     
+      WEBUI_PORT: ${ENV_QBITTORRENT_UI_PORT_PUB:?err}
+
+  qbittorrent-prv:
+    <<: *qbittorrent-common
+    container_name: qbittorrent-prv
+    
+    network_mode:   "service:gluetun-002"
+    
+    depends_on:
+      gluetun-002:
+        condition: service_healthy
+        restart: true
+
+    volumes:
+      - ./data/host/qbittorrent-prv/config:/config
+      - /mnt/downloads/qbittorrent-prv:/downloads
+      
+    environment:
+      <<: *qbittorrent-common-env     
+      WEBUI_PORT: ${ENV_QBITTORRENT_UI_PORT_PRV:?err}
+      
