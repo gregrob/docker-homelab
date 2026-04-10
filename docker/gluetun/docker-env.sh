@@ -27,6 +27,7 @@ then
 
     echo "To test that our VPN is correctly routing our QBittorrent traffic, we can download a test torrent and check our IP."
     echo "Use https://www.whatismyip.net/tools/torrent-ip-checker/ for this."
+    echo "Also use https://www.dnsleaktest.com/ to check for DNS leaks."
 
     echo ""
 
