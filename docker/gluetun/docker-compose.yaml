@@ -69,6 +69,8 @@ services:
 
       - ${ENV_QBITTORRENT_UI_PORT_PUB:?err}:${ENV_QBITTORRENT_UI_PORT_PUB:?err} # for qbittorrent
 
+      - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr
+
     volumes:
       - ./data/host/gluetun-001/gluetun:/gluetun
       - ./data/host/gluetun-001/tmp:/tmp/gluetun
@@ -142,4 +144,51 @@ services:
     environment:
       <<: *qbittorrent-common-env     
       WEBUI_PORT: ${ENV_QBITTORRENT_UI_PORT_PRV:?err}
-      
+
+  # ------------------------------------------------
+  # Setup prowlarr 
+  #
+  # https://hub.docker.com/r/linuxserver/prowlarr
+  # https://github.com/linuxserver/docker-prowlarr
+  # ------------------------------------------------
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:2.3.5.5327-ls141
+    container_name: prowlarr
+    restart: unless-stopped
+
+    network_mode:   "service:gluetun-001"
+
+    depends_on:
+      gluetun-001:
+        condition: service_healthy
+        restart: true
+      flaresolverr:
+        condition: service_started
+
+    volumes:
+      - ./data/host/prowlarr/config:/config
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+      TZ: ${ENV_TZ:?err}
+
+  # ------------------------------------------------
+  # Setup flaresolverr
+  #
+  # https://github.com/FlareSolverr/FlareSolverr
+  # ------------------------------------------------
+  flaresolverr:
+    image:          ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    container_name: flaresolverr
+    restart:        unless-stopped
+
+    network_mode:   "service:gluetun-001"
+
+    depends_on:
+      gluetun-001:
+        condition: service_healthy
+        restart: true
+
+    environment:
+      TZ: ${ENV_TZ:?err}
