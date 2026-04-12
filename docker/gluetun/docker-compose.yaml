@@ -20,7 +20,10 @@ x-gluetun-common: &gluetun-common
   
   devices:
     - /dev/net/tun:/dev/net/tun
-  
+    
+  labels:
+    autoheal: "true"
+
   # Nested anchor for environment variables - reused with <<: *gluetun-common-env
   environment: &gluetun-common-env
     PUID:                 ${ENV_DOCKER_UID:?err}
@@ -52,6 +55,29 @@ x-qbittorrent-common: &qbittorrent-common
     PGID: ${ENV_DOCKER_GID:?err}
     TZ:   ${ENV_TZ:?err}
 
+# ------------------------------------------------
+# YAML Anchor: Common VPN healthcheck configuration
+# 
+# This defines shared healthcheck configuration that gets reused 
+# across VPN services to monitor connectivity and enable autoheal.
+#
+# The healthcheck tests connectivity by curling 1.1.1.1 (Cloudflare's 
+# public DNS server). When internet connectivity is lost or the VPN 
+# tunnel fails, curl will timeout/fail, marking the container as 
+# unhealthy. Autoheal will then restart the container to restore 
+# connectivity.
+# ------------------------------------------------
+x-vpn-healthcheck: &vpn-healthcheck
+  healthcheck:
+    test:         ["CMD", "curl", "-sf", "https://1.1.1.1"]
+    interval:     30s
+    timeout:      10s
+    retries:      3
+    start_period: 90s
+  
+  labels:
+    autoheal: "true"
+    
 
 
 services:
@@ -108,7 +134,7 @@ services:
   # Setup qBittorrent
   # ------------------------------------------------
   qbittorrent-pub:
-    <<: *qbittorrent-common
+    <<: [*qbittorrent-common, *vpn-healthcheck]
     container_name: qbittorrent-pub
     
     network_mode:   "service:gluetun-001"
@@ -127,7 +153,7 @@ services:
       WEBUI_PORT: ${ENV_QBITTORRENT_UI_PORT_PUB:?err}
 
   qbittorrent-prv:
-    <<: *qbittorrent-common
+    <<: [*qbittorrent-common, *vpn-healthcheck]
     container_name: qbittorrent-prv
     
     network_mode:   "service:gluetun-002"
@@ -152,6 +178,8 @@ services:
   # https://github.com/linuxserver/docker-prowlarr
   # ------------------------------------------------
   prowlarr:
+    <<: *vpn-healthcheck
+
     image: lscr.io/linuxserver/prowlarr:2.3.5.5327-ls141
     container_name: prowlarr
     restart: unless-stopped
@@ -179,6 +207,8 @@ services:
   # https://github.com/FlareSolverr/FlareSolverr
   # ------------------------------------------------
   flaresolverr:
+    <<: *vpn-healthcheck
+
     image:          ghcr.io/flaresolverr/flaresolverr:v3.4.6
     container_name: flaresolverr
     restart:        unless-stopped
@@ -192,3 +222,28 @@ services:
 
     environment:
       TZ: ${ENV_TZ:?err}
+
+  # ------------------------------------------------
+  # Autoheal - restarts unhealthy containers
+  #
+  # https://hub.docker.com/r/willfarrell/autoheal
+  # ------------------------------------------------
+  autoheal:
+    image:          willfarrell/autoheal:1.2.0
+    container_name: autoheal
+    restart:        unless-stopped
+    
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal
+
+      # How often autoheal checks for unhealthy containers (seconds).
+      # 10s is a balance between fast recovery and not hammering the Docker API.
+      AUTOHEAL_INTERVAL:        10
+
+      # How long autoheal waits before it starts monitoring after stack startup (seconds).
+      # 60s gives the stack time to initialise before autoheal starts acting, slowing
+      # retry cycles during an extended outage.
+      AUTOHEAL_START_PERIOD: 60
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
