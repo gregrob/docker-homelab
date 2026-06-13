@@ -54,6 +54,12 @@ docker/jellyfin/data/host/config/*
 !docker/jellyfin/data/host/cache/.gitkeep
 !docker/jellyfin/data/host/config/.gitkeep
 
+# ollama host specific
+docker/ollama/data/host/ollama/*
+docker/ollama/data/host/open-webui/*
+!docker/ollama/data/host/ollama/.gitkeep
+!docker/ollama/data/host/open-webui/.gitkeep
+
 # semaphoreui host specific
 docker/semaphoreui/data/host/semaphoreui/data/*
 docker/semaphoreui/data/host/semaphoreui/config/*

@@ -1,0 +1,66 @@
+---
+services:
+
+  # ----------------------------------------
+  # Setup Ollama
+  #
+  # https://hub.docker.com/r/ollama/ollama
+  # ----------------------------------------
+  ollama:
+    image:          ollama/ollama:0.30.8
+    container_name: ollama
+    restart:        unless-stopped
+       
+    networks:
+      frontend:
+
+    environment:
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_IGPU_ENABLE=1
+      - OLLAMA_GPU_OVERHEAD=51539607552 # 48GB
+      
+    volumes:
+       - ./data/host/ollama:/root/.ollama
+
+      # Pass local timezone information to the container
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
+    
+    devices:
+      - /dev/dri/card1:/dev/dri/card1
+      - /dev/dri/renderD128:/dev/dri/renderD128
+
+    ports:
+       - "11434:11434"
+
+  # ----------------------------------------
+  # Setup Open WebUI
+  #
+  # https://github.com/open-webui/open-webui
+  # ----------------------------------------
+  open-webui:
+    image:          ghcr.io/open-webui/open-webui:0.9.6
+    container_name: open-webui
+    restart:        unless-stopped
+
+    networks:
+      frontend:
+
+    depends_on:
+      - ollama
+    
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    
+    volumes:
+      - ./data/host/open-webui:/app/backend/data
+    
+      # Pass local timezone information to the container
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - "3000:8080"
+
+networks:
+  frontend:
