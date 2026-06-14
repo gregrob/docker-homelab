@@ -18,9 +18,11 @@ services:
       - OLLAMA_KEEP_ALIVE=5m
       - OLLAMA_IGPU_ENABLE=1
       - OLLAMA_GPU_OVERHEAD=51539607552 # 48GB
-      
+      - OLLAMA_MODELS=/mnt/ollama/models
+
     volumes:
        - ./data/host/ollama:/root/.ollama
+       - /mnt/ollama/models:/mnt/ollama/models
 
       # Pass local timezone information to the container
       #- /etc/timezone:/etc/timezone:ro
