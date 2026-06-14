@@ -15,9 +15,12 @@ services:
       frontend:
 
     environment:
+      # Caps Ollama's iGPU memory to ~14GiB (LXC has 16GiB RAM, 2GiB headroom).
+      # iGPU reports a fixed 70.5GiB pool on this host: 70.5 - 56.5 = 14GiB.
+      # If LXC RAM changes, recalc: overhead = 70.5GiB - (new_RAM - 2GiB)
+      - OLLAMA_GPU_OVERHEAD=60666911744  # 56.5GiB -> caps Ollama to ~14GiB
       - OLLAMA_KEEP_ALIVE=5m
       - OLLAMA_IGPU_ENABLE=1
-      - OLLAMA_GPU_OVERHEAD=51539607552 # 48GB
       - OLLAMA_MODELS=/mnt/ollama/models
 
     volumes:
