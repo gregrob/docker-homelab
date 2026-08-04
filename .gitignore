@@ -16,6 +16,12 @@ docker/bambuddy/data/host/logs/*
 docker/bambustudio/data/host/config/*
 !docker/bambustudio/data/host/config/.gitkeep
 
+# technitium dns server specific
+docker/dns-server/data/host/config/*
+docker/dns-server/data/host/logs/*
+!docker/dns-server/data/host/config/.gitkeep
+!docker/dns-server/data/host/logs/.gitkeep
+
 # docker-volume-backup host specific
 docker/docker-volume-backup/data/host/backups/*
 !docker/docker-volume-backup/data/host/backups/.gitkeep
