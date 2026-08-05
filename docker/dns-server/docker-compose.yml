@@ -20,7 +20,7 @@ services:
 
     ports:
       - "5380:5380/tcp" #DNS web console (HTTP)
-      # - "53443:53443/tcp" #DNS web console (HTTPS)
+      - "53443:53443/tcp" #DNS web console (HTTPS)
       - "53:53/udp" #DNS service
       - "53:53/tcp" #DNS service
       # - "853:853/udp" #DNS-over-QUIC service
