@@ -53,7 +53,7 @@ fi
 source "$(dirname "${BASH_SOURCE[0]}")/../../secrets-helper.sh"
 RECORDS_JSON=$(get_secret "apps/technitium/technitium-dns-server-initial-records.secret.age")
 
-SERVER="${1:-development-002.containers.max.lan}"
+SERVER="${1:-dns-001.dns.gregrob.net}"
 TEST_PTR="${2:-true}"
 QUERY_DELAY="${3:-0}"
 

@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-SERVER="http://development-002.containers.max.lan:5380"
+SERVER="http://dns-001.dns.gregrob.net:5380"
 
 # Include the secrets helper script to use get_secret function
 source "$(dirname "${BASH_SOURCE[0]}")/../../secrets-helper.sh"
