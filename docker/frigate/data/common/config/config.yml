@@ -7,9 +7,9 @@ mqtt:
 
 # Detectors configuration
 detectors:
-  ov_0:
-    type: openvino
-    device: GPU # or NPU
+  #ov_0:
+  #  type: openvino
+  #  device: GPU # or NPU
 
   # M.2 Coral
   #coral-pci1:
@@ -17,17 +17,17 @@ detectors:
   #  device: pci
 
   # USB Coral
-  #coral-usb1:
-  #  type: edgetpu
-  #  device: usb
+  coral-usb1:
+    type: edgetpu
+    device: usb
 
-model:
-  width: 300
-  height: 300
-  input_tensor: nhwc
-  input_pixel_format: bgr
-  path: /openvino-model/ssdlite_mobilenet_v2.xml
-  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+#model:
+#  width: 300
+#  height: 300
+#  input_tensor: nhwc
+#  input_pixel_format: bgr
+#  path: /openvino-model/ssdlite_mobilenet_v2.xml
+#  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
 
 # Database configuration
 database:
