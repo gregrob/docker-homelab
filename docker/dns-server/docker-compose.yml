@@ -13,23 +13,37 @@ services:
     restart:        unless-stopped
 
     # For DHCP deployments, use "host" network mode and remove all the port mappings, including the ports array by commenting them
-    # network_mode: "host"
+    
+    # Host networking is REQUIRED here with load balancing. Docker's
+    # default bridge networking publishes ports via iptables DNAT rules
+    # that match ADDRTYPE dst-type LOCAL - i.e. ANY locally-owned address,
+    # not just this host's original IP. The moment the keepalived VIP
+    # becomes locally bound (via VRRP or the DR-mode loopback binding),
+    # Docker's DNAT rule intercepts VIP-addressed traffic and delivers it
+    # straight to the container - before IPVS's own kernel hook ever gets
+    # a chance to schedule/load-balance it. Confirmed directly via
+    # `iptables -t nat -L DOCKER -n -v` during setup; this was the root
+    # cause of load balancing silently not working at all. Host mode
+    # removes Docker's NAT/port-publishing layer entirely, letting
+    # Technitium bind directly to the host's real ports so IPVS can
+    # actually see and schedule the traffic.    
+    network_mode: "host"
 
-    sysctls:
-      - net.ipv4.ip_local_port_range=1024 65535 #remove when using "host" network mode
+    #sysctls:
+    #  - net.ipv4.ip_local_port_range=1024 65535 #remove when using "host" network mode
 
-    ports:
-      - "5380:5380/tcp" #DNS web console (HTTP)
-      - "53443:53443/tcp" #DNS web console (HTTPS)
-      - "53:53/udp" #DNS service
-      - "53:53/tcp" #DNS service
-      # - "853:853/udp" #DNS-over-QUIC service
-      # - "853:853/tcp" #DNS-over-TLS service
-      # - "443:443/udp" #DNS-over-HTTPS service (HTTP/3)
-      # - "443:443/tcp" #DNS-over-HTTPS service (HTTP/1.1, HTTP/2)
-      # - "80:80/tcp" #DNS-over-HTTP service (use with reverse proxy or certbot certificate renewal)
-      # - "8053:8053/tcp" #DNS-over-HTTP service (use with reverse proxy)
-      # - "67:67/udp" #DHCP service
+    #ports:
+    #  - "5380:5380/tcp" #DNS web console (HTTP)
+    #  - "53443:53443/tcp" #DNS web console (HTTPS)
+    #  - "53:53/udp" #DNS service
+    #  - "53:53/tcp" #DNS service
+    #  # - "853:853/udp" #DNS-over-QUIC service
+    #  # - "853:853/tcp" #DNS-over-TLS service
+    #  # - "443:443/udp" #DNS-over-HTTPS service (HTTP/3)
+    #  # - "443:443/tcp" #DNS-over-HTTPS service (HTTP/1.1, HTTP/2)
+    #  # - "80:80/tcp" #DNS-over-HTTP service (use with reverse proxy or certbot certificate renewal)
+    #  # - "8053:8053/tcp" #DNS-over-HTTP service (use with reverse proxy)
+    #  # - "67:67/udp" #DHCP service
 
     environment:
       - DNS_SERVER_DOMAIN=dns-server #The primary fully qualified domain name used by this DNS Server to identify itself.
