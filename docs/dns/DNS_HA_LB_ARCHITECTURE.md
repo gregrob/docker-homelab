@@ -161,31 +161,131 @@ continuous health awareness between VRRP transitions.
 ### Why the health check is a real script file, not inline in keepalived.conf
 
 `enable_script_security` causes keepalived to exec check commands directly
-rather than via a shell. An inline shell pipeline (e.g. `dig ... | grep
+rather than via a shell. An inline shell pipeline (e.g. `curl ... | grep
 ...`) written directly in `keepalived.conf` has its pipe character passed
-as a literal argument to `dig` instead of being interpreted — silently
+as a literal argument to the binary instead of being interpreted — silently
 breaking the check (it always "succeeds" regardless of the actual
-response). Wrapping the same command in a real script file with its own
-`#!/bin/bash` shebang avoids this, since the shell interpretation happens
-inside the script's own execution, not in how keepalived invokes it.
+response, or errors out in a way that's easy to misread as a real failure).
+Wrapping the command in a real script file with its own `#!/bin/bash`
+shebang avoids this, since the shell interpretation happens inside the
+script's own execution, not in how keepalived invokes it.
 
-### Why the health check uses TCP, not UDP
+### The health check is fully generic — nothing in the role knows about DNS or Technitium
 
-A frozen/paused Technitium container can still appear to answer UDP
-queries via Docker's `docker-proxy` layer, even when the application
-itself isn't processing anything — confirmed directly via testing (`docker
-pause` + a UDP query still returned a stale/successful-looking result). A
-TCP query requires the application to actually `accept()` the connection,
-which a frozen process can't do — so TCP correctly times out where UDP
-falsely succeeded.
+`check.sh.j2` takes two positional arguments — `TARGET` (which node/address
+to check) and an optional `EXTRA_ARG` (anything the actual check command
+needs beyond the target, e.g. an API token) — and just runs whatever
+`keepalived_check_command` says, substituting `${TARGET}`/`${TOKEN}` (a
+shell variable inside the rendered script, not an Ansible var) into it.
+Two role-level vars drive the args every invocation gets:
+
+- `keepalived_check_self_target` (role default: `127.0.0.1`) — what the
+  VRRP self-check passes as `TARGET`. Correct for virtually any service,
+  kept as an overridable default rather than hardcoded in the template.
+- `keepalived_check_extra_arg` (role default: `""`, empty) — passed as the
+  second argument to every check invocation. Most services need nothing
+  here; this DNS pool sets it (per-group, in `keepalived_dns_target`'s
+  vars) to carry a Technitium API token.
+
+For IPVS `MISC_CHECK`, each real server needs *its own* extra arg, not
+necessarily this node's own — `keepalived_real_server_extra_args` (built
+in `tasks/main.yaml` via a `hostvars` cross-lookup, same technique as the
+peer-MAC derivation) supplies that per-IP. The role has no idea this dict
+happens to hold identical values for every entry in this pool right now
+(see the token-sharing note below) — it works exactly the same whether the
+values are identical or genuinely distinct per host.
+
+**What makes this DNS-specific lives entirely in `group_vars/
+keepalived_dns_target.yaml` and the vault, not in the role**:
+
+```yaml
+keepalived_check_command: >-
+  /usr/bin/curl -sf --max-time {{ keepalived_check_timeout }}
+  "http://${TARGET}:5380/api/dnsClient/healthCheck?token=${TOKEN}"
+  | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"'
+```
+
+### Why the health check uses Technitium's API, not a real DNS query
+
+An earlier version used `dig` directly (over TCP, to correctly detect a
+frozen/paused container — see below). That worked, but generated a real,
+loggable DNS query at check frequency — across the self-check and every
+real-server `MISC_CHECK`, that added up to a continuous stream of
+query-log entries with zero informational value, confirmed directly during
+testing (visible as a wall of `NXDomain`/repeated-name entries in
+Technitium's own query log). Technitium documents a dedicated
+`/api/dnsClient/healthCheck` endpoint specifically for this purpose —
+confirms the server process is running and able to resolve names, without
+creating a query-log entry at all.
+
+Trade-offs of the switch, worth knowing:
+- Requires an API token (`Authorization` via `?token=`), so there's now a
+  credential to manage — see the "API token" section below.
+- It's HTTP (port 5380), not DNS traffic — the "frozen container" failure
+  mode had to be re-verified for this transport specifically (see next
+  section), since the original TCP-vs-UDP reasoning was DNS-specific.
+
+### Why `--max-time` on the curl check is mandatory, not optional
+
+Same failure mode as the earlier `dig`-based check, re-confirmed for HTTP:
+a frozen/paused Technitium container can still accept the TCP connection
+via Docker's port-forwarding layer even when the application itself isn't
+responding — a `curl` call with no timeout hangs indefinitely waiting for
+a response that will never come, rather than failing. `--max-time
+{{ keepalived_check_timeout }}` bounds the whole request (connect +
+response), confirmed directly via a `docker pause` test during
+development: without the flag, the check hung; with it, it correctly
+timed out and reported unhealthy.
+
+### The Technitium API token — generation and sharing behavior
+
+Generated via Technitium's `createToken` API using the existing `admin`
+account (deliberately not a separate low-privilege account — the extra
+account/credential to maintain wasn't worth it for a home LAN; the token
+does have full admin API scope as a result, worth knowing if this pattern
+is ever reused somewhere with different stakes).
+
+**Confirmed via direct testing**: Technitium clusters/syncs API tokens
+across all nodes in the cluster — a token generated on one node works
+identically when calling any other node's API. Because of this, the
+DNS pool uses a single shared token rather than one per node:
+
+- `group_vars/all/vault.yaml` (encrypted) holds one entry:
+  `keepalived_technitium_api_token_clustered`
+- Both `dns-001` and `dns-002`'s `host_vars` explicitly reference it:
+  `keepalived_check_extra_arg: "{{ keepalived_technitium_api_token_clustered }}"`
+
+The explicit per-host reference (rather than relying on implicit
+group/vault auto-merge) is deliberate — it keeps each host_vars file a
+complete, self-describing picture of what that host uses, rather than
+requiring a reader to already know a value comes from `group_vars/all/`.
+If Technitium's clustering behavior ever changes and tokens genuinely
+diverge per node, only the host_vars reference needs to change (to point
+at a distinct per-host vault entry instead) — nothing in the role does.
+
+### Check timing — tuned deliberately, not left at defaults
+
+`keepalived_check_interval: 3`, `keepalived_check_timeout: 2`,
+`keepalived_check_fall: 2`, `keepalived_check_rise: 2` (role defaults).
+`timeout` is kept below `interval` (2s vs 3s) so a check can't still be
+running when the next one would start. Worst-case detection time is
+`interval × fall` ≈ 6 seconds — a deliberate choice to favor a small
+buffer against false-positive failover (e.g. a momentary blip) over the
+fastest possible failover; acceptable for a home network where a
+few-second gap in DNS availability is a non-issue given client-side
+retry/fallback behavior anyway. Widen `fall` (not `interval`) first if
+false-positive failovers are ever observed in practice — it adds
+detection latency without weakening the check itself.
 
 ## Variable / config ownership map
 
+
 | Concern | Lives in |
 |---|---|
-| This node's identity (interface, priority, own IP, peer list) | `host_vars/dns-00N...yaml` |
-| Pool-wide facts that must match across every node (VIP, router ID, real server list, health check definition) | `group_vars/keepalived_dns_target/keepalived-dns-config.yaml` |
-| Generic role behavior/timing (not DNS-specific) | `roles/keepalived/defaults/main.yaml` |
+| This node's identity (interface, priority, own IP, peer list, own health-check extra arg) | `inventories/local/host_vars/dns-00N...yaml` |
+| Pool-wide facts that must match across every node (VIP, router ID, real server list, health check command) | `inventories/local/group_vars/keepalived_dns_target.yaml` |
+| Generic role behavior/timing, and the generic check-script slots (`keepalived_check_self_target`, `keepalived_check_extra_arg` defaults) — deliberately DNS-agnostic | `roles/keepalived/defaults/main.yaml` |
+| The actual Technitium API token value | `group_vars/all/vault.yaml` (encrypted, one shared entry — see the API token section above) |
 | Admin account identity | `group_vars/all/admin-user.yaml` |
 
 ## Debug command reference — mapped to each stage
@@ -256,9 +356,18 @@ sudo iptables -t nat -L DOCKER -n -v
 ### Stage 5 — Health check (drives both Stage 1's vrrp_script and Stage 3's MISC_CHECK)
 
 ```bash
-# manually run the exact check keepalived uses, against a specific node
-/etc/keepalived/scripts/check.sh 10.24.19.30
+# manually run the exact check keepalived uses, against a specific node -
+# needs the same extra arg (Technitium API token) keepalived passes it;
+# grab the current value from the rendered keepalived.conf if unsure:
+grep -A1 "misc_path" /etc/keepalived/keepalived.conf
+
+/etc/keepalived/scripts/check.sh 10.24.19.30 YOUR_TOKEN_HERE
 echo "exit: $?"     # 0 = healthy, non-zero = would be marked down
+
+# confirm the token check is genuinely doing its job (not just "server
+# reachable") - an invalid token should fail cleanly, not hang or false-pass:
+/etc/keepalived/scripts/check.sh 10.24.19.30 clearly-wrong-token
+echo "exit: $?"     # should be non-zero
 ```
 
 ### Stage 6 — Watching a query flow through every stage at once

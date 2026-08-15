@@ -33,20 +33,32 @@ Compare against the saved `dns-001-keepalived.conf.txt` / `dns-002-...`
 reference files — same `fwmark 1`/`fwmark 2` blocks, same priorities,
 same `virtual_router_id`, no leftover IP:port `virtual_server` blocks.
 
-## 4. Peer MAC derivation (the one piece not yet verified against live Ansible)
+## 4. Peer MAC and check-extra-arg derivation (hostvars cross-lookups, worth re-confirming after any role update)
 
-Add a temporary `debug: var=keepalived_peer_macs` task right after
-"Determine peer real server MAC addresses for mangle rules" in
-`tasks/main.yaml`, run once, and confirm:
-- On `dns-001`: `["bc:24:11:a9:20:38"]` (dns-002's MAC)
-- On `dns-002`: `["bc:24:11:22:c1:70"]` (dns-001's MAC)
+Add temporary debug tasks right after their respective set_fact tasks in
+`tasks/main.yaml` — "Determine peer real server MAC addresses for mangle
+rules" and "Determine per-real-server check extra args" — then run once
+and confirm:
 
-Then confirm the deployed rule matches:
+```yaml
+- debug: var=keepalived_peer_macs
+- debug: var=keepalived_real_server_extra_args
+```
+
+- On `dns-001`: `keepalived_peer_macs` → `["bc:24:11:a9:20:38"]` (dns-002's MAC)
+- On `dns-002`: `keepalived_peer_macs` → `["bc:24:11:22:c1:70"]` (dns-001's MAC)
+- On both: `keepalived_real_server_extra_args` → `{"10.24.19.30": "<token>", "10.24.19.32": "<token>"}` — same token value on both entries, since it's confirmed cluster-shared (see `DNS_HA_LB_ARCHITECTURE.md`)
+
+Then confirm the deployed mangle rule matches:
 ```bash
 sudo iptables -t mangle -L PREROUTING -n -v --line-numbers
 sudo cat /etc/keepalived/scripts/mangle-rules.sh
 ```
-Remove the temporary debug task once confirmed.
+And that the rendered config carries the token through correctly:
+```bash
+sudo cat /etc/keepalived/keepalived.conf | grep -A2 misc_path
+```
+Remove both temporary debug tasks once confirmed.
 
 ## 5. Services and VRRP state
 
@@ -80,7 +92,27 @@ sudo ipvsadm -L -n --stats
 ```
 `Conns` climbing on **both** real servers across the test.
 
-## 8. Health-check integration (MISC_CHECK, independent of VRRP)
+## 8. Health check itself — manual validation before trusting it end-to-end
+
+```bash
+# get the real token keepalived is using right now
+sudo grep -A1 misc_path /etc/keepalived/keepalived.conf
+
+# healthy case - should exit 0
+/etc/keepalived/scripts/check.sh 10.24.19.30 THE_REAL_TOKEN
+echo "exit: $?"
+
+# bad token - should exit non-zero, not hang or false-pass
+/etc/keepalived/scripts/check.sh 10.24.19.30 clearly-wrong-token
+echo "exit: $?"
+
+# unreachable target with no timeout protection would hang forever - confirm
+# it doesn't (should return within roughly keepalived_check_timeout seconds)
+time /etc/keepalived/scripts/check.sh 10.24.19.99 THE_REAL_TOKEN
+echo "exit: $?"
+```
+
+## 9. Health-check integration under IPVS (MISC_CHECK, independent of VRRP)
 
 ```bash
 docker pause dns-server   # on dns-002 - freezes the process without
@@ -93,7 +125,7 @@ sleep 15
 sudo ipvsadm -L -n        # weight should return to 10, automatically
 ```
 
-## 9. Full node failure (VRRP + IPVS together)
+## 10. Full node failure (VRRP + IPVS together)
 
 **Do not use `systemctl stop keepalived` for this test** — that only
 stops VRRP, and leaves the loopback binding, mangle rule, and Technitium
@@ -117,7 +149,7 @@ sudo ipvsadm -L -n                 # confirm the failed node's weight
 Restore with `docker start dns-server` on the stopped node, then confirm
 its weight returns to 10 automatically.
 
-## 10. Reboot test — do last, one node at a time
+## 11. Reboot test — do last, one node at a time
 
 Reboot `dns-002` first (leave `dns-001` serving), and after it comes back
 confirm — with **zero manual intervention** —:
