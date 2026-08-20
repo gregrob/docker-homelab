@@ -3,11 +3,14 @@ services:
   # ---------------------------------------------
   # Setup spoolman
   #
+  # Note this container has a locked 1000:1000 permissions
+  #
   # https://github.com/Donkie/Spoolman
   # ---------------------------------------------
   
   spoolman:
-    image:          ghcr.io/donkie/spoolman:0.23.1
+    #image:          ghcr.io/donkie/spoolman:0.23.1
+    image:          ghcr.io/donkie/spoolman:0.26.1
     container_name: spoolman
     restart:        unless-stopped
     
