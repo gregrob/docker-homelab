@@ -1,5 +1,10 @@
 ---
 
+# !!! NOTE !!!
+# Check these are addressed
+# https://github.com/qdm12/gluetun/issues/3178
+# https://github.com/qdm12/gluetun/issues/3257
+
 # ------------------------------------------------
 # YAML Anchor: Common gluetun configuration
 # 
