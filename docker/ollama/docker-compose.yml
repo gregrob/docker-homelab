@@ -15,10 +15,27 @@ services:
       frontend:
 
     environment:
+      # --------------
+      # Host with 96GB
+      # --------------
       # Caps Ollama's iGPU memory to ~14GiB (LXC has 16GiB RAM, 2GiB headroom).
       # iGPU reports a fixed 70.5GiB pool on this host: 70.5 - 56.5 = 14GiB.
       # If LXC RAM changes, recalc: overhead = 70.5GiB - (new_RAM - 2GiB)
-      - OLLAMA_GPU_OVERHEAD=60666911744  # 56.5GiB -> caps Ollama to ~14GiB
+      # - OLLAMA_GPU_OVERHEAD=60666911744  # 56.5GiB -> caps Ollama to ~14GiB
+
+      # --------------
+      # Host with 48GB
+      # --------------
+      # Caps Ollama's iGPU memory to ~14GiB (LXC has 16GiB RAM, 2GiB headroom).
+      # iGPU now reports a ~35.1GiB pool on this host (RAM halved 96GB->48GB,
+      # pool scaled proportionally ~73% in both cases): 35.1 - 14 = 21.1GiB.
+      # If LXC RAM changes, recalc: overhead = new_reported_total - (new_RAM - 2GiB)
+      #
+      # To re-measure the reported pool after any RAM change, don't trust the
+      # ~73% ratio blindly - check the real value:
+      #   docker logs ollama 2>&1 | grep "inference compute" | tail -1      
+      - OLLAMA_GPU_OVERHEAD=22655952486  # 21.1GiB -> caps Ollama to ~14GiB
+
       - OLLAMA_KEEP_ALIVE=5m
       - OLLAMA_IGPU_ENABLE=1
       - OLLAMA_MODELS=/mnt/ollama/models
