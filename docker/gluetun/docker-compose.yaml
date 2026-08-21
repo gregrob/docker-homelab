@@ -93,6 +93,9 @@ services:
     <<: *gluetun-common
     container_name: gluetun-001
 
+    networks:
+      frontend:
+
     ports:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
@@ -116,6 +119,9 @@ services:
   gluetun-002:
     <<: *gluetun-common
     container_name: gluetun-002
+
+    networks:
+      frontend:
 
     ports:
       - 8889:8888/tcp # HTTP proxy
@@ -237,6 +243,9 @@ services:
     image:          willfarrell/autoheal:1.2.0
     container_name: autoheal
     restart:        unless-stopped
+
+    networks:
+      frontend:
     
     environment:
       AUTOHEAL_CONTAINER_LABEL: autoheal
@@ -252,3 +261,6 @@ services:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  frontend:
