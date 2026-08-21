@@ -1,0 +1,41 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup meshcentral
+  #
+  # https://github.com/ylianst/MeshCentral/pkgs/container/meshcentral
+  # User guide at: https://meshcentral.com/docs/MeshCentral2UserGuide.pdf
+  # ---------------------------------------------
+
+  meshcentral:
+    #image:          ghcr.io/ylianst/meshcentral:1.1.24
+    image:          ghcr.io/ylianst/meshcentral:1.2.5
+    container_name: meshcentral
+    restart:        unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--fail", "https://localhost:443/health.ashx"]
+      interval: 30s
+      timeout: 5s
+      start_period: 5s
+      retries: 3
+
+    ports:
+      - 443:443
+      - 80:80
+
+    env_file:
+      - .env # Only used on initial continer start when config.json is created
+
+    volumes:
+      # config.json and other important files live here. A must for data persistence
+      - ./data/host/data:/opt/meshcentral/meshcentral-data
+      # where file uploads for users live
+      - ./data/host/user_files:/opt/meshcentral/meshcentral-files
+      # location for the meshcentral-backups - this should be mounted to an external storage
+      - ./data/host/backup:/opt/meshcentral/meshcentral-backups
+      # location for site customization files
+      - ./data/host/web:/opt/meshcentral/meshcentral-web
+
+networks:
+  frontend:

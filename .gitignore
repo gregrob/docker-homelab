@@ -60,6 +60,16 @@ docker/jellyfin/data/host/config/*
 !docker/jellyfin/data/host/cache/.gitkeep
 !docker/jellyfin/data/host/config/.gitkeep
 
+# meshcentral host specific
+docker/meshcentral/data/host/backup/*
+docker/meshcentral/data/host/data/*
+docker/meshcentral/data/host/user_files/*
+docker/meshcentral/data/host/web/*
+!docker/meshcentral/data/host/backup/.gitkeep
+!docker/meshcentral/data/host/data/.gitkeep
+!docker/meshcentral/data/host/user_files/.gitkeep
+!docker/meshcentral/data/host/web/.gitkeep
+
 # ollama host specific
 docker/ollama/data/host/ollama/*
 docker/ollama/data/host/open-webui/*
