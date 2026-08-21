@@ -91,3 +91,7 @@ docker/semaphoreui/data/host/mysql/*
 # spoolman host specific
 docker/spoolman/data/host/spoolman/*
 !docker/spoolman/data/host/spoolman/.gitkeep
+
+# uptime-kuma host specific
+docker/uptime-kuma/data/host/*
+!docker/uptime-kuma/data/host/.gitkeep
