@@ -1,0 +1,47 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup Homepage
+  #
+  # https://github.com/gethomepage/homepage/pkgs/container/homepage
+  # ---------------------------------------------
+  homepage:
+    image:          ghcr.io/gethomepage/homepage:v1.1.2
+    container_name: homepage
+    restart:        unless-stopped
+
+    networks:
+      frontend:
+    
+    ports:
+      - 80:3000
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+
+      # While using internally only - allow all hosts
+      HOMEPAGE_ALLOWED_HOSTS: "*"
+
+      # If using externally, enter all hosts
+      # If using port 80, omitted port
+      # HOMEPAGE_ALLOWED_HOSTS: ${ENV_LOCALIP:?err},homepage.gregrob.net,portal.apps.gregrob.net,portal-001.apps.gregrob.net
+
+      # Examples for connecting keys and tokens - also refer https://gethomepage.dev/installation/docker/
+      #HOMEPAGE_VAR_AUTHENTIK_TOKEN: ${ENV_AUTHENTIK_TOKEN:?err}
+      #HOMEPAGE_VAR_HOMEASSISTANT_TOKEN: ${ENV_HOMEASSISTANT_TOKEN:?err}
+
+    volumes:
+      # Container specific data mounts
+      - ./data/common/config:/app/config
+      - ./data/common/images:/app/public/images
+      - ./data/common/icons:/app/public/icons
+          
+      # Pass local timezone information to the container
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
+
+      #- /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations, see alternative methods
+
+networks:
+  frontend:

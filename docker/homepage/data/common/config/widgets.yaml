@@ -1,0 +1,38 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+#- resources:
+#    cpu: true
+#    memory: true
+#    disk: /
+
+- logo:    
+    icon: mdi-hexagon-multiple
+    
+- greeting:
+    text_size: xl
+    text: gregrob.net
+
+- search:
+    provider: [google, duckduckgo]
+    #provider: google
+    target: _blank
+
+- datetime:
+    text_size: md
+    locale: au
+    format:
+      hour12: true
+      timeStyle: short
+      #dateStyle: short
+
+- openmeteo:
+    #label: Patterson Lakes
+    latitude: -38.060242
+    longitude: 145.140126
+    timezone: Australia/Melbourne # optional
+    units: metric # or imperial
+    cache: 5 # Time in minutes to cache API responses, to stay within limits
+    format: # optional, Intl.NumberFormat options
+      maximumFractionDigits: 1

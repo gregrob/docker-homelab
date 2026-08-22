@@ -1,0 +1,40 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+# NOTES:
+#   1. Use CNAME references in here.  For example monitoring.mgmt.gregrob.net not monitoring-001.mgmt.gregrob.net
+#   2. Ubiquiti Firewall - If ping is used - remember to supress signatures on the udmp - GPL ICMP PING *NIX
+
+- Monitoring:
+    - Uptime Kuma:
+        href: http://monitoring.mgmt.gregrob.net:3001/
+        icon: uptime-kuma.png
+        ping: monitoring.mgmt.gregrob.net
+        #description: xxx
+
+    - Mesh Central:
+        href: http://monitoring.mgmt.gregrob.net:80/
+        ping: monitoring.mgmt.gregrob.net
+        icon: meshcentral.png
+
+- Download:
+    - Prowlarr:
+        href: http://download.apps.gregrob.net:9696/
+        ping: download.apps.gregrob.net
+        icon: prowlarr.png
+    - qBittorrent:
+        href: http://download.apps.gregrob.net:8080/
+        ping: download.apps.gregrob.net
+        icon: qbittorrent.png
+    - qBittorrent Backup:
+        href: http://download.apps.gregrob.net:8081/
+        ping: download.apps.gregrob.net
+        icon: qbittorrent.png
+
+
+
+- My First Group:
+    - My First Service:
+        href: http://localhost/
+        description: Homepage is awesome
