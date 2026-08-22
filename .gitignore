@@ -48,6 +48,10 @@ docker/gluetun/data/host/qbittorrent-pub/config/*
 !docker/gluetun/data/host/qbittorrent-prv/config/.gitkeep
 !docker/gluetun/data/host/qbittorrent-pub/config/.gitkeep
 
+# homepage host specific
+docker/homepage/data/host/log/*
+!docker/homepage/data/host/log/.gitkeep
+
 # infisical host specific
 docker/infisical/data/host/db-data/*
 docker/infisical/data/host/redis/*

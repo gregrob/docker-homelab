@@ -2,16 +2,15 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/settings/
 
+logpath: /app/log
+
 title: gregrob.net
-#headerStyle: boxed
 
 providers:
   openweathermap: openweathermapapikey
   weatherapi: weatherapiapikey
 
 background: 
-  #image: https://images.unsplash.com/photo-1637825891028-564f672aa42c
-  #image: /images/wp4925260-fiji-desktop-wallpapers.jpg
   image: /images/purple-abstract.jpg
   blur: xl
   brightness: 90

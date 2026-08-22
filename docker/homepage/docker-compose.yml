@@ -36,6 +36,8 @@ services:
       - ./data/common/config:/app/config
       - ./data/common/images:/app/public/images
       - ./data/common/icons:/app/public/icons
+
+      - ./data/host/log:/app/log
           
       # Pass local timezone information to the container
       #- /etc/timezone:/etc/timezone:ro
