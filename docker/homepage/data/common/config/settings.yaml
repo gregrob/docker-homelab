@@ -4,6 +4,8 @@
 
 logpath: /app/log
 
+iconStyle: theme # Makes sure the icons follow dark / light mode
+
 title: gregrob.net
 
 providers:
@@ -18,7 +20,8 @@ background:
 
 layout:
   Monitoring:
-    icon: mdi-pulse-#FFFFFF
+    #icon: mdi-pulse-#FFFFFF # Example - This forces white
+    icon: mdi-pulse
   Download:
-    icon: mdi-download-#FFFFFF
+    icon: mdi-download
   My First Group:
