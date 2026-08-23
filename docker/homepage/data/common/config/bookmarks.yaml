@@ -5,14 +5,21 @@
 - Developer:
     - Github:
         - abbr: GH
-          href: https://github.com/
+          icon: github-light.png
+          href: https://github.com/gregrob
 
-- Social:
-    - Reddit:
-        - abbr: RE
-          href: https://reddit.com/
+- Cloud:
+    - AWS:
+        - abbr: AWS
+          icon: aws.png
+          href: https://aws.amazon.com/
 
-- Entertainment:
-    - YouTube:
-        - abbr: YT
-          href: https://youtube.com/
+    - Cloudflare:
+        - abbr: CF
+          icon: cloudflare.png
+          href: https://www.cloudflare.com/
+
+    - Google Drive:
+        - abbr: GD
+          icon: google-drive.png
+          href: https://drive.google.com/

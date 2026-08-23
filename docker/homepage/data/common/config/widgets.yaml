@@ -16,7 +16,7 @@
 
 - search:
     provider: [google, duckduckgo]
-    #provider: google
+    #provider: google # Example for a single search provider
     target: _blank
 
 - datetime:

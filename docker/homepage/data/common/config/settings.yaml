@@ -19,10 +19,16 @@ background:
   opacity: 60
 
 layout:
+  Infrastructure:
+    icon: mdi-server-network
   Monitoring:
     #icon: mdi-pulse-#FFFFFF # Example - This forces white
     icon: mdi-pulse
-  Download:
+  Portal:
+    icon: mdi-view-dashboard
+  Downloads:
     icon: mdi-download
-  Unsorted:
-    icon: mdi-folder-question
+  3D Printing:
+    icon: mdi-printer-3d
+  AI:
+    icon: mdi-robot

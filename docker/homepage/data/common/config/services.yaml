@@ -6,59 +6,85 @@
 #   1. Use CNAME references in here.  For example monitoring.mgmt.gregrob.net not monitoring-001.mgmt.gregrob.net
 #   2. Ubiquiti Firewall - If ping is used - remember to supress signatures on the udmp - GPL ICMP PING *NIX
 #   3. Icons can be searched at https://github.com/homarr-labs/dashboard-icons
+#
+# CATEGORY CONVENTIONS:
+#   Grouped by function, not by app type, to stay scalable as services are added:
+#     Infrastructure - core plumbing everything else depends on (DNS, future NetBox)
+#     Monitoring     - health/observability tooling
+#     Portal         - this dashboard + its sibling docs/reference tools (Wiki.js, etc.)
+#     Downloads      - acquisition pipeline (rename to "Media" if a media server is ever added)
+#     3D Printing    - printer-adjacent tools
+#     AI             - local inference tooling
+#   New services should slot into an existing category before a new one is created.
+
+- Infrastructure:
+    - DNS Primary:
+        href: http://dns-001.dns.gregrob.net:5380/
+        ping: dns-001.dns.gregrob.net
+        icon: technitium.png
+        description: Priority 150 - load-balanced (IPVS)
+    - DNS Secondary:
+        href: http://dns-002.dns.gregrob.net:5380/
+        ping: dns-002.dns.gregrob.net
+        icon: technitium.png
+        description: Priority 100 - load-balanced (IPVS)
+    - DNS Failsafe:
+        href: http://failsafe.dns.gregrob.net:5380/
+        ping: failsafe-002.dns.gregrob.net
+        icon: technitium.png
+        description: Priority 50 - standby only, not in the load-balancer pool
 
 - Monitoring:
     - Uptime Kuma:
         href: http://monitoring.mgmt.gregrob.net:3001/
-        icon: uptime-kuma.png
         ping: monitoring.mgmt.gregrob.net
-        #description: xxx
-
+        icon: uptime-kuma.png
+        description: Host and service availability checks
     - Mesh Central:
         href: http://monitoring.mgmt.gregrob.net:80/
         ping: monitoring.mgmt.gregrob.net
         icon: meshcentral.png
+        description: AMT/vPro out-of-band management
 
-- Download:
-    - Prowlarr:
-        href: http://download.apps.gregrob.net:9696/
-        ping: download.apps.gregrob.net
-        icon: prowlarr.png
-    - qBittorrent:
-        href: http://download.apps.gregrob.net:8080/
-        ping: download.apps.gregrob.net
-        icon: qbittorrent.png
-    - qBittorrent Backup:
-        href: http://download.apps.gregrob.net:8081/
-        ping: download.apps.gregrob.net
-        icon: qbittorrent.png
-
-- Unsorted:
-    - Open WenUI:
-        href: http://ollama.apps.gregrob.net:3000/
-        ping: ollama.apps.gregrob.net
-        icon: open-webui.png
-    - Technitium DNS Server 1:
-        href: http://dns-001.dns.gregrob.net:5380/
-        ping: dns-001.dns.gregrob.net
-        icon: technitium.png
-    - Technitium DNS Server 2:
-        href: http://dns-002.dns.gregrob.net:5380/
-        ping: dns-002.dns.gregrob.net
-        icon: technitium.png
-    - Technitium DNS Server Failsafe:
-        href: http://failsafe-002.dns.gregrob.net:5380/
-        ping: failsafe-002.dns.gregrob.net
-        icon: technitium.png
-    - Bambuddy:
-        href: http://3dprinter.apps.gregrob.net:8000/
-        ping: 3dprinter.apps.gregrob.net
-        icon: /icons/bambuddy.png
-    - Spoolman:
-        href: http://3dprinter.apps.gregrob.net:7912/
-        ping: 3dprinter.apps.gregrob.net
-        icon: spoolman.png
+- Portal:
     - Homepage:
         href: http://portal.apps.gregrob.net/
         ping: portal.apps.gregrob.net
         icon: homepage.png
+        description: This dashboard
+
+- Downloads:
+    - Prowlarr:
+        href: http://download.apps.gregrob.net:9696/
+        ping: download.apps.gregrob.net
+        icon: prowlarr.png
+        description: Indexer manager for the *arr stack
+    - qBittorrent:
+        href: http://download.apps.gregrob.net:8080/
+        ping: download.apps.gregrob.net
+        icon: qbittorrent.png
+        description: Primary torrent client
+    - qBittorrent Backup:
+        href: http://download.apps.gregrob.net:8081/
+        ping: download.apps.gregrob.net
+        icon: qbittorrent.png
+        description: Secondary torrent client instance
+
+- 3D Printing:
+    - Bambuddy:
+        href: http://3dprinter.apps.gregrob.net:8000/
+        ping: 3dprinter.apps.gregrob.net
+        icon: /icons/bambuddy.png
+        description: Bambu Lab printer monitoring
+    - Spoolman:
+        href: http://3dprinter.apps.gregrob.net:7912/
+        ping: 3dprinter.apps.gregrob.net
+        icon: spoolman.png
+        description: Filament spool tracking
+
+- AI:
+    - Open WebUI:
+        href: http://ollama.apps.gregrob.net:3000/
+        ping: ollama.apps.gregrob.net
+        icon: open-webui.png
+        description: Chat interface for local Ollama models
