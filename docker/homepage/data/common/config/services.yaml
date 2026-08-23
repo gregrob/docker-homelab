@@ -5,6 +5,7 @@
 # NOTES:
 #   1. Use CNAME references in here.  For example monitoring.mgmt.gregrob.net not monitoring-001.mgmt.gregrob.net
 #   2. Ubiquiti Firewall - If ping is used - remember to supress signatures on the udmp - GPL ICMP PING *NIX
+#   3. Icons can be searched at https://github.com/homarr-labs/dashboard-icons
 
 - Monitoring:
     - Uptime Kuma:
@@ -32,9 +33,28 @@
         ping: download.apps.gregrob.net
         icon: qbittorrent.png
 
-
-
-- My First Group:
-    - My First Service:
-        href: http://localhost/
-        description: Homepage is awesome
+- Unsorted:
+    - Open WenUI:
+        href: http://ollama.apps.gregrob.net:3000/
+        ping: ollama.apps.gregrob.net
+        icon: open-webui.png
+    - Technitium DNS Server 1:
+        href: http://dns-001.dns.gregrob.net:5380/
+        ping: dns-001.dns.gregrob.net
+        icon: technitium.png
+    - Technitium DNS Server 2:
+        href: http://dns-002.dns.gregrob.net:5380/
+        ping: dns-002.dns.gregrob.net
+        icon: technitium.png
+    - Technitium DNS Server Failsafe:
+        href: http://failsafe-002.dns.gregrob.net:5380/
+        ping: failsafe-002.dns.gregrob.net
+        icon: technitium.png
+    - Bambuddy:
+        href: http://3dprinter.apps.gregrob.net:8000/
+        ping: 3dprinter.apps.gregrob.net
+        icon: /icons/bambuddy.png
+    - Spoolman:
+        href: http://3dprinter.apps.gregrob.net:7912/
+        ping: 3dprinter.apps.gregrob.net
+        icon: spoolman.png

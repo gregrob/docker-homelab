@@ -24,4 +24,5 @@ layout:
     icon: mdi-pulse
   Download:
     icon: mdi-download
-  My First Group:
+  Unsorted:
+    icon: mdi-folder-question
