@@ -99,3 +99,9 @@ docker/spoolman/data/host/spoolman/*
 # uptime-kuma host specific
 docker/uptime-kuma/data/host/*
 !docker/uptime-kuma/data/host/.gitkeep
+
+# wiki host specific
+docker/wiki/data/host/db-data/*
+docker/wiki/data/host/wiki/content/*
+!docker/wiki/data/host/db-data/.gitkeep
+!docker/wiki/data/host/wiki/content/.gitkeep

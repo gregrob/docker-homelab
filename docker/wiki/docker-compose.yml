@@ -1,0 +1,70 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup Wiki.js
+  #
+  # Wiki.js
+  #   https://github.com/requarks/wiki
+  #   https://hub.docker.com/r/requarks/wiki
+  #
+  # Postgres
+  #   https://hub.docker.com/_/postgres
+  # ---------------------------------------------
+  wiki:
+    image:          ghcr.io/requarks/wiki:2.5.314
+    container_name: wiki
+    restart:        unless-stopped
+    
+    depends_on:
+      - postgres
+    
+    init: true # Runs an init process (tini) as PID 1 to handle process signals and clean up zombie processes
+
+    networks:
+      frontend:
+      backend:
+
+    ports:
+      - "81:3000"
+
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${ENV_POSTGRES_USER:?database username required}
+      DB_PASS: ${ENV_POSTGRES_PASSWORD:?database password required}
+      DB_NAME: wiki
+
+    volumes:
+      - ./data/host/wiki/content:/wiki/data/content
+
+  postgres:
+    image:          docker.io/library/postgres:18.6-alpine3.24
+    container_name: wiki-postgres
+    restart:        unless-stopped
+
+    networks:
+      backend:
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_USER: ${ENV_POSTGRES_USER:?database username required}
+      POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD:?database password required}
+
+    #logging:
+    #  driver: none
+
+    volumes:
+      - ./data/host/db-data:/var/lib/postgresql # no :Z as it is strictly not shared between containers
+
+networks:
+  backend:
+    internal: true
+  frontend:
