@@ -19,6 +19,11 @@ then
 
     echo ""
 
+    echo "The mounted volume /wiki/data/content is owned by node:node inside the container (1000:1000)."
+    echo "Need to make sure the local volume has the same permissions."
+
+    echo ""
+
 else
     echo "FAIL: Please call script with - source ./env.sh"
 

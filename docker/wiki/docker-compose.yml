@@ -9,14 +9,33 @@ services:
   #
   # Postgres
   #   https://hub.docker.com/_/postgres
+  #
+  # Alpine (for permission fixer)
+  #   https://hub.docker.com/_/alpine
   # ---------------------------------------------
+  
+  # 1. The temporary init container to fix /wiki/data/content permissions
+  permissions-fixer:
+    image:          alpine:3.24.1
+    container_name: wiki-permissions-fixer
+    network_mode:   none
+
+    volumes:
+      - ./data/host/wiki/content:/wiki/data/content
+    
+    command: chown 1000:1000 /wiki/data/content # Run the chown (node:node, 1000:1000) command and exit, removed -R for recursive
+
+  # 2. Main wiki and database
   wiki:
     image:          ghcr.io/requarks/wiki:2.5.314
     container_name: wiki
     restart:        unless-stopped
-    
+
     depends_on:
-      - postgres
+      permissions-fixer:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
     
     init: true # Runs an init process (tini) as PID 1 to handle process signals and clean up zombie processes
 
