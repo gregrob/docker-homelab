@@ -32,6 +32,8 @@ then
     echo "sudo chown 1001:root ./data/host/semaphoreui/keys"
     echo "sudo chown 1001:root ./data/host/semaphoreui/tmp"
 
+    echo ""
+
 else
     echo "FAIL: Please call script with - source ./$(basename "${BASH_SOURCE[0]}")"
 
