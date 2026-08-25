@@ -4,38 +4,34 @@ services:
   # Setup semaphoreui
   #
   # semaphore - https://hub.docker.com/r/semaphoreui/semaphore
-  # mysql - https://hub.docker.com/_/mysql
+  # mysql was changed to sqlite for simplicity in this container
+  #
+  # Alpine (for permission fixer)
+  #   https://hub.docker.com/_/alpine
   # ---------------------------------------------
-  
-  mysql:
-    #image:          mysql:8.4.6
-    #image:          mysql:9.4.0
-    image:          mysql:9.6.0
-    container_name: semaphoreui-mysql
-    restart:        unless-stopped
-    
-    networks:
-      backend:
-
-    environment:
-      TZ: ${ENV_TZ:?err}
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      MYSQL_DATABASE: semaphore_db
-      MYSQL_USER: semaphore_user
-      MYSQL_PASSWORD: ${ENV_SEMAPHOREUI_MYSQL_PASSWORD:?err}
-
+  permissions-fixer:
+    image: alpine:3.24.1
+    container_name: semaphoreui-permissions-fixer
+    network_mode: none
     volumes:
-      - ./data/host/mysql:/var/lib/mysql
+      - ./data/host/semaphoreui/config:/semaphoreui/config
+      - ./data/host/semaphoreui/data:/semaphoreui/data
+      - ./data/host/semaphoreui/keys:/semaphoreui/keys
+      - ./data/host/semaphoreui/tmp:/semaphoreui/tmp
+    # Run the chown (1001:root) command on all 4 directories and exit (no -R)
+    command: chown 1001:root /semaphoreui/config /semaphoreui/data /semaphoreui/keys /semaphoreui/tmp
 
   semaphoreui:
-    #image:          semaphoreui/semaphore:v2.15.4
-    image:          semaphoreui/semaphore:v2.17.28
+    image:          semaphoreui/semaphore:v2.19.8
     container_name: semaphoreui
     restart:        unless-stopped
 
+    depends_on:
+      permissions-fixer:
+        condition: service_completed_successfully
+
     networks:
-      frontend:
-      backend: 
+      frontend: 
 
     ports:
       - target: 3000
@@ -43,26 +39,16 @@ services:
         protocol: tcp
 
     environment:
-      SEMAPHORE_DB_USER: semaphore_user
-      SEMAPHORE_DB_PASS: ${ENV_SEMAPHOREUI_MYSQL_PASSWORD:?err}
-      SEMAPHORE_DB_HOST: mysql # for postgres, change to: postgres
-      SEMAPHORE_DB_PORT: 3306 # change to 5432 for postgres
-      SEMAPHORE_DB_DIALECT: mysql
-      SEMAPHORE_DB: semaphore_db
+      SEMAPHORE_DB_DIALECT: sqlite 
       SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
       SEMAPHORE_ADMIN_PASSWORD: ${ENV_SEMAPHOREUI_ADMIN_PASSWORD:?err}
       SEMAPHORE_ADMIN_NAME: admin
       SEMAPHORE_ADMIN_EMAIL: admin@localhost
       SEMAPHORE_ADMIN: admin
-      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${ENV_SEMAPHOREUI_ACCESS_KEY_ENCRYPTION:?err}
       ANSIBLE_HOST_KEY_CHECKING: false  # (optional) change to true if you want to enable host key checking
       SEMAPHORE_SCHEDULE_TIMEZONE: ${ENV_TZ:?err} # Set the timezone for scheduling tasks
 
     volumes:
-      # Pass local timezone information to the container
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-
       # semaphore specific volumes
       - ./data/host/semaphoreui/data:/var/lib/semaphore:rw
       - ./data/host/semaphoreui/config:/etc/semaphore:rw
@@ -73,11 +59,6 @@ services:
 
       # ansible keys
       - ./data/host/semaphoreui/keys:/srv/ansible-keys:ro
-
-    depends_on:
-      - mysql # for postgres, change to: postgres
  
 networks:
   frontend:
-  backend:
-    internal: true
