@@ -33,6 +33,11 @@
         ping: failsafe-002.dns.gregrob.net
         icon: technitium.png
         description: Priority 50 - standby only, not in the load-balancer pool
+    - Semaphore UI:
+        href: http://ansible.mgmt.gregrob.net:3000/
+        ping: ansible.mgmt.gregrob.net
+        icon: semaphore.png
+        description: Web UI for Ansible playbooks and task automation
 
 - Monitoring:
     - Uptime Kuma:
