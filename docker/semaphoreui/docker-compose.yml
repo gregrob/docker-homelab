@@ -10,9 +10,9 @@ services:
   #   https://hub.docker.com/_/alpine
   # ---------------------------------------------
   permissions-fixer:
-    image: alpine:3.24.1
+    image:          alpine:3.24.1
     container_name: semaphoreui-permissions-fixer
-    network_mode: none
+    network_mode:   none
     volumes:
       - ./data/host/semaphoreui/config:/semaphoreui/config
       - ./data/host/semaphoreui/data:/semaphoreui/data
