@@ -50,7 +50,9 @@ docker/gluetun/data/host/qbittorrent-pub/config/*
 
 # homepage host specific
 docker/homepage/data/host/log/*
+docker/homepage/data/host/example-config/*
 !docker/homepage/data/host/log/.gitkeep
+!docker/homepage/data/host/example-config/.gitkeep
 
 # infisical host specific
 docker/infisical/data/host/db-data/*
