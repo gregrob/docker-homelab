@@ -2,6 +2,8 @@
 
 # !!! NOTE !!!
 # Check these are addressed
+# v3.41.3 Should address port forward failures, keep note here 
+# until confirmed it is solved.
 # https://github.com/qdm12/gluetun/issues/3178
 # https://github.com/qdm12/gluetun/issues/3257
 
@@ -16,7 +18,8 @@
 # ------------------------------------------------
 x-gluetun-common: &gluetun-common
   
-  image:   qmcgaw/gluetun:v3.41.1
+  #image:   qmcgaw/gluetun:v3.41.1
+  image:   qmcgaw/gluetun:v3.41.3 # Should address port forward failures
   
   restart: unless-stopped
   
@@ -50,7 +53,8 @@ x-gluetun-common: &gluetun-common
 # https://hub.docker.com/r/linuxserver/qbittorrent
 # ------------------------------------------------
 x-qbittorrent-common: &qbittorrent-common
-  image:   linuxserver/qbittorrent:5.1.4
+  #image:   linuxserver/qbittorrent:5.1.4
+  image:   linuxserver/qbittorrent:5.2.3
   
   restart: unless-stopped
   
@@ -191,7 +195,8 @@ services:
   prowlarr:
     <<: *vpn-healthcheck
 
-    image: lscr.io/linuxserver/prowlarr:2.3.5.5327-ls141
+    #image: lscr.io/linuxserver/prowlarr:2.3.5.5327-ls141
+    image: lscr.io/linuxserver/prowlarr:2.5.2.5491-ls156
     container_name: prowlarr
     restart: unless-stopped
 
@@ -220,7 +225,8 @@ services:
   flaresolverr:
     <<: *vpn-healthcheck
 
-    image:          ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    #image:          ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    image:          ghcr.io/flaresolverr/flaresolverr:v3.5.0
     container_name: flaresolverr
     restart:        unless-stopped
 
