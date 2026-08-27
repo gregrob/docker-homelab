@@ -32,3 +32,6 @@ layout:
     icon: mdi-printer-3d
   AI:
     icon: mdi-robot
+  Media & Video:
+    icon: mdi-filmstrip
+  

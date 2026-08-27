@@ -98,3 +98,15 @@
         ping: ollama.apps.gregrob.net
         icon: open-webui.png
         description: Chat interface for local Ollama models
+
+- Media & Video:
+    - Frigate:
+        href: https://frigate.home.gregrob.net:8971/
+        ping: frigate.home.gregrob.net
+        icon: frigate.png
+        description: NVR and object detection
+
+    #- Jellyfin:
+    #    icon: jellyfin.png
+    #    href: http://jellyfin.apps.gregrob.net
+    #    description: Media server and streaming
