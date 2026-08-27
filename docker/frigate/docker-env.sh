@@ -20,10 +20,10 @@ then
     export ENV_FRIGATE_HOST_MQTT_PASSWORD=$(get_secret "apps/frigate/frigate-mqtt-password.secret.age")
     echo "Exported ENV_FRIGATE_HOST_MQTT_PASSWORD=$ENV_FRIGATE_HOST_MQTT_PASSWORD"
 
-    export ENV_HOST_IP_FRIGATE_BACKEND=$(dig +short frigate-001.containers.max.lan | head -n1)
+    export ENV_HOST_IP_FRIGATE_BACKEND=$(dig +short frigate-002.apps.gregrob.net | head -n1)
     echo "Exported ENV_HOST_IP_FRIGATE_BACKEND=$ENV_HOST_IP_FRIGATE_BACKEND"
 
-    export ENV_HOST_IP_FRIGATE_FRONTEND=$(dig +short frigate-001.home.max.lan | head -n1)
+    export ENV_HOST_IP_FRIGATE_FRONTEND=$(dig +short frigate-002.home.gregrob.net | head -n1)
     echo "Exported ENV_HOST_IP_FRIGATE_FRONTEND=$ENV_HOST_IP_FRIGATE_FRONTEND"
 
     echo ""
