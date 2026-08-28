@@ -33,15 +33,20 @@ services:
     #  - '44' # group id of /dev/dri/card1
     #  - '104' # group id of /dev/dri/renderD128
    
-    #network_mode:   bridge  
+    networks:
+      - frigate-net
+
     ports:
-      - "8971:8971" # Authenticated UI and API access without TLS. Reverse proxies should use this port
-      # As the following port is unauthenticated, only expose to backend
-      - "${ENV_HOST_IP_FRIGATE_BACKEND:?backend ip required}:5000:5000" # Internal unauthenticated access - Expose carefully - Exposed for Home Assistant
-      - "8554:8554" # RTSP feeds
+      # Authenticated UI (Bound strictly to eth1 / ui interface. Authenticated UI and API access without TLS. Reverse proxies should use this port.)
+      - "${ENV_HOST_IP_FRIGATE_UI:?ui ip required}:8971:8971"
+
+      # Unauthenticated API & UI Relay (Bound strictly to eth0 / api interface)
+      - "${ENV_HOST_IP_FRIGATE_API:?api ip required}:5000:5000"
+
+      # RTSP & WebRTC Feeds (Exposed on ALL interfaces)
+      - "8554:8554"     # RTSP feeds
       - "8555:8555/tcp" # WebRTC over tcp
       - "8555:8555/udp" # WebRTC over udp
-
 
     # Update for your cameras based on calculation below (default was 64mb)
     # (width * height * 1.5 * 9 + 270480)/1048576 = <shm size in mb>
@@ -89,4 +94,6 @@ services:
       FRIGATE_MQTT_PASSWORD: ${ENV_FRIGATE_HOST_MQTT_PASSWORD:?mqtt user password required}
 
 networks:
-  frontend:
+  frigate-net:
+    name: frigate-net
+    driver: bridge
