@@ -8,7 +8,8 @@ services:
   docker-volume-backup:
     #image:          offen/docker-volume-backup:v2.43.0
     #image:          offen/docker-volume-backup:v2.43.4
-    image:          offen/docker-volume-backup:v2.47.0
+    #image:          offen/docker-volume-backup:v2.47.0
+    image:          offen/docker-volume-backup:v2.48.2
     container_name: docker-volume-backup
     restart:        unless-stopped
 
@@ -16,7 +17,7 @@ services:
       - no-new-privileges:true
 
     networks:
-      frontend:
+      - docker-volume-backup-net
 
     environment:
       # Greedy exclusion of the folder /backup/my-app-backup/backup
@@ -85,4 +86,6 @@ services:
       - docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>${ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS:?number of backups to keep required}" | xargs -t -I {} rm -rf /archive/{}'
 
 networks:
-  frontend:
+  docker-volume-backup-net:
+    name: docker-volume-backup-net
+    driver: bridge
