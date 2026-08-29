@@ -22,7 +22,8 @@ services:
     command: chown 1001:root /semaphoreui/config /semaphoreui/data /semaphoreui/keys /semaphoreui/tmp
 
   semaphoreui:
-    image:          semaphoreui/semaphore:v2.19.8
+    #image:          semaphoreui/semaphore:v2.19.8
+    image:          semaphoreui/semaphore:v2.19.11
     container_name: semaphoreui
     restart:        unless-stopped
 
@@ -31,7 +32,7 @@ services:
         condition: service_completed_successfully
 
     networks:
-      frontend: 
+      - semaphoreui-net 
 
     ports:
       - target: 3000
@@ -61,4 +62,6 @@ services:
       - ./data/host/semaphoreui/keys:/srv/ansible-keys:ro
  
 networks:
-  frontend:
+  semaphoreui-net:
+    name: semaphoreui-net
+    driver: bridge
