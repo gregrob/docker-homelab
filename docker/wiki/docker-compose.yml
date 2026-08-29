@@ -40,8 +40,8 @@ services:
     init: true # Runs an init process (tini) as PID 1 to handle process signals and clean up zombie processes
 
     networks:
-      frontend:
-      backend:
+      - wiki-net
+      - wiki-db-net
 
     ports:
       - "81:3000"
@@ -63,7 +63,7 @@ services:
     restart:        unless-stopped
 
     networks:
-      backend:
+      - wiki-db-net
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
@@ -84,6 +84,10 @@ services:
       - ./data/host/db-data:/var/lib/postgresql # no :Z as it is strictly not shared between containers
 
 networks:
-  backend:
+  wiki-net:
+    name: wiki-net
+    driver: bridge
+  wiki-db-net:
+    name: wiki-db-net
+    driver: bridge
     internal: true
-  frontend:
