@@ -15,7 +15,7 @@ services:
     restart:        unless-stopped
 
     networks:
-      - frontend
+      - spoolman-net
 
     ports:
       - "7912:8000"
@@ -27,4 +27,6 @@ services:
       - ./data/host/spoolman:/home/app/.local/share/spoolman
 
 networks:
-  frontend:
+  spoolman-net:
+    name: spoolman-net
+    driver: bridge
