@@ -21,7 +21,7 @@ services:
       retries: 3
 
     networks:
-      - frontend
+      - meshcentral-net
       
     ports:
       - 443:443
@@ -41,4 +41,7 @@ services:
       - ./data/host/web:/opt/meshcentral/meshcentral-web
 
 networks:
-  frontend:
+  meshcentral-net:
+    name: meshcentral-net
+    driver: bridge
+
