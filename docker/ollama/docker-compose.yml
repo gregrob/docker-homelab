@@ -7,12 +7,13 @@ services:
   # https://hub.docker.com/r/ollama/ollama
   # ----------------------------------------
   ollama:
-    image:          ollama/ollama:0.30.8
+    #image:          ollama/ollama:0.30.8
+    image:          ollama/ollama:0.33.2
     container_name: ollama
     restart:        unless-stopped
        
     networks:
-      frontend:
+      - ollama-net
 
     environment:
       # --------------
@@ -62,12 +63,13 @@ services:
   # https://github.com/open-webui/open-webui
   # ----------------------------------------
   open-webui:
-    image:          ghcr.io/open-webui/open-webui:0.9.6
+    #image:          ghcr.io/open-webui/open-webui:0.9.6
+    image:          ghcr.io/open-webui/open-webui:0.11.1
     container_name: open-webui
     restart:        unless-stopped
 
     networks:
-      frontend:
+      - ollama-net
 
     depends_on:
       - ollama
@@ -99,4 +101,6 @@ services:
       - "3000:8080"
 
 networks:
-  frontend:
+  ollama-net:
+    name: ollama-net
+    driver: bridge
