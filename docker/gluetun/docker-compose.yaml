@@ -98,7 +98,7 @@ services:
     container_name: gluetun-001
 
     networks:
-      frontend:
+      - gluetun-net
 
     ports:
       - 8888:8888/tcp # HTTP proxy
@@ -125,7 +125,7 @@ services:
     container_name: gluetun-002
 
     networks:
-      frontend:
+      - gluetun-net
 
     ports:
       - 8889:8888/tcp # HTTP proxy
@@ -237,6 +237,9 @@ services:
         condition: service_healthy
         restart: true
 
+    volumes:
+      - ./data/host/flaresolver/config:/config
+
     environment:
       TZ: ${ENV_TZ:?err}
 
@@ -251,7 +254,7 @@ services:
     restart:        unless-stopped
 
     networks:
-      frontend:
+      - gluetun-net
     
     environment:
       AUTOHEAL_CONTAINER_LABEL: autoheal
@@ -269,4 +272,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
-  frontend:
+  gluetun-net:
+    name: gluetun-net
+    driver: bridge
