@@ -22,7 +22,15 @@ x-gluetun-common: &gluetun-common
   image:   qmcgaw/gluetun:v3.41.3 # Should address port forward failures
   
   restart: unless-stopped
-  
+
+  # start_period gives Gluetun 90 seconds to figure itself out
+  # before Docker starts counting failures against the retries limit.
+  healthcheck:
+    start_period: 90s
+    interval: 10s
+    retries: 5
+    timeout: 5s
+
   cap_add:
     - NET_ADMIN
   
@@ -117,7 +125,27 @@ services:
       <<: *gluetun-common-env
       WIREGUARD_PRIVATE_KEY:            ${ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_001:?err}
       
-      VPN_PORT_FORWARDING_UP_COMMAND:   /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PUB}/api/v2/app/setPreferences'
+      # --------------------------------------------------------------------------------
+      # Dynamic Port Forwarding Configuration
+      #
+      # Gluetun runs these commands when it successfully negotiates a port (UP) 
+      # or loses it (DOWN). They send an API payload to qBittorrent's WebUI to 
+      # update the listening port and bind to the VPN interface automatically.
+      # 
+      # - {{PORT}} and {{VPN_INTERFACE}} are placeholders dynamically filled by Gluetun.
+      # - The UP command includes '--tries=30 --waitretry=2' because qBittorrent 
+      #   starts AFTER Gluetun. This forces wget to retry for up to 60 seconds, 
+      #   waiting for the qBittorrent WebUI to come online and accept the API call.
+      # - The DOWN command sets the port to 0 and interface to local loopback ('lo') 
+      #   as a killswitch to prevent leaks if the forwarded port is lost.
+      #
+      # NOTE ON LOGS: You will see an "ERROR" in Gluetun logs that looks like:
+      # "ERROR [port forwarding] ... URL:http://127.0.0.1:8080/... [0/0] -> "-" [1]"
+      # This is a FALSE POSITIVE. `wget -nv` prints its success summary to stderr, 
+      # which Gluetun assumes is a script failure. We don't use `-q` (quiet) to hide 
+      # this, because that would also hide genuine API connection failures.      
+      # --------------------------------------------------------------------------------
+      VPN_PORT_FORWARDING_UP_COMMAND:   /bin/sh -c 'wget -O- -nv --retry-connrefused --tries=30 --waitretry=2 --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PUB}/api/v2/app/setPreferences'
       VPN_PORT_FORWARDING_DOWN_COMMAND: /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":0,\"current_network_interface\":\"lo\"}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PUB}/api/v2/app/setPreferences'
 
   gluetun-002:
@@ -142,7 +170,27 @@ services:
       <<: *gluetun-common-env
       WIREGUARD_PRIVATE_KEY:            ${ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_002:?err}
       
-      VPN_PORT_FORWARDING_UP_COMMAND:   /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PRV}/api/v2/app/setPreferences'
+      # --------------------------------------------------------------------------------
+      # Dynamic Port Forwarding Configuration
+      #
+      # Gluetun runs these commands when it successfully negotiates a port (UP) 
+      # or loses it (DOWN). They send an API payload to qBittorrent's WebUI to 
+      # update the listening port and bind to the VPN interface automatically.
+      # 
+      # - {{PORT}} and {{VPN_INTERFACE}} are placeholders dynamically filled by Gluetun.
+      # - The UP command includes '--tries=30 --waitretry=2' because qBittorrent 
+      #   starts AFTER Gluetun. This forces wget to retry for up to 60 seconds, 
+      #   waiting for the qBittorrent WebUI to come online and accept the API call.
+      # - The DOWN command sets the port to 0 and interface to local loopback ('lo') 
+      #   as a killswitch to prevent leaks if the forwarded port is lost.
+      #
+      # NOTE ON LOGS: You will see an "ERROR" in Gluetun logs that looks like:
+      # "ERROR [port forwarding] ... URL:http://127.0.0.1:8080/... [0/0] -> "-" [1]"
+      # This is a FALSE POSITIVE. `wget -nv` prints its success summary to stderr, 
+      # which Gluetun assumes is a script failure. We don't use `-q` (quiet) to hide 
+      # this, because that would also hide genuine API connection failures.
+      # --------------------------------------------------------------------------------
+      VPN_PORT_FORWARDING_UP_COMMAND:   /bin/sh -c 'wget -O- -nv --retry-connrefused --tries=30 --waitretry=2 --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PRV}/api/v2/app/setPreferences'
       VPN_PORT_FORWARDING_DOWN_COMMAND: /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":0,\"current_network_interface\":\"lo\"}" http://127.0.0.1:${ENV_QBITTORRENT_UI_PORT_PRV}/api/v2/app/setPreferences'
 
   # ------------------------------------------------
@@ -263,10 +311,10 @@ services:
       # 10s is a balance between fast recovery and not hammering the Docker API.
       AUTOHEAL_INTERVAL:        10
 
-      # How long autoheal waits before it starts monitoring after stack startup (seconds).
-      # 60s gives the stack time to initialise before autoheal starts acting, slowing
-      # retry cycles during an extended outage.
-      AUTOHEAL_START_PERIOD: 60
+      # Grace period (in seconds) before Autoheal starts monitoring the stack.
+      # This MUST match Gluetun's 90s healthcheck 'start_period' to prevent 
+      # Autoheal from forcefully restarting containers that are still booting up.
+      AUTOHEAL_START_PERIOD: 90
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
