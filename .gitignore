@@ -97,6 +97,10 @@ docker/semaphoreui/data/host/semaphoreui/tmp/*
 !docker/semaphoreui/data/host/semaphoreui/keys/.gitkeep
 !docker/semaphoreui/data/host/semaphoreui/tmp/.gitkeep
 
+# speedtest-tracker host specific
+docker/speedtest-tracker/data/host/config/*
+!docker/speedtest-tracker/data/host/config/.gitkeep
+
 # spoolman host specific
 docker/spoolman/data/host/spoolman/*
 !docker/spoolman/data/host/spoolman/.gitkeep
