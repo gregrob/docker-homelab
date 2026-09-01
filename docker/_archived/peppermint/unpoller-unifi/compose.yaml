@@ -1,0 +1,15 @@
+---
+# Pull the latest version at - https://github.com/timothystewart6/unpoller-unifi
+#
+# NOTE: the version on GitHub at time of writing didn't handle UID and GID well.
+# Had to hard code them in the compose:
+#   user: 1001:1001
+# instead of:
+#   user: "${UID:-1000}:${GID:-1000}"
+#
+# NOTE: this doesn't work even with UID/GID set in prometheus and grafana .env —
+# env_file only sets vars *inside* the container at runtime; compose
+# variable interpolation (the ${UID} in `user:`) only reads the shell
+# env or a top-level .env next to compose.yaml, resolved before env_file
+# is ever applied. Hardcoded to 1001:1001 instead.
+
