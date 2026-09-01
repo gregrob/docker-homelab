@@ -50,6 +50,11 @@
         ping: monitoring.mgmt.gregrob.net
         icon: meshcentral.png
         description: AMT/vPro out-of-band management
+    - Speedtest Tracker:
+        href: http://tools.mgmt.gregrob.net:8080/
+        ping: tools.mgmt.gregrob.net
+        icon: speedtest-tracker.png
+        description: Internet speed monitoring
 
 - Portal:
     - Homepage:
