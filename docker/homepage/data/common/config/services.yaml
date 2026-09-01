@@ -105,8 +105,8 @@
         ping: frigate.home.gregrob.net
         icon: frigate.png
         description: NVR and object detection
-
-    #- Jellyfin:
-    #    icon: jellyfin.png
-    #    href: http://jellyfin.apps.gregrob.net
-    #    description: Media server and streaming
+    - Jellyfin:
+        icon: jellyfin.png
+        ping: jellyfin.home.gregrob.net
+        href: http://jellyfin.home.gregrob.net:8096/
+        description: Media server and streaming
