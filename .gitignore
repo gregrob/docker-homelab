@@ -6,6 +6,9 @@
 # Ignore temp folder
 temp/
 
+# Ignore work in progress folder
+_wip/
+
 # bambuddy host specific
 docker/bambuddy/data/host/data/*
 docker/bambuddy/data/host/logs/*
