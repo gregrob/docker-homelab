@@ -23,6 +23,15 @@ then
     export ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD=$(get_secret "apps/speedtest-tracker/speedtest-tracker-admin-password.secret.age")
     echo "Exported ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD=$ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD"
 
+    export ENV_SPEEDTEST_TRACKER_MAIL_USERNAME=$(get_secret "apps/speedtest-tracker/speedtest-tracker-mail-username.secret.age")
+    echo "Exported ENV_SPEEDTEST_TRACKER_MAIL_USERNAME=$ENV_SPEEDTEST_TRACKER_MAIL_USERNAME"
+
+    export ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD=$(get_secret "apps/speedtest-tracker/speedtest-tracker-mail-password.secret.age")
+    echo "Exported ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD=$ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD"
+
+    export ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS=$(get_secret "apps/speedtest-tracker/speedtest-tracker-mail-from-address.secret.age")
+    echo "Exported ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS=$ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS"
+
     echo ""
 
 else

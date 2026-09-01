@@ -28,10 +28,18 @@ services:
       ADMIN_PASSWORD: ${ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD:?err}  # NOTE: Only effective during initial setup.
 
       APP_KEY: ${ENV_SPEEDTEST_TRACKER_APP_KEY:?err}
-      APP_URL: http://tools-001.mgmt.gregrob.net:8080
+      APP_URL: http://tools.mgmt.gregrob.net:8080
       DB_CONNECTION: sqlite
       SPEEDTEST_SCHEDULE: 15 * * * * # Run at 15min past every hour
       #SPEEDTEST_SERVERS: 14670, 12491 # Aussie Broadband, Telstra - generate with docker run -it --rm --entrypoint /bin/bash lscr.io/linuxserver/speedtest-tracker:latest list-servers
+
+      MAIL_MAILER: smtp
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 465
+      MAIL_USERNAME: ${ENV_SPEEDTEST_TRACKER_MAIL_USERNAME:?err}
+      MAIL_PASSWORD: ${ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD:?err}
+      MAIL_FROM_ADDRESS: ${ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS:?err}
+      MAIL_FROM_NAME: "Speedtest Tracker"
 
     volumes:
       - ./data/host/config:/config
