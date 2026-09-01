@@ -1,0 +1,45 @@
+---
+services:
+  # ---------------------------------------------
+  # Setup Peppermint
+  #
+  # peppermint - https://hub.docker.com/r/pepperlabs/peppermint
+  # postgress - https://hub.docker.com/_/postgres
+  #
+  # The default login credentials are
+  #   admin@admin.com
+  #   1234
+  #
+  # NOTE: repo archived, never used, container dropped 1 Sept 2026
+  #
+  # ---------------------------------------------
+  
+  peppermint_postgres:
+    container_name: peppermint_postgres
+    image: postgres:18
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql      
+    environment:
+      POSTGRES_USER: peppermint
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: peppermint
+ 
+  peppermint:
+    container_name: peppermint
+    image: pepperlabs/peppermint:latest
+    ports:
+      - 3000:3000
+      - 5003:5003
+    restart: unless-stopped
+    depends_on:
+      - peppermint_postgres
+    environment:
+      DB_USERNAME: "peppermint"
+      DB_PASSWORD: "1234"
+      DB_HOST: "peppermint_postgres"
+      SECRET: 'peppermint4life'
+ 
+volumes:
+  pgdata:
+ 
