@@ -324,7 +324,7 @@ services:
 
     volumes:
       - ./data/host/sonarr/config:/config
-      - /mnt/media/tv:/tv:ro
+      - /mnt/media/tv:/tv
       - *downloads-pub-mount
 
     environment:
