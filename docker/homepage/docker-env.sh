@@ -17,6 +17,9 @@ then
     export ENV_HOMEPAGE_VAR_JELLYFIN_KEY=$(get_secret "apps/homepage/homepage-jellyfin-key.secret.age")
     echo "Exported ENV_HOMEPAGE_VAR_JELLYFIN_KEY=$ENV_HOMEPAGE_VAR_JELLYFIN_KEY"
 
+    export ENV_HOMEPAGE_VAR_SONARR_KEY=$(get_secret "apps/homepage/homepage-sonarr-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_SONARR_KEY=$ENV_HOMEPAGE_VAR_SONARR_KEY"
+
     echo ""
 
 else

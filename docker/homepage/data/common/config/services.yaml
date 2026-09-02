@@ -94,6 +94,18 @@
         statusStyle: "dot"
 
 - Downloads:
+    - Sonarr:
+        icon: sonarr.png
+        href: &sonarr_url http://download.apps.gregrob.net:8989/
+        description: TV series tracking and management
+        siteMonitor: *sonarr_url
+        statusStyle: "dot"
+        widget:
+            type: sonarr
+            url: *sonarr_url
+            key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+            enableQueue: false
+
     - Prowlarr:
         icon: prowlarr.png
         href: &prowlarr_url http://download.apps.gregrob.net:9696/
