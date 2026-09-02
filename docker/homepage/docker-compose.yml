@@ -28,9 +28,9 @@ services:
       # If using port 80, omitted port
       # HOMEPAGE_ALLOWED_HOSTS: ${ENV_LOCALIP:?err},homepage.gregrob.net,portal.apps.gregrob.net,portal-001.apps.gregrob.net
 
-      # Examples for connecting keys and tokens - also refer https://gethomepage.dev/installation/docker/
-      #HOMEPAGE_VAR_AUTHENTIK_TOKEN: ${ENV_AUTHENTIK_TOKEN:?err}
-      #HOMEPAGE_VAR_HOMEASSISTANT_TOKEN: ${ENV_HOMEASSISTANT_TOKEN:?err}
+      # Cnnecting keys and tokens - also refer https://gethomepage.dev/installation/docker/
+      HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY: ${ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY:?err}
+      HOMEPAGE_VAR_JELLYFIN_KEY: ${ENV_HOMEPAGE_VAR_JELLYFIN_KEY:?err}
 
     volumes:
       # Container specific data mounts

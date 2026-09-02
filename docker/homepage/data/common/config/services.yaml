@@ -45,17 +45,27 @@
         ping: monitoring.mgmt.gregrob.net
         icon: uptime-kuma.png
         description: Host and service availability checks
-    - Mesh Central:
-        href: http://monitoring.mgmt.gregrob.net:80/
-        ping: monitoring.mgmt.gregrob.net
-        icon: meshcentral.png
-        description: AMT/vPro out-of-band management
+        widget:
+            type: uptimekuma
+            url: http://monitoring.mgmt.gregrob.net:3001/
+            slug: all-servers
     - Speedtest Tracker:
         href: http://tools.mgmt.gregrob.net:8080/
         ping: tools.mgmt.gregrob.net
         icon: speedtest-tracker.png
         description: Internet speed monitoring
-
+        widget:
+            type: speedtest
+            url: http://tools.mgmt.gregrob.net:8080/
+            version: 2
+            key: {{HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY}}
+            bitratePrecision: 0
+    - Mesh Central:
+        href: http://monitoring.mgmt.gregrob.net:80/
+        ping: monitoring.mgmt.gregrob.net
+        icon: meshcentral.png
+        description: AMT/vPro out-of-band management
+        
 - Portal:
     - Homepage:
         href: http://portal.apps.gregrob.net/
@@ -105,13 +115,25 @@
         description: Chat interface for local Ollama models
 
 - Media & Video:
-    - Frigate:
-        href: https://frigate.home.gregrob.net:8971/
-        ping: frigate.home.gregrob.net
-        icon: frigate.png
-        description: NVR and object detection
     - Jellyfin:
         icon: jellyfin.png
         ping: jellyfin.home.gregrob.net
         href: http://jellyfin.home.gregrob.net:8096/
         description: Media server and streaming
+        widget:
+            type: jellyfin
+            url: http://jellyfin.home.gregrob.net:8096/
+            key: {{HOMEPAGE_VAR_JELLYFIN_KEY}}
+            version: 2
+            enableBlocks: true
+            fields: ["movies", "series", "episodes"]
+            enableNowPlaying: true
+            enableUser: true
+            enableMediaControl: true
+            showEpisodeNumber: true
+            expandOneStreamToTwoRows: false
+    - Frigate:
+        href: https://frigate.home.gregrob.net:8971/
+        ping: frigate.home.gregrob.net
+        icon: frigate.png
+        description: NVR and object detection

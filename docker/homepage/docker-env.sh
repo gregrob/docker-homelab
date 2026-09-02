@@ -11,8 +11,11 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    #export EXAMPLE="example var"
-    #echo "Exported EXAMPLE=$EXAMPLE"
+    export ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY=$(get_secret "apps/homepage/homepage-speedtest-tracker-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY=$ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY"
+
+    export ENV_HOMEPAGE_VAR_JELLYFIN_KEY=$(get_secret "apps/homepage/homepage-jellyfin-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_JELLYFIN_KEY=$ENV_HOMEPAGE_VAR_JELLYFIN_KEY"
 
     echo ""
 
