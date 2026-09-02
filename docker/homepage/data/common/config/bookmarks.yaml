@@ -2,6 +2,12 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/bookmarks
 
+- Utilities:
+  - BOM Radar:
+      - abbr: BR
+        icon: /icons/cloudy.png
+        href: https://reg.bom.gov.au/products/IDR023.loop.shtml#skip
+
 - Developer:
     - Github:
         - abbr: GH
