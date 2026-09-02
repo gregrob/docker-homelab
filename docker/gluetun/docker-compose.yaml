@@ -95,7 +95,17 @@ x-vpn-healthcheck: &vpn-healthcheck
   labels:
     autoheal: "true"
     
-
+# ------------------------------------------------
+# YAML Anchors: Shared downloads mounts (pub + priv)
+#
+# Sonarr (or any other app) needs visibility into a qBittorrent
+# instance's downloads folder to detect completed grabs and import
+# them into the library. Host and container paths are identical in
+# both cases, so each whole line is reused rather than
+# duplicated across services.
+# ------------------------------------------------
+x-downloads-pub-mount: &downloads-pub-mount /mnt/downloads/qbittorrent-pub:/downloads
+x-downloads-prv-mount: &downloads-prv-mount /mnt/downloads/qbittorrent-prv:/downloads
 
 services:
   # ------------------------------------------------
@@ -210,7 +220,7 @@ services:
 
     volumes:
       - ./data/host/qbittorrent-pub/config:/config
-      - /mnt/downloads/qbittorrent-pub:/downloads
+      - *downloads-pub-mount
       
     environment:
       <<: *qbittorrent-common-env     
@@ -229,7 +239,7 @@ services:
 
     volumes:
       - ./data/host/qbittorrent-prv/config:/config
-      - /mnt/downloads/qbittorrent-prv:/downloads
+      - *downloads-prv-mount
       
     environment:
       <<: *qbittorrent-common-env     
@@ -314,8 +324,8 @@ services:
 
     volumes:
       - ./data/host/sonarr/config:/config
-      - /mnt/media/tv:/tv:ro #optional
-      #- /path/to/downloadclient-downloads:/downloads #optional
+      - /mnt/media/tv:/tv:ro
+      - *downloads-pub-mount
 
     environment:
       PUID: ${ENV_DOCKER_UID:?err}
