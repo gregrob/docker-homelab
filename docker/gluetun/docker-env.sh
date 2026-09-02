@@ -26,6 +26,9 @@ then
     export ENV_PROWLARR_PORT=9696
     echo "Exported ENV_PROWLARR_PORT=$ENV_PROWLARR_PORT"
 
+    export ENV_SONARR_PORT=8989
+    echo "Exported ENV_SONARR_PORT=$ENV_SONARR_PORT"
+
     echo ""
 
     echo "To test that our VPN is correctly routing our QBittorrent traffic, we can download a test torrent and check our IP."
