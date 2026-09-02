@@ -31,6 +31,7 @@ services:
       APP_URL: http://tools.mgmt.gregrob.net:8080
       DB_CONNECTION: sqlite
       SPEEDTEST_SCHEDULE: 15 * * * * # Run at 15min past every hour
+      SPEEDTEST_SERVERS: 12491 # Lock server down to Telstra for a more comparable history
       #SPEEDTEST_SERVERS: 14670, 12491 # Aussie Broadband, Telstra - generate with docker run -it --rm --entrypoint /bin/bash lscr.io/linuxserver/speedtest-tracker:latest list-servers
 
       MAIL_MAILER: smtp
