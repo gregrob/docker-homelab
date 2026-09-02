@@ -31,6 +31,7 @@ services:
       # Cnnecting keys and tokens - also refer https://gethomepage.dev/installation/docker/
       HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY: ${ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY:?err}
       HOMEPAGE_VAR_JELLYFIN_KEY: ${ENV_HOMEPAGE_VAR_JELLYFIN_KEY:?err}
+      HOMEPAGE_VAR_SONARR_KEY: ${ENV_HOMEPAGE_VAR_SONARR_KEY:?err}
 
     volumes:
       # Container specific data mounts
