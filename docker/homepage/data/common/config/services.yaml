@@ -94,6 +94,18 @@
         statusStyle: "dot"
 
 - Downloads:
+    - Seerr:
+        icon: seerr.png
+        href: &seerr_url http://download.apps.gregrob.net:5055/
+        description: TV series tracking and management
+        siteMonitor: *seerr_url
+        statusStyle: "dot"
+        widget:
+            type: seerr
+            url: *seerr_url
+            key: "{{HOMEPAGE_VAR_SEERR_KEY}}"
+            enableQueue: false
+
     - Sonarr:
         icon: sonarr.png
         href: &sonarr_url http://download.apps.gregrob.net:8989/
