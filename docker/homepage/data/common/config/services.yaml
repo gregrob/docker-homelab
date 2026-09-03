@@ -106,6 +106,18 @@
             key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
             enableQueue: false
 
+    - Radarr:
+        icon: radarr.png
+        href: &radarr_url http://download.apps.gregrob.net:7878/
+        description: Movie tracking and management
+        siteMonitor: *radarr_url
+        statusStyle: "dot"
+        widget:
+            type: radarr
+            url: *radarr_url
+            key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+            enableQueue: false
+
     - Prowlarr:
         icon: prowlarr.png
         href: &prowlarr_url http://download.apps.gregrob.net:9696/
