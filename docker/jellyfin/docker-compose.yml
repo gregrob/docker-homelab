@@ -44,6 +44,9 @@ services:
       - /mnt/downloads/movies:/mnt/downloads/movies:ro
       - /mnt/downloads/tv:/mnt/downloads/tv:ro
       - /mnt/downloads/qbittorrent-pub:/mnt/downloads/qbittorrent-pub:ro
+
+      # New arr library path
+      - /mnt/arr:/arr:ro
       
     devices:     
       - /dev/dri:/dev/dri # hw transcoding
