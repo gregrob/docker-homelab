@@ -130,8 +130,7 @@ services:
 
       - ${ENV_QBITTORRENT_UI_PORT_PUB:?err}:${ENV_QBITTORRENT_UI_PORT_PUB:?err} # for qbittorrent
 
-      - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr
-      - ${ENV_SONARR_PORT:?err}:8989/tcp # for sonarr      
+      - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr   
 
     volumes:
       - ./data/host/gluetun-001/gluetun:/gluetun
@@ -321,17 +320,15 @@ services:
     container_name: sonarr
     restart: unless-stopped
 
-    network_mode:   "service:gluetun-001"
-
-    depends_on:
-      gluetun-001:
-        condition: service_healthy
-        restart: true
+    networks:
+      - gluetun-net
+    
+    ports:
+      - ${ENV_SONARR_PORT:?err}:8989/tcp # for sonarr  
 
     volumes:
       - ./data/host/sonarr/config:/config
-      - /mnt/media/tv:/tv
-      - *downloads-pub-mount
+      - *arr-mount
 
     environment:
       PUID: ${ENV_DOCKER_UID:?err}
