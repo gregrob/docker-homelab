@@ -127,6 +127,7 @@ services:
 
       - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr
       - ${ENV_SONARR_PORT:?err}:8989/tcp # for sonarr
+      - ${ENV_RADARR_PORT:?err}:7878/tcp # for radarr
 
     volumes:
       - ./data/host/gluetun-001/gluetun:/gluetun
@@ -325,6 +326,36 @@ services:
     volumes:
       - ./data/host/sonarr/config:/config
       - /mnt/media/tv:/tv
+      - *downloads-pub-mount
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+      TZ: ${ENV_TZ:?err}
+
+  # ------------------------------------------------
+  # Setup radarr 
+  #
+  # https://hub.docker.com/r/linuxserver/radarr
+  # https://github.com/linuxserver/docker-radarr
+  # ------------------------------------------------
+  radarr:
+    <<: *vpn-healthcheck
+
+    image: lscr.io/linuxserver/radarr:6.3.0.10514-ls314
+    container_name: radarr
+    restart: unless-stopped
+
+    network_mode:   "service:gluetun-001"
+
+    depends_on:
+      gluetun-001:
+        condition: service_healthy
+        restart: true
+
+    volumes:
+      - ./data/host/radarr/config:/config
+      - /mnt/media/movies:/movies
       - *downloads-pub-mount
 
     environment:

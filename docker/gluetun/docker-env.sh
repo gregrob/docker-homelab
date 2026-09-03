@@ -29,6 +29,9 @@ then
     export ENV_SONARR_PORT=8989
     echo "Exported ENV_SONARR_PORT=$ENV_SONARR_PORT"
 
+    export ENV_RADARR_PORT=7878
+    echo "Exported ENV_RADARR_PORT=$ENV_RADARR_PORT"
+
     echo ""
 
     echo "To test that our VPN is correctly routing our QBittorrent traffic, we can download a test torrent and check our IP."
