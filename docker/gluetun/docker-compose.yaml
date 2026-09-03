@@ -364,6 +364,71 @@ services:
       TZ: ${ENV_TZ:?err}
 
   # ------------------------------------------------
+  # Setup seerr-permissions-fixer
+  #
+  # One-shot container that sets ownership on Seerr's config
+  # folder before Seerr itself starts. Runs once and exits —
+  # avoids a manual host-side chown, and keeps the correct
+  # ownership co-located with the rest of Seerr's config here.
+  #
+  # Seerr's image runs as the baked-in 'node' user (1000:1000),
+  # not your usual PUID/PGID — see the note on the seerr
+  # service itself for why.
+  # ------------------------------------------------
+  seerr-permissions-fixer:
+    image:          alpine:3.24.1
+    container_name: seerr-permissions-fixer
+    
+    network_mode:   none
+    
+    volumes:
+      - ./data/host/seerr/config:/seerr/config
+
+    command: chown 1000:1000 /seerr/config
+
+# ------------------------------------------------
+  # Setup seerr
+  #
+  # Successor to Overseerr/Jellyseerr (merged Feb 2026).
+  # Rootless by design — runs as the image's own baked-in
+  # default user (no 'user:' override here; PUID/PGID env
+  # vars also don't work reliably with this image).
+  #
+  # https://docs.seerr.dev/getting-started/docker
+  # https://github.com/seerr-team/seerr
+  # ------------------------------------------------
+  seerr:
+    image:          ghcr.io/seerr-team/seerr:v3.4.1
+    container_name: seerr
+    restart:        unless-stopped
+    init:           true
+
+    depends_on:
+      seerr-permissions-fixer:
+        condition: service_completed_successfully
+
+    networks:
+      - gluetun-net
+    
+    ports:
+      - ${ENV_SEERR_PORT:?err}:5055/tcp # for seerr
+
+    environment:
+      TZ: ${ENV_TZ:?err}
+      LOG_LEVEL: debug
+      PORT: 5055
+
+    volumes:
+      - ./data/host/seerr/config:/app/config
+
+    healthcheck:
+      test:         ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5055/api/v1/settings/public"]
+      start_period: 20s
+      timeout:      3s
+      interval:     15s      
+      retries:      3
+      
+  # ------------------------------------------------
   # Autoheal - restarts unhealthy containers
   #
   # https://hub.docker.com/r/willfarrell/autoheal
