@@ -20,6 +20,9 @@ then
     export ENV_HOMEPAGE_VAR_SONARR_KEY=$(get_secret "apps/homepage/homepage-sonarr-key.secret.age")
     echo "Exported ENV_HOMEPAGE_VAR_SONARR_KEY=$ENV_HOMEPAGE_VAR_SONARR_KEY"
 
+    export ENV_HOMEPAGE_VAR_RADARR_KEY=$(get_secret "apps/homepage/homepage-radarr-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_RADARR_KEY=$ENV_HOMEPAGE_VAR_RADARR_KEY"
+
     echo ""
 
 else
