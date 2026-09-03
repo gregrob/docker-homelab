@@ -96,16 +96,21 @@ x-vpn-healthcheck: &vpn-healthcheck
     autoheal: "true"
     
 # ------------------------------------------------
-# YAML Anchors: Shared downloads mounts (pub + priv)
+# YAML Anchors: Shared downloads mounts
 #
-# Sonarr (or any other app) needs visibility into a qBittorrent
-# instance's downloads folder to detect completed grabs and import
-# them into the library. Host and container paths are identical in
-# both cases, so each whole line is reused rather than
-# duplicated across services.
+# downloads-pub-mount / downloads-prv-mount: the original general-
+# purpose downloads folders — unchanged, still used for anything not
+# part of the arr-stack automation.
+#
+# arr-mount: the new unified downloads+media NFS share used by
+# Sonarr/Radarr/qBittorrent-pub specifically, so hardlinks work across
+# the downloads → media boundary (see the arr-stack folder structure
+# note). Only qBittorrent-pub currently touches this — qBittorrent-prv
+# has no arr-stack involvement, so it doesn't get this mount.
 # ------------------------------------------------
 x-downloads-pub-mount: &downloads-pub-mount /mnt/downloads/qbittorrent-pub:/downloads
 x-downloads-prv-mount: &downloads-prv-mount /mnt/downloads/qbittorrent-prv:/downloads
+x-arr-mount: &arr-mount /mnt/arr:/arr
 
 services:
   # ------------------------------------------------
@@ -126,8 +131,7 @@ services:
       - ${ENV_QBITTORRENT_UI_PORT_PUB:?err}:${ENV_QBITTORRENT_UI_PORT_PUB:?err} # for qbittorrent
 
       - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr
-      - ${ENV_SONARR_PORT:?err}:8989/tcp # for sonarr
-      - ${ENV_RADARR_PORT:?err}:7878/tcp # for radarr
+      - ${ENV_SONARR_PORT:?err}:8989/tcp # for sonarr      
 
     volumes:
       - ./data/host/gluetun-001/gluetun:/gluetun
@@ -222,6 +226,7 @@ services:
     volumes:
       - ./data/host/qbittorrent-pub/config:/config
       - *downloads-pub-mount
+      - *arr-mount
       
     environment:
       <<: *qbittorrent-common-env     
@@ -346,17 +351,15 @@ services:
     container_name: radarr
     restart: unless-stopped
 
-    network_mode:   "service:gluetun-001"
-
-    depends_on:
-      gluetun-001:
-        condition: service_healthy
-        restart: true
+    networks:
+      - gluetun-net
+    
+    ports:
+      - ${ENV_RADARR_PORT:?err}:7878/tcp # for radarr
 
     volumes:
       - ./data/host/radarr/config:/config
-      - /mnt/media/movies:/movies
-      - *downloads-pub-mount
+      - *arr-mount
 
     environment:
       PUID: ${ENV_DOCKER_UID:?err}
