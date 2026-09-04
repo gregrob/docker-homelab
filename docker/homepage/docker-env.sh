@@ -29,6 +29,9 @@ then
     export ENV_HOMEPAGE_VAR_PROWLARR_KEY=$(get_secret "apps/homepage/homepage-prowlarr-key.secret.age")
     echo "Exported ENV_HOMEPAGE_VAR_PROWLARR_KEY=$ENV_HOMEPAGE_VAR_PROWLARR_KEY"
 
+    export ENV_HOMEPAGE_VAR_LIDARR_KEY=$(get_secret "apps/homepage/homepage-lidarr-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_LIDARR_KEY=$ENV_HOMEPAGE_VAR_LIDARR_KEY"
+
     echo ""
 
 else

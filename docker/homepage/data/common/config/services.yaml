@@ -130,6 +130,18 @@
             key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
             enableQueue: false
 
+    - Lidarr:
+        icon: lidarr.png
+        href: &lidarr_url http://download.apps.gregrob.net:8686/
+        description: Music tracking and management
+        siteMonitor: *lidarr_url
+        statusStyle: "dot"
+        widget:
+            type: lidarr
+            url: *lidarr_url
+            key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
+            enableQueue: false
+
     - Prowlarr:
         icon: prowlarr.png
         href: &prowlarr_url http://download.apps.gregrob.net:9696/
