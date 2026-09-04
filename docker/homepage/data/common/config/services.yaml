@@ -136,6 +136,11 @@
         description: Indexer manager for the *arr stack
         siteMonitor: *prowlarr_url
         statusStyle: "dot"
+        widget:
+            type: prowlarr
+            url: *prowlarr_url
+            key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+            enableQueue: false
 
     - qBittorrent:
         icon: qbittorrent.png
