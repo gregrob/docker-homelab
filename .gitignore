@@ -41,6 +41,7 @@ docker/gluetun/data/host/gluetun-001/gluetun/*
 docker/gluetun/data/host/gluetun-001/tmp/*
 docker/gluetun/data/host/gluetun-002/gluetun/*
 docker/gluetun/data/host/gluetun-002/tmp/*
+docker/gluetun/data/host/lidarr/config/*
 docker/gluetun/data/host/prowlarr/config/*
 docker/gluetun/data/host/qbittorrent-prv/config/*
 docker/gluetun/data/host/qbittorrent-pub/config/*
@@ -50,6 +51,7 @@ docker/gluetun/data/host/sonarr/config/*
 !docker/gluetun/data/host/flaresolver/config/.gitkeep
 !docker/gluetun/data/host/gluetun-001/gluetun/.gitkeep
 !docker/gluetun/data/host/gluetun-001/tmp/.gitkeep
+!docker/gluetun/data/host/lidarr/config/.gitkeep
 !docker/gluetun/data/host/prowlarr/config/.gitkeep
 !docker/gluetun/data/host/gluetun-002/gluetun/.gitkeep
 !docker/gluetun/data/host/gluetun-002/tmp/.gitkeep

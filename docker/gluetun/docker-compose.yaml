@@ -500,6 +500,48 @@ services:
       autoheal: "true"
 
   # ------------------------------------------------
+  # Setup lidarr 
+  #
+  # https://hub.docker.com/r/linuxserver/lidarr
+  # https://github.com/linuxserver/docker-lidarr
+  # ------------------------------------------------
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:3.1.0.4875-ls40
+    container_name: lidarr
+    restart: unless-stopped
+
+    networks:
+      - gluetun-net
+    
+    ports:
+      - ${ENV_LIDARR_PORT:?err}:8686/tcp # for lidarr
+
+    healthcheck:
+      <<: *healthcheck-timing
+      
+      # WebUI available
+      test:
+        - CMD-SHELL
+        - >-
+          curl -sf http://127.0.0.1:8686 >/dev/null
+
+    labels:
+      autoheal: "true"
+
+    depends_on:
+      qbittorrent-pub:
+        condition: service_healthy
+
+    volumes:
+      - ./data/host/lidarr/config:/config
+      - *arr-mount
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+      TZ: ${ENV_TZ:?err}
+
+  # ------------------------------------------------
   # Autoheal - restarts unhealthy containers
   #
   # https://hub.docker.com/r/willfarrell/autoheal

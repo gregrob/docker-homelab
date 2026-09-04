@@ -35,6 +35,9 @@ then
     export ENV_SEERR_PORT=5055
     echo "Exported ENV_SEERR_PORT=$ENV_SEERR_PORT"
 
+    export ENV_LIDARR_PORT=8686
+    echo "Exported ENV_LIDARR_PORT=$ENV_LIDARR_PORT"
+
     echo ""
 
     echo "To test that our VPN is correctly routing our QBittorrent traffic, we can download a test torrent and check our IP."
