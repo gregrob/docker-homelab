@@ -584,9 +584,7 @@ services:
     image:          willfarrell/autoheal:1.2.0
     container_name: autoheal
     restart:        unless-stopped
-
-    networks:
-      - gluetun-net
+    network_mode:   none
     
     environment:
       AUTOHEAL_CONTAINER_LABEL: autoheal
