@@ -121,7 +121,6 @@ services:
       - 8388:8388/udp # Shadowsocks
 
       - ${ENV_QBITTORRENT_UI_PORT_PUB:?err}:${ENV_QBITTORRENT_UI_PORT_PUB:?err} # for qbittorrent
-
       - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr   
 
     volumes:
@@ -454,7 +453,7 @@ services:
 
     command: chown 1000:1000 /seerr/config
 
-# ------------------------------------------------
+  # ------------------------------------------------
   # Setup seerr
   #
   # Successor to Overseerr/Jellyseerr (merged Feb 2026).
@@ -540,6 +539,41 @@ services:
       PUID: ${ENV_DOCKER_UID:?err}
       PGID: ${ENV_DOCKER_GID:?err}
       TZ: ${ENV_TZ:?err}
+
+  # ------------------------------------------------
+  # Setup aurral
+  #
+  # https://docs.aurral.org/
+  # https://github.com/lklynet/aurral
+  # ------------------------------------------------
+  aurral:
+    image:          ghcr.io/lklynet/aurral:2.8.0
+    container_name: aurral
+    restart:        unless-stopped
+
+    networks:
+      - gluetun-net
+    
+    ports:
+      - ${ENV_AURRAL_PORT:?err}:3001/tcp # for aurral
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+      TZ: ${ENV_TZ:?err} # not sure if this is supproted
+
+    volumes:
+      - ./data/host/aurral/config:/config
+      - *arr-mount
+
+    healthcheck:
+      <<: *healthcheck-timing
+      
+      # WebUI reachability (curl unavailable in this image; using node instead)
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3001', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+
+    labels:
+      autoheal: "true"
 
   # ------------------------------------------------
   # Autoheal - restarts unhealthy containers
