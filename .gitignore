@@ -36,6 +36,7 @@ docker/frigate/data/host/config/*
 !docker/frigate/data/host/config/.gitkeep
 
 # gluetun host specific
+docker/gluetun/data/host/aurral/config/*
 docker/gluetun/data/host/flaresolver/config/*
 docker/gluetun/data/host/gluetun-001/gluetun/*
 docker/gluetun/data/host/gluetun-001/tmp/*
@@ -48,6 +49,7 @@ docker/gluetun/data/host/qbittorrent-pub/config/*
 docker/gluetun/data/host/radarr/config/*
 docker/gluetun/data/host/seerr/config/*
 docker/gluetun/data/host/sonarr/config/*
+!docker/gluetun/data/host/aurral/config/.gitkeep
 !docker/gluetun/data/host/flaresolver/config/.gitkeep
 !docker/gluetun/data/host/gluetun-001/gluetun/.gitkeep
 !docker/gluetun/data/host/gluetun-001/tmp/.gitkeep
