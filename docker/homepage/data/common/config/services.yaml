@@ -94,53 +94,6 @@
         statusStyle: "dot"
 
 - Downloads:
-    - Seerr:
-        icon: seerr.png
-        href: &seerr_url http://download.apps.gregrob.net:5055/
-        description: TV series tracking and management
-        siteMonitor: *seerr_url
-        statusStyle: "dot"
-        widget:
-            type: seerr
-            url: *seerr_url
-            key: "{{HOMEPAGE_VAR_SEERR_KEY}}"
-            enableQueue: false
-
-    - Sonarr:
-        icon: sonarr.png
-        href: &sonarr_url http://download.apps.gregrob.net:8989/
-        description: TV series tracking and management
-        siteMonitor: *sonarr_url
-        statusStyle: "dot"
-        widget:
-            type: sonarr
-            url: *sonarr_url
-            key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
-            enableQueue: false
-
-    - Radarr:
-        icon: radarr.png
-        href: &radarr_url http://download.apps.gregrob.net:7878/
-        description: Movie tracking and management
-        siteMonitor: *radarr_url
-        statusStyle: "dot"
-        widget:
-            type: radarr
-            url: *radarr_url
-            key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
-            enableQueue: false
-
-    - Lidarr:
-        icon: lidarr.png
-        href: &lidarr_url http://download.apps.gregrob.net:8686/
-        description: Music tracking and management
-        siteMonitor: *lidarr_url
-        statusStyle: "dot"
-        widget:
-            type: lidarr
-            url: *lidarr_url
-            key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
-            enableQueue: false
 
     - Prowlarr:
         icon: prowlarr.png
@@ -153,6 +106,13 @@
             url: *prowlarr_url
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
             enableQueue: false
+
+    - Aurral:
+        icon: aurral.png
+        href: &aurral_url http://download.apps.gregrob.net:3001/
+        description: Music discovery and download automation
+        siteMonitor: *aurral_url
+        statusStyle: "dot"
 
     - qBittorrent:
         icon: qbittorrent.png
@@ -210,6 +170,54 @@
             enableMediaControl: true
             showEpisodeNumber: true
             expandOneStreamToTwoRows: false
+
+    - Seerr:
+        icon: seerr.png
+        href: &seerr_url http://download.apps.gregrob.net:5055/
+        description: TV and movies request management
+        siteMonitor: *seerr_url
+        statusStyle: "dot"
+        widget:
+            type: seerr
+            url: *seerr_url
+            key: "{{HOMEPAGE_VAR_SEERR_KEY}}"
+            enableQueue: false
+
+    - Sonarr:
+        icon: sonarr.png
+        href: &sonarr_url http://download.apps.gregrob.net:8989/
+        description: TV series tracking and management
+        siteMonitor: *sonarr_url
+        statusStyle: "dot"
+        widget:
+            type: sonarr
+            url: *sonarr_url
+            key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+            enableQueue: false
+
+    - Radarr:
+        icon: radarr.png
+        href: &radarr_url http://download.apps.gregrob.net:7878/
+        description: Movie tracking and management
+        siteMonitor: *radarr_url
+        statusStyle: "dot"
+        widget:
+            type: radarr
+            url: *radarr_url
+            key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+            enableQueue: false
+
+    - Lidarr:
+        icon: lidarr.png
+        href: &lidarr_url http://download.apps.gregrob.net:8686/
+        description: Music tracking and management
+        siteMonitor: *lidarr_url
+        statusStyle: "dot"
+        widget:
+            type: lidarr
+            url: *lidarr_url
+            key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
+            enableQueue: false
 
     - Frigate:
         icon: frigate.png
