@@ -35,33 +35,33 @@ docker/frigate/data/host/config/*
 !docker/frigate/data/host/db/.gitkeep
 !docker/frigate/data/host/config/.gitkeep
 
-# gluetun host specific
-docker/gluetun/data/host/aurral/config/*
-docker/gluetun/data/host/flaresolver/config/*
-docker/gluetun/data/host/gluetun-001/gluetun/*
-docker/gluetun/data/host/gluetun-001/tmp/*
-docker/gluetun/data/host/gluetun-002/gluetun/*
-docker/gluetun/data/host/gluetun-002/tmp/*
-docker/gluetun/data/host/lidarr/config/*
-docker/gluetun/data/host/prowlarr/config/*
-docker/gluetun/data/host/qbittorrent-prv/config/*
-docker/gluetun/data/host/qbittorrent-pub/config/*
-docker/gluetun/data/host/radarr/config/*
-docker/gluetun/data/host/seerr/config/*
-docker/gluetun/data/host/sonarr/config/*
-!docker/gluetun/data/host/aurral/config/.gitkeep
-!docker/gluetun/data/host/flaresolver/config/.gitkeep
-!docker/gluetun/data/host/gluetun-001/gluetun/.gitkeep
-!docker/gluetun/data/host/gluetun-001/tmp/.gitkeep
-!docker/gluetun/data/host/lidarr/config/.gitkeep
-!docker/gluetun/data/host/prowlarr/config/.gitkeep
-!docker/gluetun/data/host/gluetun-002/gluetun/.gitkeep
-!docker/gluetun/data/host/gluetun-002/tmp/.gitkeep
-!docker/gluetun/data/host/qbittorrent-prv/config/.gitkeep
-!docker/gluetun/data/host/qbittorrent-pub/config/.gitkeep
-!docker/gluetun/data/host/sonarr/config/.gitkeep
-!docker/gluetun/data/host/seerr/config/.gitkeep
-!docker/gluetun/data/host/radarr/config/.gitkeep
+# arr host specific
+docker/arr/data/host/aurral/config/*
+docker/arr/data/host/flaresolver/config/*
+docker/arr/data/host/gluetun-001/gluetun/*
+docker/arr/data/host/gluetun-001/tmp/*
+docker/arr/data/host/gluetun-002/gluetun/*
+docker/arr/data/host/gluetun-002/tmp/*
+docker/arr/data/host/lidarr/config/*
+docker/arr/data/host/prowlarr/config/*
+docker/arr/data/host/qbittorrent-prv/config/*
+docker/arr/data/host/qbittorrent-pub/config/*
+docker/arr/data/host/radarr/config/*
+docker/arr/data/host/seerr/config/*
+docker/arr/data/host/sonarr/config/*
+!docker/arr/data/host/aurral/config/.gitkeep
+!docker/arr/data/host/flaresolver/config/.gitkeep
+!docker/arr/data/host/gluetun-001/gluetun/.gitkeep
+!docker/arr/data/host/gluetun-001/tmp/.gitkeep
+!docker/arr/data/host/lidarr/config/.gitkeep
+!docker/arr/data/host/prowlarr/config/.gitkeep
+!docker/arr/data/host/gluetun-002/gluetun/.gitkeep
+!docker/arr/data/host/gluetun-002/tmp/.gitkeep
+!docker/arr/data/host/qbittorrent-prv/config/.gitkeep
+!docker/arr/data/host/qbittorrent-pub/config/.gitkeep
+!docker/arr/data/host/sonarr/config/.gitkeep
+!docker/arr/data/host/seerr/config/.gitkeep
+!docker/arr/data/host/radarr/config/.gitkeep
 
 # homepage host specific
 docker/homepage/data/host/log/*
