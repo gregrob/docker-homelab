@@ -1,11 +1,13 @@
 #!/bin/sh
 # ==============================================================================
-# Post-Archive Backup & Offsite Sync Script
-# Executed by offen/docker-volume-backup via the archive-post hook
+# Post-Prune Backup & Offsite Sync Script
+# Executed by offen/docker-volume-backup via the prune-post hook
 # ==============================================================================
 
 # Abort script execution immediately if any command fails
 set -e
+# Ensure pipelines (like ls | awk | xargs) fail if an intermediate command fails
+set -o pipefail
 
 # Ensure rsync is present inside the Alpine container without cluttering logs
 apk add --no-cache rsync >/dev/null 2>&1
@@ -31,7 +33,7 @@ export RSYNC_PASSWORD
 # ------------------------------------------------------------------------------
 # List local archives by modification time (newest first), skip the newest $KEEP files,
 # and remove older archives to prevent local disk exhaustion
-ls -t /archive | awk "NR > $KEEP" | xargs -r -t -I {} rm -rf /archive/{}
+ls -1t /archive/*.tar.gz | awk "NR > $KEEP" | xargs -r -t rm -rf
 
 # ------------------------------------------------------------------------------
 # Offsite Daemon Sync (Port 873)
