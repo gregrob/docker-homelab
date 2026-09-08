@@ -9,7 +9,8 @@ services:
     #image:          offen/docker-volume-backup:v2.43.0
     #image:          offen/docker-volume-backup:v2.43.4
     #image:          offen/docker-volume-backup:v2.47.0
-    image:          offen/docker-volume-backup:v2.48.2
+    #image:          offen/docker-volume-backup:v2.48.2
+    image:          offen/docker-volume-backup:v2.49.0
     container_name: docker-volume-backup
     restart:        unless-stopped
 
@@ -56,6 +57,7 @@ services:
       - ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS=7
 
       # ASUSTOR NAS Rsync daemon connection details (Port 873)
+      #   ENV_RSYNC_SYNC_NAS_HOST must be IP so it can be resolved by targets without local resolution (i.e. dns-001)
       - ENV_RSYNC_SYNC_NAS_HOST=${ENV_NAS_BACKUP_TARGET}
       - ENV_RSYNC_SYNC_NAS_USER=${ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER}
       - ENV_RSYNC_SYNC_NAS_PASSWORD=${ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD}
