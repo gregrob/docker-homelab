@@ -20,9 +20,14 @@ then
     export ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO=$(get_secret "apps/docker-volume-backup/docker-volume-backup-email-to.secret.age")
     echo "Exported ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO=$ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO"
 
-    # This is always +1 (e.g. a value of 9 keeps 10 backups)
-    export ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS="9"
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS=$ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS"
+    export ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER=$(get_secret "apps/docker-volume-backup/docker-volume-backup-rsync-nas-user.secret.age")
+    echo "Exported ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER=$ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER"
+
+    export ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD=$(get_secret "apps/docker-volume-backup/docker-volume-backup-rsync-nas-password.secret.age")
+    echo "Exported ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD=$ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD"
+
+    export ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE=$(get_secret "apps/docker-volume-backup/docker-volume-backup-rsync-nas-module.secret.age")
+    echo "Exported ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE=$ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE"
 
     echo ""
     echo "Please run 'docker exec docker-volume-backup backup' to perform an immediate manual backup"

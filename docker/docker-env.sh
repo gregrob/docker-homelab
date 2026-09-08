@@ -31,6 +31,9 @@ then
     export ENV_TZ=$(timedatectl show --property=Timezone --value)
     echo "Exported ENV_TZ=$ENV_TZ"
 
+    export ENV_NAS_BACKUP_TARGET=$(get_secret "infra/nas-backup-target.secret.age")
+    echo "Exported ENV_NAS_BACKUP_TARGET=$ENV_NAS_BACKUP_TARGET"
+
     export ENV_TEST_DECRYPTION_COMMON=$(get_secret "test/test-code-string.secret.age")
     echo "Exported ENV_TEST_DECRYPTION_COMMON=$ENV_TEST_DECRYPTION_COMMON"
 

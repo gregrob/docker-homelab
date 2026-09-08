@@ -20,19 +20,19 @@ services:
       - docker-volume-backup-net
 
     environment:
+      
+      # Container timezone setting; enforces required ENV_TZ from host/environment
+      - TZ=${ENV_TZ:?err}
+
+      # Random delay (up to 1 minute) added before scheduled jobs to prevent execution overlap
+      - BACKUP_JITTER=1m
+
       # Greedy exclusion of the folder /backup/my-app-backup/backup
       # Use https://regex101.com/ with Goland to derive expression
-      #- BACKUP_EXCLUDE_REGEXP=\/backup\/my-app-backup\/backup\/.*$
       - BACKUP_EXCLUDE_REGEXP=\/backup\/my-app-backup\/docker-homelab\/docker\/docker-volume-backup\/data\/host\/backups\/.*$
 
       # Include hostname in backup file name
       - BACKUP_FILENAME=$ENV_HOSTNAME-backup-%Y-%m-%dT%H-%M-%S.tar.gz
-
-      # Backups run on the given cron schedule in `busybox` flavor. If no
-      # value is set, `@daily` will be used. If you do not want the cron
-      # to ever run, use `0 0 5 31 2 ?`.
-      # Now moved to /data/common to handle multiple schedules
-      #- BACKUP_CRON_EXPRESSION=*/5 * * * *
 
       # Notifications (email, Slack, etc.) can be sent out when a backup run finishes.
       # Configuration is provided as a comma-separated list of URLs as consumed
@@ -47,8 +47,22 @@ services:
       # By default, notifications would only be sent out when a backup run fails
       # To receive notifications for every run, set `NOTIFICATION_LEVEL` to `info`
       # instead of the default `error`.
-      # 13-07-2024 - set to info so manually calling backup also sends mail
+      # Set to info so manually calling backup also sends mail.
       - NOTIFICATION_LEVEL=info
+
+      # Custom variables passed into the container for /scripts/post-prune.sh execution
+
+      # Retention policy: Number of recent local .tar.gz archives to retain in /archive
+      - ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS="7"
+
+      # ASUSTOR NAS Rsync daemon connection details (Port 873)
+      - ENV_RSYNC_SYNC_NAS_HOST=${ENV_NAS_BACKUP_TARGET}
+      - ENV_RSYNC_SYNC_NAS_USER=${ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER}
+      - ENV_RSYNC_SYNC_NAS_PASSWORD=${ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD}
+      - ENV_RSYNC_SYNC_NAS_MODULE=${ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE}
+
+      # Node identifier used to create host-specific backup subdirectories on the NAS
+      - ENV_RSYNC_SYNC_HOSTNAME=${ENV_HOSTNAME}
 
     # Uncomment both lines to immediately trigger a single backup
     #restart:    "no"
@@ -75,15 +89,12 @@ services:
       # Custom notifications
       - ./data/common/notifications.d:/etc/dockervolumebackup/notifications.d
 
-      # Pass local timezone information to the container
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      # Mount the external post-prune script as read-only into the container
+      - ./data/common/scripts/post-prune.sh:/scripts/post-prune.sh:ro
 
     labels:
-      # Example label to generate a list of files to be deleted
-      #- docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>7" | xargs -t -I {} echo /archive/{} > /archive/delete_list.txt'      
-      #- docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>7" | xargs -t -I {} rm -rf /archive/{}'
-      - docker-volume-backup.archive-post=/bin/sh -c 'ls /archive -t | awk "NR>${ENV_DOCKER_VOLUME_BACKUP_KEEP_LAST_BACKUPS:?number of backups to keep required}" | xargs -t -I {} rm -rf /archive/{}'
+      # Executes at the end of the backup lifecycle after containers are restarted and online
+      docker-volume-backup.prune-post: "sh /scripts/post-prune.sh"
 
 networks:
   docker-volume-backup-net:
