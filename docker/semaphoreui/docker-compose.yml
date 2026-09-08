@@ -23,7 +23,8 @@ services:
 
   semaphoreui:
     #image:          semaphoreui/semaphore:v2.19.8
-    image:          semaphoreui/semaphore:v2.19.11
+    #image:          semaphoreui/semaphore:v2.19.11
+    image:          semaphoreui/semaphore:v2.19.12
     container_name: semaphoreui
     restart:        unless-stopped
 
