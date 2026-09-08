@@ -62,7 +62,8 @@ x-gluetun-common: &gluetun-common
 # ------------------------------------------------
 x-qbittorrent-common: &qbittorrent-common
   #image:   linuxserver/qbittorrent:5.1.4
-  image:   linuxserver/qbittorrent:5.2.3
+  #image:   linuxserver/qbittorrent:5.2.3
+  image:   linuxserver/qbittorrent:5.2.3_v2.0.14-ls475
   
   restart: unless-stopped
   
