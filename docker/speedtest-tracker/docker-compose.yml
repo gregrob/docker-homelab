@@ -5,9 +5,11 @@ services:
   #
   # speedtest-tracker - https://docs.linuxserver.io/images/docker-speedtest-tracker/
   #                     https://github.com/alexjustesen/speedtest-tracker/releases
+  #                     https://github.com/linuxserver/docker-speedtest-tracker
   # ---------------------------------------------
   speedtest-tracker:
-    image:          lscr.io/linuxserver/speedtest-tracker:1.15.0
+    #image:          lscr.io/linuxserver/speedtest-tracker:1.15.0
+    image:          lscr.io/linuxserver/speedtest-tracker:v1.15.0-ls171
     container_name: speedtest-tracker
     restart:        unless-stopped
 
