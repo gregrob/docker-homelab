@@ -104,6 +104,7 @@ x-healthcheck-timing: &healthcheck-timing
 x-downloads-pub-mount: &downloads-pub-mount /mnt/downloads/qbittorrent-pub:/downloads
 x-downloads-prv-mount: &downloads-prv-mount /mnt/downloads/qbittorrent-prv:/downloads
 x-arr-mount: &arr-mount /mnt/arr:/arr
+x-arr-prv-mount: &arr-prv-mount /mnt/arr-prv:/arr-prv
 
 services:
   # ------------------------------------------------
@@ -263,6 +264,7 @@ services:
     volumes:
       - ./data/host/qbittorrent-prv/config:/config
       - *downloads-prv-mount
+      - *arr-prv-mount      
       
     environment:
       <<: *qbittorrent-common-env     
