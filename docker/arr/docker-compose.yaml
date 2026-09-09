@@ -607,5 +607,4 @@ services:
 
 networks:
   arr-net:
-    name: arr-net
-    driver: bridge
+    external: true

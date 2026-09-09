@@ -49,6 +49,12 @@ then
 
     echo ""
 
+    # Creates the network if missing, ignores if it already exists
+    echo "Create arr-net for sharing between stacks..."    
+    docker network inspect arr-net >/dev/null 2>&1 || docker network create --driver bridge arr-net
+
+    echo ""
+
 else
     echo "FAIL: Please call script with - source ./env.sh"
 
