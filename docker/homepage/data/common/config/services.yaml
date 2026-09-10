@@ -117,7 +117,7 @@
     - qBittorrent:
         icon: qbittorrent.png
         href: &qbittorrent_pub_url http://download.apps.gregrob.net:8080/
-        description: Primary torrent client
+        description: Torrent client
         siteMonitor: *qbittorrent_pub_url
         statusStyle: "dot"
 
