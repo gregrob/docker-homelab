@@ -17,6 +17,9 @@ then
     export ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_002=$(get_secret "apps/gluetun/gluetun-wireguard-private-key-002.secret.age")
     echo "Exported ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_002=$ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_002"
 
+    export ENV_GLUETUN_CONTROL_SERVER_API_KEY=$(get_secret "apps/gluetun/gluetun-control-server-api-key.secret.age")
+    echo "Exported ENV_GLUETUN_CONTROL_SERVER_API_KEY=$ENV_GLUETUN_CONTROL_SERVER_API_KEY"
+
     export ENV_QBITTORRENT_UI_PORT_PUB=8080
     echo "Exported ENV_QBITTORRENT_UI_PORT_PUB=$ENV_QBITTORRENT_UI_PORT_PUB"
     
