@@ -96,10 +96,22 @@
 - Downloads:
     - qBittorrent:
         icon: qbittorrent.png
-        href: &qbittorrent_pub_url http://download.apps.gregrob.net:8080/
+        # Don't add training / to href otherwise qbitorrent widget does not work
+        href: &qbittorrent_pub_url http://download.apps.gregrob.net:8080
         description: Torrent client
         siteMonitor: *qbittorrent_pub_url
         statusStyle: "dot"
+        widgets:
+          - type: gluetun
+            url: http://download.apps.gregrob.net:8000
+            key: "{{HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY}}"
+            version: 2
+          #- type: qbittorrent
+          #  url: *qbittorrent_pub_url
+          #  username: username
+          #  password: password
+          #  enableLeechProgress: true
+          #  enableLeechSize: true
 
     - Prowlarr:
         icon: prowlarr.png
