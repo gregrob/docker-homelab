@@ -35,6 +35,12 @@ then
     export ENV_HOMEPAGE_VAR_LIDARR_KEY=$(get_secret "apps/homepage/homepage-lidarr-key.secret.age")
     echo "Exported ENV_HOMEPAGE_VAR_LIDARR_KEY=$ENV_HOMEPAGE_VAR_LIDARR_KEY"
 
+    export ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD=$(get_secret "apps/homepage/homepage-frigate-homepage-user-password.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD=$ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD"
+
+    export ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY=$(get_secret "apps/homepage/homepage-technitium-dns-server-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY=$ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY"
+
     echo ""
 
 else

@@ -24,6 +24,12 @@
         description: Priority 150 - load-balanced (IPVS)
         siteMonitor: *technitium_001_url
         statusStyle: "dot"
+        widget:
+            type: technitium
+            url: *technitium_001_url
+            key: "{{HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY}}"
+            node: cluster
+            #range: LastDay # optional, defaults to LastHour
 
     - DNS Secondary:
         icon: technitium.png    
@@ -230,3 +236,9 @@
         description: NVR and object detection
         siteMonitor: *frigate_url
         statusStyle: "dot"
+        widget:
+            type: frigate
+            url: *frigate_url
+            enableRecentEvents: true
+            username: homepage
+            password: "{{HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD}}"
