@@ -26,7 +26,7 @@
         statusStyle: "dot"
         widget:
             type: technitium
-            url: *technitium_001_url
+            url: http://vip.dns.gregrob.net:5380/ # address the vip here so widget works accross all servers
             key: "{{HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY}}"
             node: cluster
             #range: LastDay # optional, defaults to LastHour
