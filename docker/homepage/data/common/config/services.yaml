@@ -94,6 +94,12 @@
         statusStyle: "dot"
 
 - Downloads:
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: &qbittorrent_pub_url http://download.apps.gregrob.net:8080/
+        description: Torrent client
+        siteMonitor: *qbittorrent_pub_url
+        statusStyle: "dot"
 
     - Prowlarr:
         icon: prowlarr.png
@@ -106,20 +112,6 @@
             url: *prowlarr_url
             key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
             enableQueue: false
-
-    - Aurral:
-        icon: aurral.png
-        href: &aurral_url http://download.apps.gregrob.net:3001/
-        description: Music discovery and download automation
-        siteMonitor: *aurral_url
-        statusStyle: "dot"
-
-    - qBittorrent:
-        icon: qbittorrent.png
-        href: &qbittorrent_pub_url http://download.apps.gregrob.net:8080/
-        description: Torrent client
-        siteMonitor: *qbittorrent_pub_url
-        statusStyle: "dot"
 
 - 3D Printing:
     - Bambuddy:
@@ -144,26 +136,7 @@
         siteMonitor: *open_webui_url
         statusStyle: "dot"
 
-- Media & Video:
-    - Jellyfin:
-        icon: jellyfin.png
-        href: &jellyfin_url http://jellyfin.home.gregrob.net:8096/
-        description: Media server and streaming
-        siteMonitor: *jellyfin_url
-        statusStyle: "dot"
-        widget:
-            type: jellyfin
-            url: *jellyfin_url
-            key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
-            version: 2
-            enableBlocks: true
-            fields: ["movies", "series", "episodes"]
-            enableNowPlaying: true
-            enableUser: true
-            enableMediaControl: true
-            showEpisodeNumber: true
-            expandOneStreamToTwoRows: false
-
+- Media Management:
     - Seerr:
         icon: seerr.png
         href: &seerr_url http://download.apps.gregrob.net:5055/
@@ -175,6 +148,13 @@
             url: *seerr_url
             key: "{{HOMEPAGE_VAR_SEERR_KEY}}"
             enableQueue: false
+
+    - Aurral:
+        icon: aurral.png
+        href: &aurral_url http://download.apps.gregrob.net:3001/
+        description: Music discovery and download automation
+        siteMonitor: *aurral_url
+        statusStyle: "dot"
 
     - Sonarr:
         icon: sonarr.png
@@ -211,6 +191,26 @@
             url: *lidarr_url
             key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
             enableQueue: false
+
+- Media & Video:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: &jellyfin_url http://jellyfin.home.gregrob.net:8096/
+        description: Media server and streaming
+        siteMonitor: *jellyfin_url
+        statusStyle: "dot"
+        widget:
+            type: jellyfin
+            url: *jellyfin_url
+            key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
+            version: 2
+            enableBlocks: true
+            fields: ["movies", "series", "episodes"]
+            enableNowPlaying: true
+            enableUser: true
+            enableMediaControl: true
+            showEpisodeNumber: true
+            expandOneStreamToTwoRows: false
 
     - Frigate:
         icon: frigate.png
