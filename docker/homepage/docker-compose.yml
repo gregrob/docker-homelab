@@ -30,6 +30,7 @@ services:
       # HOMEPAGE_ALLOWED_HOSTS: ${ENV_LOCALIP:?err},homepage.gregrob.net,portal.apps.gregrob.net,portal-001.apps.gregrob.net
 
       # Cnnecting keys and tokens - also refer https://gethomepage.dev/installation/docker/
+      HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY: ${ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY:?err}
       HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY: ${ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY:?err}
       HOMEPAGE_VAR_JELLYFIN_KEY: ${ENV_HOMEPAGE_VAR_JELLYFIN_KEY:?err}
       HOMEPAGE_VAR_SONARR_KEY: ${ENV_HOMEPAGE_VAR_SONARR_KEY:?err}

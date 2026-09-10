@@ -11,6 +11,9 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
+    export ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY=$(get_secret "apps/gluetun/gluetun-control-server-api-key.secret.age")
+    echo "Exported ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY=$ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY"
+    
     export ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY=$(get_secret "apps/homepage/homepage-speedtest-tracker-key.secret.age")
     echo "Exported ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY=$ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY"
 
