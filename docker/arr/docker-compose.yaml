@@ -42,16 +42,17 @@ x-gluetun-common: &gluetun-common
 
   # Nested anchor for environment variables - reused with <<: *gluetun-common-env
   environment: &gluetun-common-env
-    PUID:                 ${ENV_DOCKER_UID:?err}
-    PGID:                 ${ENV_DOCKER_GID:?err}
-    TZ:                   ${ENV_TZ:?err}
-    VPN_SERVICE_PROVIDER: protonvpn
-    VPN_TYPE:             wireguard
-    SERVER_COUNTRIES:     Switzerland
-    HTTPPROXY:            on
-    PORT_FORWARD_ONLY:    on
-    VPN_PORT_FORWARDING:  on
-
+    PUID:                                  ${ENV_DOCKER_UID:?err}
+    PGID:                                  ${ENV_DOCKER_GID:?err}
+    TZ:                                    ${ENV_TZ:?err}
+    VPN_SERVICE_PROVIDER:                  protonvpn
+    VPN_TYPE:                              wireguard
+    SERVER_COUNTRIES:                      Switzerland
+    HTTPPROXY:                             on
+    PORT_FORWARD_ONLY:                     on
+    VPN_PORT_FORWARDING:                   on
+    HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE: '{"auth":"apikey","apikey":"${ENV_GLUETUN_CONTROL_SERVER_API_KEY:?err}"}'
+    
 # ------------------------------------------------
 # YAML Anchor: Common qBittorrent configuration
 # 
@@ -121,6 +122,7 @@ services:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
       - 8388:8388/udp # Shadowsocks
+      - 8000:8000/tcp # Control Server
 
       - ${ENV_QBITTORRENT_UI_PORT_PUB:?err}:${ENV_QBITTORRENT_UI_PORT_PUB:?err} # for qbittorrent
       - ${ENV_PROWLARR_PORT:?err}:9696/tcp # for prowlarr   
@@ -167,6 +169,7 @@ services:
       - 8889:8888/tcp # HTTP proxy
       - 8389:8388/tcp # Shadowsocks
       - 8389:8388/udp # Shadowsocks
+      - 8001:8000/tcp # Control Server
 
       - ${ENV_QBITTORRENT_UI_PORT_PRV:?err}:${ENV_QBITTORRENT_UI_PORT_PRV:?err} # for qbittorrent
 
