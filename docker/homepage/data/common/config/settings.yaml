@@ -26,12 +26,15 @@ layout:
     icon: mdi-pulse
   Portal:
     icon: mdi-view-dashboard
+  AI:
+    icon: mdi-robot
+  
+  Media Management:
+    icon: mdi-movie-open-cog
+  Media & Video:
+    icon: mdi-filmstrip
   Downloads:
     icon: mdi-download
   3D Printing:
     icon: mdi-printer-3d
-  AI:
-    icon: mdi-robot
-  Media & Video:
-    icon: mdi-filmstrip
   
