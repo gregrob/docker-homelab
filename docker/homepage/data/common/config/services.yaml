@@ -81,9 +81,9 @@
 - Portal:
     - Homepage:
         icon: homepage.png
-        href: &homepage_url http://portal.apps.gregrob.net/
-        description: This dashboard
-        siteMonitor: *homepage_url
+        href: &homepage_prv_url http://portal.apps.gregrob.net:90/
+        description: Private dashboard
+        siteMonitor: *homepage_prv_url
         statusStyle: "dot"
 
     - Wiki.js:
@@ -119,13 +119,6 @@
         href: &qbittorrent_pub_url http://download.apps.gregrob.net:8080/
         description: Primary torrent client
         siteMonitor: *qbittorrent_pub_url
-        statusStyle: "dot"
-
-    - qBittorrent Backup:
-        icon: qbittorrent.png
-        href: &qbittorrent_prv_url http://download.apps.gregrob.net:8081/
-        description: Secondary torrent client instance
-        siteMonitor: *qbittorrent_prv_url
         statusStyle: "dot"
 
 - 3D Printing:
