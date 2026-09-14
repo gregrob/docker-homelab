@@ -74,6 +74,13 @@
         siteMonitor: *proxmox_petra_url
         statusStyle: "dot"
 
+    - Backup Server:
+        icon: proxmox-backup-server.png    
+        href: &proxmox_backup_server_url https://pbs.mgmt.gregrob.net:8007/
+        description: VM and container backup target
+        siteMonitor: *proxmox_backup_server_url
+        statusStyle: "dot"        
+
 - Monitoring:
     - Uptime Kuma:
         icon: uptime-kuma.png
