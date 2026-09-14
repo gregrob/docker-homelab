@@ -24,17 +24,20 @@ layout:
   Monitoring:
     #icon: mdi-pulse-#FFFFFF # Example - This forces white
     icon: mdi-pulse
+  Proxmox Cluster:
+    icon: mdi-lan
   Portal:
     icon: mdi-view-dashboard
-  AI:
-    icon: mdi-robot
-  
+ 
   Media Management:
     icon: mdi-movie-open-cog
   Media & Video:
     icon: mdi-filmstrip
   Downloads:
     icon: mdi-download
+  AI:
+    icon: mdi-robot
+    
   3D Printing:
     icon: mdi-printer-3d
   

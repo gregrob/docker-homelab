@@ -52,6 +52,28 @@
         siteMonitor: *semaphore_url
         statusStyle: "dot"
 
+- Proxmox Cluster:    
+    - Atlantis:
+        icon: proxmox.png    
+        href: &proxmox_atlantis_url https://atlantis.mgmt.gregrob.net:8006/
+        description: Proxmox cluster node
+        siteMonitor: *proxmox_atlantis_url
+        statusStyle: "dot"
+
+    - Eldorado:
+        icon: proxmox.png    
+        href: &proxmox_eldorado_url https://eldorado.mgmt.gregrob.net:8006/
+        description: Proxmox cluster node
+        siteMonitor: *proxmox_eldorado_url
+        statusStyle: "dot"
+
+    - Petra:
+        icon: proxmox.png    
+        href: &proxmox_petra_url https://petra.mgmt.gregrob.net:8006/
+        description: Proxmox cluster node
+        siteMonitor: *proxmox_petra_url
+        statusStyle: "dot"
+
 - Monitoring:
     - Uptime Kuma:
         icon: uptime-kuma.png
