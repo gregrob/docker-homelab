@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Include the secrets helper script to use get_secret function
-source "$(dirname "${BASH_SOURCE[0]}")/../secrets-helper.sh"
-
 # Check if the script is being sourced
 if [ "${BASH_SOURCE[0]}" != "${0}" ]
 then   
