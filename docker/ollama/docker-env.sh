@@ -8,11 +8,9 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    export ENV_OPEN_WEBUI_OAUTH_CLIENT_ID=$(get_secret "apps/open-webui/open-webui-oauth-client-id.secret.age")
-    echo "Exported ENV_OPEN_WEBUI_OAUTH_CLIENT_ID=$ENV_OPEN_WEBUI_OAUTH_CLIENT_ID"
+    export_secret ENV_OPEN_WEBUI_OAUTH_CLIENT_ID "apps/open-webui/open-webui-oauth-client-id.secret.age"
 
-    export ENV_OPEN_WEBUI_OAUTH_CLIENT_SECRET=$(get_secret "apps/open-webui/open-webui-oauth-client-secret.secret.age")
-    echo "Exported ENV_OPEN_WEBUI_OAUTH_CLIENT_SECRET=$ENV_OPEN_WEBUI_OAUTH_CLIENT_SECRET"
+    export_secret ENV_OPEN_WEBUI_OAUTH_CLIENT_SECRET "apps/open-webui/open-webui-oauth-client-secret.secret.age"
 
     echo ""
 

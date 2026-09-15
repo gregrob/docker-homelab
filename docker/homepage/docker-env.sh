@@ -8,35 +8,25 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    export ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY=$(get_secret "apps/gluetun/gluetun-control-server-api-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY=$ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY"
-    
-    export ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY=$(get_secret "apps/homepage/homepage-speedtest-tracker-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY=$ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY"
+   export_secret ENV_HOMEPAGE_VAR_GLUETUN_CONTROL_SERVER_API_KEY "apps/gluetun/gluetun-control-server-api-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_JELLYFIN_KEY=$(get_secret "apps/homepage/homepage-jellyfin-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_JELLYFIN_KEY=$ENV_HOMEPAGE_VAR_JELLYFIN_KEY"
+    export_secret ENV_HOMEPAGE_VAR_SPEEDTEST_TRACKER_KEY "apps/homepage/homepage-speedtest-tracker-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_SONARR_KEY=$(get_secret "apps/homepage/homepage-sonarr-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_SONARR_KEY=$ENV_HOMEPAGE_VAR_SONARR_KEY"
+    export_secret ENV_HOMEPAGE_VAR_JELLYFIN_KEY "apps/homepage/homepage-jellyfin-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_RADARR_KEY=$(get_secret "apps/homepage/homepage-radarr-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_RADARR_KEY=$ENV_HOMEPAGE_VAR_RADARR_KEY"
+    export_secret ENV_HOMEPAGE_VAR_SONARR_KEY "apps/homepage/homepage-sonarr-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_SEERR_KEY=$(get_secret "apps/homepage/homepage-seerr-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_SEERR_KEY=$ENV_HOMEPAGE_VAR_SEERR_KEY"
+    export_secret ENV_HOMEPAGE_VAR_RADARR_KEY "apps/homepage/homepage-radarr-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_PROWLARR_KEY=$(get_secret "apps/homepage/homepage-prowlarr-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_PROWLARR_KEY=$ENV_HOMEPAGE_VAR_PROWLARR_KEY"
+    export_secret ENV_HOMEPAGE_VAR_SEERR_KEY "apps/homepage/homepage-seerr-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_LIDARR_KEY=$(get_secret "apps/homepage/homepage-lidarr-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_LIDARR_KEY=$ENV_HOMEPAGE_VAR_LIDARR_KEY"
+    export_secret ENV_HOMEPAGE_VAR_PROWLARR_KEY "apps/homepage/homepage-prowlarr-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD=$(get_secret "apps/homepage/homepage-frigate-homepage-user-password.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD=$ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD"
+    export_secret ENV_HOMEPAGE_VAR_LIDARR_KEY "apps/homepage/homepage-lidarr-key.secret.age"
 
-    export ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY=$(get_secret "apps/homepage/homepage-technitium-dns-server-key.secret.age")
-    echo "Exported ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY=$ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY"
+    export_secret ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD "apps/homepage/homepage-frigate-homepage-user-password.secret.age"
+
+    export_secret ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY "apps/homepage/homepage-technitium-dns-server-key.secret.age"
 
     echo ""
 

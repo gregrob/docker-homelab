@@ -8,11 +8,9 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    export ENV_POSTGRES_USER=$(get_secret "apps/wiki/wiki-postgres-user.secret.age")
-    echo "Exported ENV_POSTGRES_USER=$ENV_POSTGRES_USER"
+    export_secret ENV_POSTGRES_USER "apps/wiki/wiki-postgres-user.secret.age"
 
-    export ENV_POSTGRES_PASSWORD=$(get_secret "apps/wiki/wiki-postgres-password.secret.age")
-    echo "Exported ENV_POSTGRES_PASSWORD=$ENV_POSTGRES_PASSWORD"
+    export_secret ENV_POSTGRES_PASSWORD "apps/wiki/wiki-postgres-password.secret.age"
 
     echo ""
 

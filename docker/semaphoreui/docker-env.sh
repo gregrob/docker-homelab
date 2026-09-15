@@ -8,17 +8,7 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    export ENV_SEMAPHOREUI_ADMIN_PASSWORD=$(get_secret "apps/semaphoreui/semaphoreui-admin-password.secret.age")
-    echo "Exported ENV_SEMAPHOREUI_ADMIN_PASSWORD=$ENV_SEMAPHOREUI_ADMIN_PASSWORD"
-
-    #export ENV_SEMAPHOREUI_ACCESS_KEY_ENCRYPTION=$(get_secret "apps/semaphoreui/semaphoreui-access-key-encryption.secret.age")
-    #echo "Exported ENV_SEMAPHOREUI_ACCESS_KEY_ENCRYPTION=$ENV_SEMAPHOREUI_ACCESS_KEY_ENCRYPTION"
-
-    #export ENV_SEMAPHOREUI_MYSQL_PASSWORD=$(get_secret "apps/semaphoreui/semaphoreui-mysql-password.secret.age")
-    #echo "Exported ENV_SEMAPHOREUI_MYSQL_PASSWORD=$ENV_SEMAPHOREUI_MYSQL_PASSWORD"
-
-    #export ENV_TEST_DECRYPTION_SPECIFIC=$(get_secret "test/test-code-string.secret.age")
-    #echo "Exported ENV_TEST_DECRYPTION_SPECIFIC=$ENV_TEST_DECRYPTION_SPECIFIC"
+    export_secret ENV_SEMAPHOREUI_ADMIN_PASSWORD "apps/semaphoreui/semaphoreui-admin-password.secret.age"
 
     echo ""
 

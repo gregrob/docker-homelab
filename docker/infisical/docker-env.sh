@@ -25,34 +25,28 @@ then
     export ENV_HOST="infisical.max.lan"
     echo "Exported ENV_HOST=$ENV_HOST"
     
-    export ENV_ENCRYPTION_KEY=$(get_secret "apps/infisical/infisical-encryption-key.secret.age")
+    export_secret ENV_ENCRYPTION_KEY "apps/infisical/infisical-encryption-key.secret.age"
     echo "Generate new encryption key with: openssl rand -hex 16"
-    echo "Exported ENV_ENCRYPTION_KEY=$ENV_ENCRYPTION_KEY"
 
-    export ENV_AUTH_SECRET=$(get_secret "apps/infisical/infisical-auth-secret.secret.age")
+    export_secret ENV_AUTH_SECRET "apps/infisical/infisical-auth-secret.secret.age"
     echo "Generate new auth secret with: openssl rand -base64 32"
-    echo "Exported ENV_AUTH_SECRET=$ENV_AUTH_SECRET"
-    
+
     export ENV_INFISICAL_EMAIL_HOST="smtp.gmail.com"
     echo "Exported ENV_INFISICAL_EMAIL_HOST=$ENV_INFISICAL_EMAIL_HOST"
 
-    export ENV_INFISICAL_EMAIL_USERNAME=$(get_secret "apps/infisical/infisical-gmail-email.secret.age")
-    echo "Exported ENV_INFISICAL_EMAIL_USERNAME=$ENV_INFISICAL_EMAIL_USERNAME"
+    export_secret ENV_INFISICAL_EMAIL_USERNAME "apps/infisical/infisical-gmail-email.secret.age"
 
-    export ENV_INFISICAL_EMAIL_PASSWORD=$(get_secret "apps/infisical/infisical-gmail-app-password.secret.age")
-    echo "Exported ENV_INFISICAL_EMAIL_PASSWORD=$ENV_INFISICAL_EMAIL_PASSWORD"
+    export_secret ENV_INFISICAL_EMAIL_PASSWORD "apps/infisical/infisical-gmail-app-password.secret.age"
 
     export ENV_INFISICAL_EMAIL_PORT=587
     echo "Exported ENV_INFISICAL_EMAIL_PORT=$ENV_INFISICAL_EMAIL_PORT"
 
-    export ENV_INFISICAL_EMAIL_FROM=$(get_secret "apps/infisical/infisical-gmail-email.secret.age")
-    echo "Exported ENV_INFISICAL_EMAIL_FROM=$ENV_INFISICAL_EMAIL_FROM"
+    export_secret ENV_INFISICAL_EMAIL_FROM "apps/infisical/infisical-gmail-email.secret.age"
 
     export ENV_INFISICAL_EMAIL_NAME="Infisical"
     echo "Exported ENV_INFISICAL_EMAIL_NAME=$ENV_INFISICAL_EMAIL_NAME"
 
-    export ENV_TEST_DECRYPTION_COMMON=$(get_secret "test/test-code-string.secret.age")
-    echo "Exported ENV_TEST_DECRYPTION_COMMON=$ENV_TEST_DECRYPTION_COMMON"
+    export_secret ENV_TEST_DECRYPTION_COMMON "test/test-code-string.secret.age"
 
     echo ""
     echo ""

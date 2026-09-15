@@ -8,23 +8,17 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    export ENV_DOCKER_VOLUME_BACKUP_GMAIL_APP_PASSWORD=$(get_secret "apps/docker-volume-backup/docker-volume-backup-gmail-app-password.secret.age")
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_GMAIL_APP_PASSWORD=$ENV_DOCKER_VOLUME_BACKUP_GMAIL_APP_PASSWORD"
+    export_secret ENV_DOCKER_VOLUME_BACKUP_GMAIL_APP_PASSWORD "apps/docker-volume-backup/docker-volume-backup-gmail-app-password.secret.age"
 
-    export ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL=$(get_secret "apps/docker-volume-backup/docker-volume-backup-gmail-email.secret.age")
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL=$ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL"
+    export_secret ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL "apps/docker-volume-backup/docker-volume-backup-gmail-email.secret.age"
 
-    export ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO=$(get_secret "apps/docker-volume-backup/docker-volume-backup-email-to.secret.age")
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO=$ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO"
+    export_secret ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO "apps/docker-volume-backup/docker-volume-backup-email-to.secret.age"
 
-    export ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER=$(get_secret "apps/docker-volume-backup/docker-volume-backup-rsync-nas-user.secret.age")
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER=$ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER"
+    export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER "apps/docker-volume-backup/docker-volume-backup-rsync-nas-user.secret.age"
 
-    export ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD=$(get_secret "apps/docker-volume-backup/docker-volume-backup-rsync-nas-password.secret.age")
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD=$ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD"
+    export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD "apps/docker-volume-backup/docker-volume-backup-rsync-nas-password.secret.age"
 
-    export ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE=$(get_secret "apps/docker-volume-backup/docker-volume-backup-rsync-nas-module.secret.age")
-    echo "Exported ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE=$ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE"
+    export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE "apps/docker-volume-backup/docker-volume-backup-rsync-nas-module.secret.age"
 
     echo ""
     echo "Please run 'docker exec docker-volume-backup backup' to perform an immediate manual backup"

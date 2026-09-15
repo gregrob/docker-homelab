@@ -3,6 +3,9 @@
 # Include the secrets helper script to use get_secret function
 source "/srv/secrets-homelab/client/scripts/secrets-helper.sh"
 
+# Only set the following to true during DEBUG as it will display all secrets in the console
+export SECRET_DEBUG=false
+
 # Check if the script is being sourced
 if [ "${BASH_SOURCE[0]}" != "${0}" ]
 then
@@ -31,13 +34,9 @@ then
     export ENV_TZ=$(timedatectl show --property=Timezone --value)
     echo "Exported ENV_TZ=$ENV_TZ"
 
-    export ENV_NAS_BACKUP_TARGET=$(get_secret "infra/nas-backup-target.secret.age")
-    echo "Exported ENV_NAS_BACKUP_TARGET=$ENV_NAS_BACKUP_TARGET"
+    export_secret ENV_NAS_BACKUP_TARGET "infra/nas-backup-target.secret.age"
 
-    export ENV_TEST_DECRYPTION_COMMON=$(get_secret "test/test-code-string.secret.age")
-    echo "Exported ENV_TEST_DECRYPTION_COMMON=$ENV_TEST_DECRYPTION_COMMON"
-
-    echo ""
+    export_secret ENV_TEST_DECRYPTION_COMMON "test/test-code-string.secret.age" true
 
 else
     echo "FAIL: Please call script with - source ./$(basename "${BASH_SOURCE[0]}")"

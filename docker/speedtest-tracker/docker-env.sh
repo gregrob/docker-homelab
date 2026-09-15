@@ -8,26 +8,19 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
-    export ENV_SPEEDTEST_TRACKER_APP_KEY=$(get_secret "apps/speedtest-tracker/speedtest-tracker-app-key.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_APP_KEY=$ENV_SPEEDTEST_TRACKER_APP_KEY"
+    export_secret ENV_SPEEDTEST_TRACKER_APP_KEY "apps/speedtest-tracker/speedtest-tracker-app-key.secret.age"
 
-    export ENV_SPEEDTEST_TRACKER_ADMIN_NAME=$(get_secret "apps/speedtest-tracker/speedtest-tracker-admin-name.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_ADMIN_NAME=$ENV_SPEEDTEST_TRACKER_ADMIN_NAME"
+    export_secret ENV_SPEEDTEST_TRACKER_ADMIN_NAME "apps/speedtest-tracker/speedtest-tracker-admin-name.secret.age"
 
-    export ENV_SPEEDTEST_TRACKER_ADMIN_EMAIL=$(get_secret "apps/speedtest-tracker/speedtest-tracker-admin-email.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_ADMIN_EMAIL=$ENV_SPEEDTEST_TRACKER_ADMIN_EMAIL"
+    export_secret ENV_SPEEDTEST_TRACKER_ADMIN_EMAIL "apps/speedtest-tracker/speedtest-tracker-admin-email.secret.age"
 
-    export ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD=$(get_secret "apps/speedtest-tracker/speedtest-tracker-admin-password.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD=$ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD"
+    export_secret ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD "apps/speedtest-tracker/speedtest-tracker-admin-password.secret.age"
 
-    export ENV_SPEEDTEST_TRACKER_MAIL_USERNAME=$(get_secret "apps/speedtest-tracker/speedtest-tracker-mail-username.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_MAIL_USERNAME=$ENV_SPEEDTEST_TRACKER_MAIL_USERNAME"
+    export_secret ENV_SPEEDTEST_TRACKER_MAIL_USERNAME "apps/speedtest-tracker/speedtest-tracker-mail-username.secret.age"
 
-    export ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD=$(get_secret "apps/speedtest-tracker/speedtest-tracker-mail-password.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD=$ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD"
+    export_secret ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD "apps/speedtest-tracker/speedtest-tracker-mail-password.secret.age"
 
-    export ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS=$(get_secret "apps/speedtest-tracker/speedtest-tracker-mail-from-address.secret.age")
-    echo "Exported ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS=$ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS"
+    export_secret ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS "apps/speedtest-tracker/speedtest-tracker-mail-from-address.secret.age"
 
     echo ""
 
