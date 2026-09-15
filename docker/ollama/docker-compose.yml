@@ -9,7 +9,8 @@ services:
   ollama:
     #image:          ollama/ollama:0.30.8
     #image:          ollama/ollama:0.33.2
-    image:          ollama/ollama:0.33.3
+    #image:          ollama/ollama:0.33.3
+    image:          ollama/ollama:0.34.0
     container_name: ollama
     restart:        unless-stopped
        
