@@ -8,35 +8,18 @@ then
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
     
+    export_var ENV_QBITTORRENT_UI_PORT_PUB 8080
+    export_var ENV_QBITTORRENT_UI_PORT_PRV 8081
+    export_var ENV_PROWLARR_PORT 9696
+    export_var ENV_SONARR_PORT 8989
+    export_var ENV_RADARR_PORT 7878
+    export_var ENV_SEERR_PORT 5055
+    export_var ENV_LIDARR_PORT 8686
+    export_var ENV_AURRAL_PORT 3001
+
     export_secret ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_001 "apps/gluetun/gluetun-wireguard-private-key-001.secret.age"
-
     export_secret ENV_WIREGUARD_PRIVATE_KEY_GLUETUN_002 "apps/gluetun/gluetun-wireguard-private-key-002.secret.age"
-
     export_secret ENV_GLUETUN_CONTROL_SERVER_API_KEY "apps/gluetun/gluetun-control-server-api-key.secret.age"
-
-    export ENV_QBITTORRENT_UI_PORT_PUB=8080
-    echo "Exported ENV_QBITTORRENT_UI_PORT_PUB=$ENV_QBITTORRENT_UI_PORT_PUB"
-    
-    export ENV_QBITTORRENT_UI_PORT_PRV=8081
-    echo "Exported ENV_QBITTORRENT_UI_PORT_PRV=$ENV_QBITTORRENT_UI_PORT_PRV"
-
-    export ENV_PROWLARR_PORT=9696
-    echo "Exported ENV_PROWLARR_PORT=$ENV_PROWLARR_PORT"
-
-    export ENV_SONARR_PORT=8989
-    echo "Exported ENV_SONARR_PORT=$ENV_SONARR_PORT"
-
-    export ENV_RADARR_PORT=7878
-    echo "Exported ENV_RADARR_PORT=$ENV_RADARR_PORT"
-
-    export ENV_SEERR_PORT=5055
-    echo "Exported ENV_SEERR_PORT=$ENV_SEERR_PORT"
-
-    export ENV_LIDARR_PORT=8686
-    echo "Exported ENV_LIDARR_PORT=$ENV_LIDARR_PORT"
-
-    export ENV_AURRAL_PORT=3001
-    echo "Exported ENV_AURRAL_PORT=$ENV_AURRAL_PORT"
 
     echo ""
 
