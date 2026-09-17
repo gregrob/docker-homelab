@@ -9,15 +9,10 @@ then
     echo "----------------------------------------------"
 
     export_secret ENV_DOCKER_VOLUME_BACKUP_GMAIL_APP_PASSWORD "apps/docker-volume-backup/docker-volume-backup-gmail-app-password.secret.age"
-
     export_secret ENV_DOCKER_VOLUME_BACKUP_GMAIL_EMAIL "apps/docker-volume-backup/docker-volume-backup-gmail-email.secret.age"
-
     export_secret ENV_DOCKER_VOLUME_BACKUP_EMAIL_TO "apps/docker-volume-backup/docker-volume-backup-email-to.secret.age"
-
     export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_USER "apps/docker-volume-backup/docker-volume-backup-rsync-nas-user.secret.age"
-
     export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_PASSWORD "apps/docker-volume-backup/docker-volume-backup-rsync-nas-password.secret.age"
-
     export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE "apps/docker-volume-backup/docker-volume-backup-rsync-nas-module.secret.age"
 
     echo ""

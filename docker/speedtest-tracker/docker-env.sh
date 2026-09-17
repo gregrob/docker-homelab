@@ -9,17 +9,11 @@ then
     echo "----------------------------------------------"
 
     export_secret ENV_SPEEDTEST_TRACKER_APP_KEY "apps/speedtest-tracker/speedtest-tracker-app-key.secret.age"
-
     export_secret ENV_SPEEDTEST_TRACKER_ADMIN_NAME "apps/speedtest-tracker/speedtest-tracker-admin-name.secret.age"
-
     export_secret ENV_SPEEDTEST_TRACKER_ADMIN_EMAIL "apps/speedtest-tracker/speedtest-tracker-admin-email.secret.age"
-
     export_secret ENV_SPEEDTEST_TRACKER_ADMIN_PASSWORD "apps/speedtest-tracker/speedtest-tracker-admin-password.secret.age"
-
     export_secret ENV_SPEEDTEST_TRACKER_MAIL_USERNAME "apps/speedtest-tracker/speedtest-tracker-mail-username.secret.age"
-
     export_secret ENV_SPEEDTEST_TRACKER_MAIL_PASSWORD "apps/speedtest-tracker/speedtest-tracker-mail-password.secret.age"
-
     export_secret ENV_SPEEDTEST_TRACKER_MAIL_FROM_ADDRESS "apps/speedtest-tracker/speedtest-tracker-mail-from-address.secret.age"
 
     echo ""

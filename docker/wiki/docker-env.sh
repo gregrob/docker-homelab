@@ -9,7 +9,6 @@ then
     echo "----------------------------------------------"
 
     export_secret ENV_POSTGRES_USER "apps/wiki/wiki-postgres-user.secret.age"
-
     export_secret ENV_POSTGRES_PASSWORD "apps/wiki/wiki-postgres-password.secret.age"
 
     echo ""
