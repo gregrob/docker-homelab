@@ -1,9 +1,10 @@
 #!/bin/bash
+# docker-env.sh (container level)
 
-# Check if the script is being sourced
-if [ "${BASH_SOURCE[0]}" != "${0}" ]
-then
-
+# =============================================================================
+# ENVIRONMENT VARIABLES & SECRETS
+# =============================================================================
+load_container_env() {
     echo "----------------------------------------------"
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
@@ -12,15 +13,13 @@ then
     export_secret ENV_POSTGRES_PASSWORD "apps/wiki/wiki-postgres-password.secret.age"
 
     echo ""
-
     echo "The mounted volume /wiki/data/content is owned by node:node inside the container (1000:1000)."
     echo "Need to make sure the local volume has the same permissions."
-
     echo ""
+}
 
-else
-    echo "FAIL: Please call script with - source ./env.sh"
-
-    exit 1
-
-fi
+# =============================================================================
+# Delegate Guard, Bootstrap & Execution to Parent Helper
+# =============================================================================
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+source "$SCRIPT_DIR/../docker-env-repo-helper.sh"

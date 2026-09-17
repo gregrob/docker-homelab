@@ -1,13 +1,14 @@
 #!/bin/bash
+# docker-env.sh (container level)
 
-# Check if the script is being sourced
-if [ "${BASH_SOURCE[0]}" != "${0}" ]
-then
-
+# =============================================================================
+# ENVIRONMENT VARIABLES & SECRETS
+# =============================================================================
+load_container_env() {
     echo "----------------------------------------------"
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
-    
+
     export_var ENV_QBITTORRENT_UI_PORT_PUB 8080
     export_var ENV_QBITTORRENT_UI_PORT_PRV 8081
     export_var ENV_PROWLARR_PORT 9696
@@ -34,10 +35,10 @@ then
     docker network inspect arr-net >/dev/null 2>&1 || docker network create --driver bridge arr-net
 
     echo ""
+}
 
-else
-    echo "FAIL: Please call script with - source ./env.sh"
-
-    exit 1
-
-fi
+# =============================================================================
+# Delegate Guard, Bootstrap & Execution to Parent Helper
+# =============================================================================
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+source "$SCRIPT_DIR/../docker-env-repo-helper.sh"

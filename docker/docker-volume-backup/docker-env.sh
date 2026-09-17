@@ -1,9 +1,10 @@
 #!/bin/bash
+# docker-env.sh (container level)
 
-# Check if the script is being sourced
-if [ "${BASH_SOURCE[0]}" != "${0}" ]
-then   
-    
+# =============================================================================
+# ENVIRONMENT VARIABLES & SECRETS
+# =============================================================================
+load_container_env() {
     echo "----------------------------------------------"
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
@@ -43,10 +44,10 @@ then
     echo "To check UID/GID distribution before and after extraction and including symlinked directories:"
     echo "  find -L /path/to/data -exec stat -c \"%u:%g\" {} + | sort | uniq -c | sort -rn"
     echo ""
+}
 
-else
-    echo "FAIL: Please call script with - source ./env.sh"
-
-    exit 1
-  
-fi
+# =============================================================================
+# Delegate Guard, Bootstrap & Execution to Parent Helper
+# =============================================================================
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+source "$SCRIPT_DIR/../docker-env-repo-helper.sh"
