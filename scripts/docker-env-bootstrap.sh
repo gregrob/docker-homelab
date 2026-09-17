@@ -16,7 +16,7 @@
 #   docker_env_bootstrap "${BASH_SOURCE[0]}" "${0}"
 
 # Set to 'true' to display secrets in the console during troubleshooting
-SECRET_DEBUG_VALUE=false
+_SECRET_DEBUG_DEFAULT=false
 
 docker_env_bootstrap() {
     local calling_source="$1"
@@ -35,7 +35,7 @@ docker_env_bootstrap() {
     source "$SECRETS_HOMELAB_CLIENT_SCRIPTS_DIR/secrets-helper.sh"
 
     # Only set to true during debug (displays secrets in console output)
-    export SECRET_DEBUG="$SECRET_DEBUG_VALUE"
+    export SECRET_DEBUG="$_SECRET_DEBUG_DEFAULT"
 
     # Generic host-level vars and shared secrets
     source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-env-common.sh"
