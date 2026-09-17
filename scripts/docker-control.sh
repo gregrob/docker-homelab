@@ -3,16 +3,16 @@
 #
 # Shared logic behind docker-start.sh / docker-stop.sh across every
 # docker-* repo (docker-homelab, docker-homelab-private, etc.) — those
-# files are now thin jumpers that source this and call docker_control_run
+# files are thin entry points that source this and call docker_control_run
 # with a mode. Adding a new docker-* repo now only needs its own
 # docker-env.sh (repo-specific vars/secrets); the start/stop machinery
 # itself lives here once, not duplicated per repo.
 #
-# Usage (from a jumper script, not called directly):
-#   docker_control_run <start|stop> <jumper_dir> "$@"
+# Usage (from a caller script, not called directly):
+#   docker_control_run <start|stop> <caller_dir> "$@"
 #
-# jumper_dir MUST be the directory the CALLING jumper script itself lives
-# in, computed there and passed in — this file can't infer it via its own
+# caller_dir MUST be the directory the CALLING script itself lives in,
+# computed there and passed in — this file can't infer it via its own
 # BASH_SOURCE, since that always resolves to this shared file's own
 # location in scripts/, not wherever a given repo's docker-start.sh /
 # docker-stop.sh happen to live.
@@ -20,12 +20,12 @@
 readonly _DC_RED='\033[0;31m'
 readonly _DC_NC='\033[0m'
 
-# Refuse to run if called from the jumper's own directory rather than a
+# Refuse to run if called from the scripts root directory rather than a
 # container subfolder.
 _docker_control_check_calling_source() {
-    local jumper_dir="$1"
+    local caller_dir="$1"
 
-    if [[ "$jumper_dir" == "$PWD" ]]; then
+    if [[ "$caller_dir" == "$PWD" ]]; then
         echo -e "${_DC_RED}ERROR${_DC_NC}:"
         echo "        This script is intended to be called from a container's own folder."
         echo "        It appears like you have called it from its source location."
@@ -38,15 +38,15 @@ _docker_control_check_calling_source() {
     fi
 }
 
-# Sources, in order: the repo-level docker-env.sh (in jumper_dir), an
+# Sources, in order: the repo-level docker-env.sh (in caller_dir), an
 # optional per-host override, then an optional per-container override in
-# the current directory. Same layering as before this refactor.
+# the current directory.
 _docker_control_setup_environment() {
-    local jumper_dir="$1"
+    local caller_dir="$1"
 
-    source "$jumper_dir/docker-env.sh"
+    source "$caller_dir/docker-env.sh"
 
-    local host_specific="$jumper_dir/docker-env-${HOSTNAME}.sh"
+    local host_specific="$caller_dir/docker-env-${HOSTNAME}.sh"
     if [[ -f "$host_specific" ]]; then
         source "$host_specific"
     fi
@@ -71,15 +71,15 @@ _docker_control_invalid_parameters() {
     exit 1
 }
 
-# docker_control_run: the actual entrypoint, called by each jumper.
+# docker_control_run: the actual entrypoint, called by each starter/stopper script.
 #
 # Arguments:
 #   $1   - mode: "start" or "stop"
-#   $2   - jumper_dir: the calling jumper script's own directory
-#   $3.. - whatever the user passed to the jumper (dryrun/v1/v2)
+#   $2   - caller_dir: the calling script's own directory
+#   $3.. - whatever the user passed to the script (dryrun/v1/v2)
 docker_control_run() {
     local mode="$1"
-    local jumper_dir="$2"
+    local caller_dir="$2"
     shift 2
 
     local method_name method_str v1_command v2_command
@@ -102,26 +102,26 @@ docker_control_run() {
             ;;
     esac
 
-    _docker_control_check_calling_source "$jumper_dir"
+    _docker_control_check_calling_source "$caller_dir"
 
     local method_specific="./${method_name}"
 
     if [[ -f "$method_specific" ]]; then
-        _docker_control_setup_environment "$jumper_dir"
+        _docker_control_setup_environment "$caller_dir"
         echo "${method_str} with specific script"
         "$method_specific"
 
     elif [[ "$1" == "dryrun" ]]; then
-        _docker_control_setup_environment "$jumper_dir"
+        _docker_control_setup_environment "$caller_dir"
         echo "Not calling docker container commands"
 
     elif [[ "$1" == "v2" ]]; then
-        _docker_control_setup_environment "$jumper_dir"
+        _docker_control_setup_environment "$caller_dir"
         echo "${method_str} with the v2 API"
         eval "$v2_command"
 
     elif [[ "$1" == "v1" ]]; then
-        _docker_control_setup_environment "$jumper_dir"
+        _docker_control_setup_environment "$caller_dir"
         echo "${method_str} with the V1 API"
         eval "$v1_command"
 
