@@ -7,9 +7,9 @@
 # secrets-helper.sh (the export_secret and export_var calls below 
 # depend on it).
 
-echo "--------------------------------------------"
+echo "------------------------------------------"
 echo "Setting up REPO environment for docker ..."
-echo "--------------------------------------------"
+echo "------------------------------------------"
 
 # Repo-specific exports go here
 # export_var ENV_DOCKER_HOMELAB_COMPOSE_PROJECT "docker-homelab"
