@@ -12,5 +12,5 @@ echo "Setting up REPO environment for docker ..."
 echo "--------------------------------------------"
 
 # Repo-specific exports go here
-# export_var ENV_HOSTNAME "$HOSTNAME"
-# export_secret ENV_TEST_DECRYPTION_COMMON "test/test-code-string.secret.age" true
+# export_var ENV_DOCKER_HOMELAB_COMPOSE_PROJECT "docker-homelab"
+# export_secret ENV_DOCKER_HOMELAB_SHARED_API_TOKEN "apps/docker-homelab/shared-api-token.secret.age"
