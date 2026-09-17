@@ -25,3 +25,4 @@ load_container_env() {
 # =============================================================================
 SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 source "$SCRIPT_DIR/../docker-env-repo-helper.sh"
+docker_env_repo_bootstrap "${BASH_SOURCE[0]}" "${0}"
