@@ -1,35 +1,25 @@
 #!/bin/bash
+# docker-env.sh
+#
+# Environment orchestrator. Sourced by docker-control.sh
+# (via docker-start.sh / docker-stop.sh) before container actions, or directly
+# for local shell environments.
+#
+# Execution flow:
+# 1. Resolves script directory via realpath (which covers symlinks).
+# 2. Sources local docker-paths.sh for shared script locations.
+# 3. Invokes docker-env-bootstrap.sh for core functions, safety guards, and common env.
+# 4. Sources repo-specific vars and secrets from docker-env-repo.sh.
 
-# Include the environment variable helper script to use export_var function
-source "/srv/docker-homelab/scripts/env-helper.sh"
+# Get the true folder where THIS script lives on disk
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-# Include the secrets helper script to use export_secret function
-source "/srv/secrets-homelab/client/scripts/secrets-helper.sh"
+# Source paths.sh relative to this script's directory
+source "$SCRIPT_DIR/docker-paths.sh"
 
-# Only set the following to true during DEBUG as it will display all secrets in the console
-export SECRET_DEBUG=false
+# Source and run environment setup script (setup and common vars/secrets)
+source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-env-bootstrap.sh"
+docker_env_bootstrap "${BASH_SOURCE[0]}" "${0}"
 
-# Check if the script is being sourced
-if [ "${BASH_SOURCE[0]}" != "${0}" ]
-then
-    echo "--------------------------------------------"
-    echo "Setting up COMMON environment for docker ..."
-    echo "--------------------------------------------"
-
-    export_var ENV_HOSTNAME "$HOSTNAME"
-    export_var ENV_LOCALIP "$(hostname -I | awk '{print $1}')"
-    export_var ENV_LOOPBACK "127.0.0.1"
-    export_var ENV_DOCKER_USER "$USER"
-    export_var ENV_DOCKER_UID "$(id -u "$ENV_DOCKER_USER")"
-    export_var ENV_DOCKER_GID "$(id -g "$ENV_DOCKER_USER")"
-    export_var ENV_TZ "$(timedatectl show --property=Timezone --value)"
-
-    export_secret ENV_NAS_BACKUP_TARGET "infra/nas-backup-target.secret.age"
-    export_secret ENV_TEST_DECRYPTION_COMMON "test/test-code-string.secret.age" true
-
-else
-    echo "FAIL: Please call script with - source ./$(basename "${BASH_SOURCE[0]}")"
-
-    exit 1
-
-fi
+# Source repo vars/secrets
+source "$SCRIPT_DIR/docker-env-repo.sh"
