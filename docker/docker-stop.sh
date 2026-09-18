@@ -10,8 +10,8 @@
 # Get the true folder where THIS script lives on disk
 SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-# Source paths.sh relative to this script's directory
-source "$SCRIPT_DIR/docker-paths.sh"
+# Source configuration (paths, defaults) relative to this script's directory
+source "$SCRIPT_DIR/docker-config.sh"
 
 # Source and run control script
 source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-control.sh"
