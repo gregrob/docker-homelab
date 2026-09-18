@@ -20,8 +20,9 @@ load_container_env() {
 }
 
 # =============================================================================
-# Delegate Guard, Bootstrap & Execution to Parent Helper
+# Bootstrap & Execution (shared docker_env_bootstrap)
 # =============================================================================
-SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-source "$SCRIPT_DIR/../docker-env-repo-helper.sh"
-docker_env_repo_bootstrap "${BASH_SOURCE[0]}" "${0}"
+CONTAINER_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+source "$CONTAINER_DIR/../docker-config.sh"
+source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-env-bootstrap.sh"
+docker_env_bootstrap "${BASH_SOURCE[0]}" "${0}" "$CONTAINER_DIR/.." false load_container_env
