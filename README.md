@@ -22,7 +22,7 @@ How docker containers actually get started and stopped across the fleet — the 
 
 ## Overview
 
-Every container's start/stop logic and environment setup boilerplate is centralised in `docker-homelab/scripts/` and `docker-homelab/docker/`, shared across every container rather than duplicated per container. A container's own folder contains almost nothing but the things that are actually unique to it — its `docker-compose.yaml`, its own data mounts, and a short list of its own environment variables and secrets.
+Every container's start/stop logic and environment setup boilerplate is centralised in `docker-homelab/scripts/` and `docker-homelab/docker/`, shared across every container rather than duplicated per container. A container's own folder contains almost nothing but the things that are actually unique to it — its `docker-compose.yaml`, its own data mounts, and (optionally) a short list of its own environment variables and secrets.
 
 The same shared scripts are reusable by other homelab docker repos (e.g. a future `docker-homelab-prv`) without copying anything — a new repo only needs its own `docker-env-repo.sh` and container folders, since everything else lives at a fixed path that every docker host already has. Naming follows the wider convention used across the homelab: `*-homelab` (`docker-homelab`, `docker-homelab-prv`, `ansible-homelab`, `secrets-homelab`).
 
@@ -53,7 +53,7 @@ docker-homelab/                        (git repo, pulled to every docker host)
     │   ├── data/
     │   │   ├── host/                  # host mount point for the container (not committed)
     │   │   └── common/                # common data mount point (committed)
-    │   └── docker-env.sh              # this container's own vars/secrets (tier 4)
+    │   └── docker-env.sh              # this container's own vars/secrets — optional (tier 4)
     └── container-2/
         ├── docker-compose.yaml
         ├── data/
@@ -109,20 +109,22 @@ sequenceDiagram
         Control->>HostEnv: source docker-env-HOSTNAME.sh (tier 3)
         HostEnv-->>Control: return
     end
-    Control->>ContainerEnv: source ./docker-env.sh (tier 4)
-    Note over ContainerEnv: defines load_container_env()
-    ContainerEnv->>Bootstrap: docker_env_bootstrap(BASH_SOURCE[0], $0, repo_dir, false, load_container_env)
-    Note over Bootstrap: self-bootstrap check<br/>(skipped — already loaded)
-    Bootstrap->>ContainerEnv: call load_container_env()
-    ContainerEnv-->>Bootstrap: container's own exports run
-    Bootstrap-->>Bootstrap: unset -f load_container_env
-    Bootstrap-->>ContainerEnv: return
-    ContainerEnv-->>Control: return
+    opt container's own docker-env.sh exists
+        Control->>ContainerEnv: source ./docker-env.sh (tier 4)
+        Note over ContainerEnv: defines load_container_env()
+        ContainerEnv->>Bootstrap: docker_env_bootstrap(BASH_SOURCE[0], $0, repo_dir, false, load_container_env)
+        Note over Bootstrap: self-bootstrap check<br/>(skipped — already loaded)
+        Bootstrap->>ContainerEnv: call load_container_env()
+        ContainerEnv-->>Bootstrap: container's own exports run
+        Bootstrap-->>Bootstrap: unset -f load_container_env
+        Bootstrap-->>ContainerEnv: return
+        ContainerEnv-->>Control: return
+    end
     Control->>Compose: eval "docker compose up -d"
     Compose-->>U: containers started
 ```
 
-`docker-stop.sh` follows the identical path, just with `docker_control_run("stop", ...)` and `docker compose down` at the end.
+`docker-stop.sh` follows the identical path, just with `docker_control_run("stop", ...)` and `docker compose down` at the end. If a container has no `docker-env.sh` at all, that whole block is simply skipped — nothing needs to exist there for the container to start.
 
 ## File reference
 
@@ -136,17 +138,17 @@ sequenceDiagram
 | `docker-start.sh` / `docker-stop.sh` | `docker/` | Entry points — compute their own directory, delegate everything to `docker-control.sh` |
 | `docker-env.sh` (repo level) | `docker/` | Orchestrator — bootstraps (tier 1), then sources tier 2 |
 | `docker-env-repo.sh` | `docker/` | Tier 2: vars/secrets shared by every container in this repo |
-| `docker-env-<hostname>.sh` | `docker/` | Tier 3: per-host override, sourced if present |
-| `docker-env.sh` (container level) | `docker/<container>/` | Tier 4: this container's own vars/secrets, defined inside `load_container_env` |
+| `docker-env-<hostname>.sh` | `docker/` | Tier 3 (optional): per-host override, sourced if present |
+| `docker-env.sh` (container level) | `docker/<container>/` | Tier 4 (optional): this container's own vars/secrets, defined inside `load_container_env`, sourced if present |
 
 ## Environment variable tiers
 
-Four tiers, sourced in a fixed order, each able to override anything set before it. Tier 3 is always considered — it's a formal part of the sequence, sourced whenever the file for the current host happens to exist, not an ad hoc extra step:
+Four tiers, sourced in a fixed order, each able to override anything set before it. Tiers 3 and 4 are both optional — each is a formal, always-considered part of the sequence, but only actually sourced when its file happens to exist for the current host/container. A container that needs no environment variables of its own simply has no `docker-env.sh` — there's no need for an empty placeholder file:
 
 1. **Common** (`scripts/docker-env-common.sh`) — host facts (`ENV_HOSTNAME`, `ENV_LOCALIP`, `ENV_TZ`, etc.) and secrets genuinely common to every `*-homelab` docker repo.
 2. **Repo** (`docker/docker-env-repo.sh`) — vars/secrets shared by every container within this one repo, but not necessarily relevant to other repos.
 3. **Host** (`docker/docker-env-<hostname>.sh`, optional) — overrides specific to one host. Sourced if the file exists for the current `$HOSTNAME`; skipped otherwise. No host-specific overrides exist yet in the current examples — this is the file to create when that need comes up.
-4. **Container** (each container's own `docker-env.sh`, inside `load_container_env`) — only what that one container needs.
+4. **Container** (each container's own `docker-env.sh`, optional, inside `load_container_env`) — only what that one container needs. Sourced if the file exists; skipped otherwise. Plenty of simple containers need nothing here at all.
 
 ## What to configure per host
 
@@ -181,14 +183,15 @@ There's very little host-specific configuration by design — almost everything 
 
 ## Adding a new container
 
-1. Create `docker/<container-name>/` with a `docker-compose.yaml`, a `data/host/` and `data/common/` mount structure, and a `docker-env.sh`.
-2. In `docker-env.sh`, define `load_container_env` with that container's own `export_var`/`export_secret` calls, then the same closing lines every container file uses:
+1. Create `docker/<container-name>/` with a `docker-compose.yaml` and a `data/host/` / `data/common/` mount structure.
+2. If this container needs its own vars/secrets, add a `docker-env.sh` there: define `load_container_env` with that container's own `export_var`/`export_secret` calls, then the same closing lines every container file uses:
    ```bash
    CONTAINER_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
    source "$CONTAINER_DIR/../docker-config.sh"
    source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-env-bootstrap.sh"
    docker_env_bootstrap "${BASH_SOURCE[0]}" "${0}" "$CONTAINER_DIR/.." false load_container_env
    ```
+   If it needs nothing beyond tiers 1–3, skip this file entirely — `docker-control.sh` only sources it when present.
 3. Symlink it into whichever host(s) will run it: `servers/<hostname>/<container-name> -> ../../docker/<container-name>`.
 
 ## Adding a new homelab docker repo
