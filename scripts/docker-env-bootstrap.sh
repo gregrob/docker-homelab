@@ -21,10 +21,12 @@
 #   repo_dir      - absolute path to this repo's docker/ folder
 #   source_common - "true" to source docker-env-common.sh (tier 1); pass
 #                   "true" from the repo-level orchestrator, "false" from
-#                   a container's docker-env.sh (tier 1 has already run
-#                   earlier in the normal chain by the time a container
-#                   level file runs — see the self-bootstrap branch below
-#                   for the one case where it still needs to happen)
+#                   a container's docker-env.sh. This is the ONLY thing
+#                   that controls tier 1 — self-bootstrapping below never
+#                   pulls it in as a side effect, even on a cold shell,
+#                   so a standalone test of one container's docker-env.sh
+#                   loads only that container's own vars/secrets, not the
+#                   full fleet-wide common environment too.
 #   callback_fn   - optional function name to call then unset afterwards
 #                   (container level's load_container_env; omit at repo
 #                   level, which has no such callback)
@@ -35,7 +37,6 @@ docker_env_bootstrap() {
     local repo_dir="$3"
     local source_common="${4:-true}"
     local callback_fn="${5:-}"
-    local _bootstrapped_tier1=false
 
     # 1. Enforce sourcing guard
     if [[ "$calling_source" == "$invoked_as" ]]; then
@@ -44,12 +45,13 @@ docker_env_bootstrap() {
         exit 1
     fi
 
-    # 2. Self-bootstrap helpers if missing — lets ANY docker-env.sh (repo
-    # or container level) be sourced standalone for local testing,
-    # without the normal chain having run first. A shell cold enough to
-    # be missing these functions has also never seen tier 1, so pull that
-    # in here too rather than leaving a standalone container test with
-    # host facts / fleet-wide secrets missing.
+    # 2. Self-bootstrap helper FUNCTIONS only, if missing — lets ANY
+    # docker-env.sh (repo or container level) be sourced standalone for
+    # local testing, without the normal chain having run first. Only
+    # ensures export_var / export_secret exist, since load_container_env
+    # (or a repo's own exports) needs them to run at all — deliberately
+    # does NOT also pull in tier 1 here, so this stays scoped to "make
+    # the required functions available," not "replicate the whole chain."
     if ! declare -f export_var >/dev/null 2>&1 || \
        ! declare -f export_secret >/dev/null 2>&1; then
 
@@ -58,16 +60,14 @@ docker_env_bootstrap() {
         source "$DOCKER_HOMELAB_SCRIPTS_DIR/env-helper.sh"
         source "$SECRETS_HOMELAB_CLIENT_SCRIPTS_DIR/secrets-helper.sh"
         export SECRET_DEBUG="$SECRET_DEBUG_DEFAULT"
-
-        source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-env-common.sh"
-        _bootstrapped_tier1=true
     fi
 
-    # 3. Tier 1 (fleet-wide common vars/secrets) — only when explicitly
-    # requested AND not already pulled in by the self-bootstrap branch
-    # just above (avoids sourcing it twice, with two banners, on a cold
-    # repo-level run).
-    if [[ "$source_common" == "true" && "$_bootstrapped_tier1" != "true" ]]; then
+    # 3. Tier 1 (fleet-wide common vars/secrets) — governed solely by
+    # source_common, regardless of whether step 2 just fired. A
+    # standalone container test (source_common=false) intentionally
+    # skips this; source the repo-level docker-env.sh first if a test
+    # needs tier 1 too.
+    if [[ "$source_common" == "true" ]]; then
         source "$DOCKER_HOMELAB_SCRIPTS_DIR/docker-env-common.sh"
     fi
 
