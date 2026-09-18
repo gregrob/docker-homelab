@@ -271,3 +271,11 @@
             enableRecentEvents: true
             username: homepage
             password: "{{HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD}}"
+            
+- Home Automation:
+    - Home Assistant Test:
+        icon: home-assistant.png
+        href: &ha_test_url http://ha-test.home.gregrob.net:8123/
+        description: Testing sandbox for core updates, add-ons, and scripts
+        siteMonitor: *ha_test_url
+        statusStyle: "dot"

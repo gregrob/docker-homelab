@@ -35,9 +35,11 @@ layout:
     icon: mdi-filmstrip
   Downloads:
     icon: mdi-download
+  Home Automation:
+    icon: mdi-home
+  
   AI:
     icon: mdi-robot
-    
   3D Printing:
     icon: mdi-printer-3d
   
