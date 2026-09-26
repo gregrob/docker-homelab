@@ -7,7 +7,8 @@ services:
   # https://github.com/TechnitiumSoftware/DnsServer
   # ---------------------------------------------
   dns-server:
-    image:          docker.io/technitium/dns-server:15.4.0
+    #image:          docker.io/technitium/dns-server:15.4.0
+    image:          docker.io/technitium/dns-server:15.5.0
     container_name: dns-server
     hostname:       dns-server
     restart:        unless-stopped
