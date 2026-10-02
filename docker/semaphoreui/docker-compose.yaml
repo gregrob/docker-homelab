@@ -10,7 +10,8 @@ services:
   #   https://hub.docker.com/_/alpine
   # ---------------------------------------------
   permissions-fixer:
-    image:          alpine:3.24.1
+    #image:          alpine:3.24.1
+    image:          alpine:3.24.2
     container_name: semaphoreui-permissions-fixer
     network_mode:   none
     volumes:
