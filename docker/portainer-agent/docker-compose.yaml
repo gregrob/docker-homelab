@@ -9,7 +9,8 @@ services:
   portainer-agent:
     #image:          portainer/agent:2.32.0
     #image:          portainer/agent:2.33.7
-    image:          portainer/agent:2.45.0
+    #image:          portainer/agent:2.45.0
+    image:          portainer/agent:2.45.1
     container_name: portainer-agent
     restart:        unless-stopped
        
