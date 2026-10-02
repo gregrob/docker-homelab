@@ -16,7 +16,8 @@ services:
   
   # 1. The temporary init container to fix /wiki/data/content permissions
   permissions-fixer:
-    image:          alpine:3.24.1
+    #image:          alpine:3.24.1
+    image:          alpine:3.24.2
     container_name: wiki-permissions-fixer
     network_mode:   none
 
@@ -27,7 +28,8 @@ services:
 
   # 2. Main wiki and database
   wiki:
-    image:          ghcr.io/requarks/wiki:2.5.314
+    #image:          ghcr.io/requarks/wiki:2.5.314
+    image:          ghcr.io/requarks/wiki:2.5.316
     container_name: wiki
     restart:        unless-stopped
 
