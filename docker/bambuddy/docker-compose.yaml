@@ -16,7 +16,8 @@ services:
     #image: ghcr.io/maziggy/bambuddy:1.2.5.3
     #image: ghcr.io/maziggy/bambuddy:1.2.5.4
     #image: ghcr.io/maziggy/bambuddy:1.2.5.5
-    image: ghcr.io/maziggy/bambuddy:1.2.5.6
+    #image: ghcr.io/maziggy/bambuddy:1.2.5.6
+    image: ghcr.io/maziggy/bambuddy:1.2.5.7
     build: .
     # Usage:
     #   docker compose up -d          → pulls pre-built image from ghcr.io
