@@ -279,3 +279,11 @@
         description: Testing sandbox for core updates, add-ons, and scripts
         siteMonitor: *ha_test_url
         statusStyle: "dot"
+
+- In Development:
+    - Infisical:
+        icon: infisical.png
+        href: &infisical_url http://development-003.apps.gregrob.net:90/
+        description: Secrets management (test instance)
+        siteMonitor: *infisical_url
+        statusStyle: "dot"

@@ -42,4 +42,5 @@ layout:
     icon: mdi-robot
   3D Printing:
     icon: mdi-printer-3d
-  
+  In Development:
+    icon: mdi-dev-to
