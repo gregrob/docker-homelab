@@ -81,7 +81,8 @@ services:
       - wiki-db-net
 
     # User set so mounts are written with these permissions
-    #user: "${ENV_DOCKER_UID:?admin user id required}:${ENV_DOCKER_GID:?admin group id required}" 
+    # Expected harmless log: "chmod: /var/run/postgresql: Operation not permitted" (entrypoint can't chmod the socket dir as a non-root user; the socket is still created)
+    user: "${ENV_DOCKER_UID:?admin user id required}:${ENV_DOCKER_GID:?admin group id required}" 
 
     environment:
       POSTGRES_DB: *postgres-db
@@ -92,7 +93,7 @@ services:
       - ./data/host/postgres:/var/lib/postgresql
 
       # initdb needs the uid to resolve in /etc/passwd
-      #- /etc/passwd:/etc/passwd:ro
+      - /etc/passwd:/etc/passwd:ro
 
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
