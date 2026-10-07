@@ -29,7 +29,7 @@ load_container_env() {
 
     export_secret ENV_INFISICAL_EMAIL_USERNAME "apps/infisical/infisical-gmail-email.secret.age"
     export_secret ENV_INFISICAL_EMAIL_PASSWORD "apps/infisical/infisical-gmail-app-password.secret.age"
-    export_secret ENV_INFISICAL_EMAIL_FROM "apps/infisical/infisical-gmail-email.secret.age"
+    export_secret ENV_INFISICAL_EMAIL_FROM "apps/infisical/infisical-gmail-email-from.secret.age"
 
     echo ""
     echo "WARNING: In my original setup with v0.77.0-postgres, the unifi firewall was blocking" 
