@@ -1,13 +1,20 @@
 ---
+
+# ------------------------------------------------
+# YAML Anchors: Shared database parameters
+# ------------------------------------------------
+x-postgres-db:       &postgres-db       infisical
+x-postgres-user:     &postgres-user     "${ENV_INFISICAL_POSTGRES_USER:?database username required}"
+x-postgres-password: &postgres-password "${ENV_INFISICAL_POSTGRES_PASSWORD:?database password required}"
+x-postgres-uri:      &postgres-uri      "postgres://${ENV_INFISICAL_POSTGRES_USER}:${ENV_INFISICAL_POSTGRES_PASSWORD}@postgres:5432/infisical"
+
 services:
   # ---------------------------------------------
   # Setup infisical
   #
-  # postgres - https://hub.docker.com/_/postgres
-  # redis - https://hub.docker.com/_/redis
   # infisical - https://hub.docker.com/r/infisical/infisical
   # 
-  # Recomendations for package versions:
+  # Recommendations for package versions:
   #  https://infisical.com/docs/self-hosting/deployment-options/native/linux-package/installation
   #  As at 25-March-2026 - PostgreSQL v14 and up, Redis V6.x or 7.x
   #
@@ -22,88 +29,108 @@ services:
     restart:        unless-stopped
 
     networks:
-      backend:
-      frontend:
+      infisical-db-net:
+      infisical-net:
 
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
 
     ports:
-      - 80:8080
+      - 90:8080
 
     environment:
       NODE_ENV: production
-      DB_CONNECTION_URI: postgres://${ENV_POSTGRES_USER}:${ENV_POSTGRES_PASSWORD}@postgres:5432/${ENV_POSTGRES_DB}
+      DB_CONNECTION_URI: *postgres-uri
       REDIS_URL: redis://redis:6379
-      SITE_URL: http://${ENV_HOST:?hostname required}:80
+      SITE_URL: http://${ENV_FQDN:?hostname required}:90
       ENCRYPTION_KEY: ${ENV_ENCRYPTION_KEY:?encryption key required}
       AUTH_SECRET: ${ENV_AUTH_SECRET:?auth secret required}
 
       SMTP_HOST: ${ENV_INFISICAL_EMAIL_HOST:?email host required}
       SMTP_USERNAME: ${ENV_INFISICAL_EMAIL_USERNAME:?email username required}
-      SMTP_PASSWORD: ${ENV_INFISICAL_EMAIL_PASSWORD:?email username required}
+      SMTP_PASSWORD: ${ENV_INFISICAL_EMAIL_PASSWORD:?email password required}
       SMTP_PORT: ${ENV_INFISICAL_EMAIL_PORT:?email port required}
       SMTP_FROM_ADDRESS: ${ENV_INFISICAL_EMAIL_FROM:?email from address required}
       SMTP_FROM_NAME: ${ENV_INFISICAL_EMAIL_NAME:?email name required}
 
+  # ---------------------------------------------
+  # Setup redis
+  #
+  # redis - https://hub.docker.com/_/redis
+  # ---------------------------------------------
   redis:
-    #image:          docker.io/library/redis:7.2.5-alpine3.20
-    image:          docker.io/library/redis:7.4.8-alpine3.21
+    image:          docker.io/library/redis:8.10.2-alpine3.23
     container_name: infisical-redis
     restart:        unless-stopped
 
     networks:
-      backend:
-      frontend:
+      infisical-db-net:
 
-    ports:
-     - 6379:6379
+    user: "${ENV_DOCKER_UID:?admin user id required}:${ENV_DOCKER_GID:?admin group id required}"
 
-    environment:
-      ALLOW_EMPTY_PASSWORD: yes
-
+    # Expected log warnings (harmless for dev/test):
+    #   - "Memory overcommit must be enabled" -> host setting; fix with
+    #     `sudo sysctl vm.overcommit_memory=1` (persist in /etc/sysctl.d/99-redis.conf)
+    #   - "does not require authentication" -> fine while Redis is internal-only (no ports: published)
     command: --save 60 1 --loglevel warning
 
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 3s
-    
     volumes:
-      - ./data/host/redis:/data # no :Z as it is strictly not shared between containers
+      - ./data/host/redis:/data
 
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ------------------------------------------------
+  # Setup postgres
+  #
+  # https://hub.docker.com/_/postgres
+  # ------------------------------------------------
   postgres:
-    #image:          docker.io/library/postgres:14-alpine
-    image:          docker.io/library/postgres:18.3-alpine3.23
+    image:          docker.io/library/postgres:18.6-alpine3.24
     container_name: infisical-postgres
     restart:        unless-stopped
 
-    networks:
-      backend:
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
 
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 5s
+    networks:
+      - infisical-db-net
+
+    # Run as host admin user so mounts are owned by it (needs ENV_DOCKER_UID/GID in .env)
+    # NOTE: log shows "chmod: /var/run/postgresql: Operation not permitted" - harmless,
+    #       the entrypoint can't chmod as non-root, the socket is still created.
+    user: "${ENV_DOCKER_UID:?admin user id required}:${ENV_DOCKER_GID:?admin group id required}"
 
     environment:
-      POSTGRES_USER: ${ENV_POSTGRES_USER:?database username required}
-      POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD:?database password required}
-      POSTGRES_DB: ${ENV_POSTGRES_DB:?database name required}
-      # Remove for new handling in V18
-      #PGDATA: /var/lib/postgresql/data/infisical
+      POSTGRES_DB: *postgres-db
+      POSTGRES_USER: *postgres-user
+      POSTGRES_PASSWORD: *postgres-password
 
     volumes:
-      - ./data/host/db-data:/var/lib/postgresql # no :Z as it is strictly not shared between containers
+      - ./data/host/postgres:/var/lib/postgresql
+
+      # initdb needs the uid to resolve in /etc/passwd
+      - /etc/passwd:/etc/passwd:ro
+
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
-  backend:
+  infisical-net:
+    name: infisical-net
+    driver: bridge
+  infisical-db-net:
+    name: infisical-db-net
+    driver: bridge
     internal: true
-  frontend:

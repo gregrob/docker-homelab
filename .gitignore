@@ -70,9 +70,9 @@ docker/homepage/data/host/example-config/*
 !docker/homepage/data/host/example-config/.gitkeep
 
 # infisical host specific
-docker/infisical/data/host/db-data/*
+docker/infisical/data/host/postgres/*
 docker/infisical/data/host/redis/*
-!docker/infisical/data/host/db-data/.gitkeep
+!docker/infisical/data/host/postgres/.gitkeep
 !docker/infisical/data/host/redis/.gitkeep
 
 # jellyfin host specific
