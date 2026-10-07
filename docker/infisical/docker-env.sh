@@ -11,14 +11,15 @@ load_container_env() {
 
     #export ENV_INFISICAL_TAG="v0.77.0-postgres"
     #export ENV_INFISICAL_TAG="v0.128.0-postgres"
-    export_var ENV_INFISICAL_TAG "v0.158.22"
-    export_var ENV_POSTGRES_USER "infisical"
-    export_var ENV_POSTGRES_PASSWORD "infisical"
-    export_var ENV_POSTGRES_DB "infisical"
-    export_var ENV_HOST "infisical.max.lan"
+    #export_var ENV_INFISICAL_TAG "v0.158.22"
+    export_var ENV_INFISICAL_TAG "v0.166.2"
+    
     export_var ENV_INFISICAL_EMAIL_HOST "smtp.gmail.com"
     export_var ENV_INFISICAL_EMAIL_PORT 587
     export_var ENV_INFISICAL_EMAIL_NAME "Infisical"
+
+    export_secret ENV_INFISICAL_POSTGRES_USER "apps/infisical/infisical-postgres-user.secret.age"
+    export_secret ENV_INFISICAL_POSTGRES_PASSWORD "apps/infisical/infisical-postgres-password.secret.age"
 
     export_secret ENV_ENCRYPTION_KEY "apps/infisical/infisical-encryption-key.secret.age"
     echo "Generate new encryption key with: openssl rand -hex 16"
