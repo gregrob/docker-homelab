@@ -29,6 +29,10 @@ docker/dns-server/data/host/logs/*
 docker/docker-volume-backup/data/host/backups/*
 !docker/docker-volume-backup/data/host/backups/.gitkeep
 
+# finns-page host specific
+docker/finns-page/data/host/certs/*
+!docker/finns-page/data/host/certs/.gitkeep
+
 # frigate host specific
 docker/frigate/data/host/db/*
 docker/frigate/data/host/config/*
