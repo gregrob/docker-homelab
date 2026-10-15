@@ -768,10 +768,21 @@ cameras:
   #    order: 11
 
 version: 0.18-0
-semantic_search:
-  enabled: true
-  model_size: large
-  device: GPU
+
+# Remove semantic search and gen AI for now.  Was not being used.
+#semantic_search:
+#  enabled: true
+#  model_size: large
+#  device: GPU
+#genai:
+#  newKey:
+#    base_url: http://ollama.apps.gregrob.net:11434/
+#    model: qwen3:8b
+#    provider: ollama
+#    roles:
+#      - descriptions
+#      - chat
+
 face_recognition:
   enabled: false
   model_size: small
