@@ -10,7 +10,8 @@ services:
   meshcentral:
     #image:          ghcr.io/ylianst/meshcentral:1.1.24
     #image:          ghcr.io/ylianst/meshcentral:1.2.5
-    image:          ghcr.io/ylianst/meshcentral:1.2.6
+    #image:          ghcr.io/ylianst/meshcentral:1.2.6
+    image:          ghcr.io/ylianst/meshcentral:1.3.0
     container_name: meshcentral
     restart:        unless-stopped
 
