@@ -12,7 +12,8 @@ load_container_env() {
     #export ENV_INFISICAL_TAG="v0.77.0-postgres"
     #export ENV_INFISICAL_TAG="v0.128.0-postgres"
     #export_var ENV_INFISICAL_TAG "v0.158.22"
-    export_var ENV_INFISICAL_TAG "v0.166.2"
+    #export_var ENV_INFISICAL_TAG "v0.166.2"
+    export_var ENV_INFISICAL_TAG "v0.167.1"
     
     export_var ENV_INFISICAL_EMAIL_HOST "smtp.gmail.com"
     export_var ENV_INFISICAL_EMAIL_PORT 587
