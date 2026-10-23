@@ -11,7 +11,8 @@ services:
   # ---------------------------------------------
   permissions-fixer:
     #image:          alpine:3.24.1
-    image:          alpine:3.24.2
+    #image:          alpine:3.24.2
+    image:          alpine:3.24.3
     container_name: semaphoreui-permissions-fixer
     network_mode:   none
     volumes:
@@ -26,7 +27,8 @@ services:
     #image:          semaphoreui/semaphore:v2.19.8
     #image:          semaphoreui/semaphore:v2.19.11
     #image:          semaphoreui/semaphore:v2.19.12
-    image:          semaphoreui/semaphore:v2.19.14
+    #image:          semaphoreui/semaphore:v2.19.14
+    image:          semaphoreui/semaphore:v2.19.17
     container_name: semaphoreui
     restart:        unless-stopped
 
