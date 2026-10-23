@@ -11,7 +11,8 @@ services:
     #image:          offen/docker-volume-backup:v2.47.0
     #image:          offen/docker-volume-backup:v2.48.2
     #image:          offen/docker-volume-backup:v2.49.0
-    image:          offen/docker-volume-backup:v2.49.1
+    #image:          offen/docker-volume-backup:v2.49.1
+    image:          offen/docker-volume-backup:v2.49.3
     container_name: docker-volume-backup
     restart:        unless-stopped
 
