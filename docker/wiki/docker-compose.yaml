@@ -22,7 +22,8 @@ services:
   # 1. The temporary init container to fix /wiki/data/content permissions
   permissions-fixer:
     #image:          alpine:3.24.1
-    image:          alpine:3.24.2
+    #image:          alpine:3.24.2
+    image:          alpine:3.24.3
     container_name: wiki-permissions-fixer
     network_mode:   none
 
