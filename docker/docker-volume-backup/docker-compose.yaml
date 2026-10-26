@@ -68,6 +68,9 @@ services:
       # Node identifier used to create host-specific backup subdirectories on the NAS
       - ENV_RSYNC_SYNC_HOSTNAME=${ENV_HOSTNAME}
 
+      # GPG passhrase (consistent across backup jobs)
+      - GPG_PASSPHRASE=${ENV_DOCKER_VOLUME_BACKUP_GPG_PASSPHRASE:?gpg passphrase required}
+
     # Uncomment both lines to immediately trigger a single backup
     #restart:    "no"
     #entrypoint: backup
