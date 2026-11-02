@@ -67,7 +67,8 @@ x-qbittorrent-common: &qbittorrent-common
   #image:   linuxserver/qbittorrent:5.2.3_v2.0.14-ls475
   #image:   linuxserver/qbittorrent:5.2.3_v2.0.14-ls476
   #image:   linuxserver/qbittorrent:5.2.4_v2.0.15-ls479
-  image:   linuxserver/qbittorrent:5.3.0_v2.1.2-ls484
+  #image:   linuxserver/qbittorrent:5.3.0_v2.1.2-ls484
+  image:   linuxserver/qbittorrent:5.3.0_v2.1.2-ls486
   
   restart: unless-stopped
   
@@ -288,7 +289,8 @@ services:
     #image: lscr.io/linuxserver/prowlarr:2.5.2.5491-ls158
     #image: lscr.io/linuxserver/prowlarr:2.5.2.5491-ls159
     #image: lscr.io/linuxserver/prowlarr:2.6.5.5623-ls162
-    image: lscr.io/linuxserver/prowlarr:2.6.5.5623-ls165
+    #image: lscr.io/linuxserver/prowlarr:2.6.5.5623-ls165
+    image: lscr.io/linuxserver/prowlarr:2.7.0.5723-ls166
     container_name: prowlarr
     restart: unless-stopped
 
@@ -417,7 +419,8 @@ services:
     #image: lscr.io/linuxserver/radarr:6.3.0.10514-ls315
     #image: lscr.io/linuxserver/radarr:6.3.0.10514-ls316
     #image: lscr.io/linuxserver/radarr:6.4.4.10685-ls318
-    image: lscr.io/linuxserver/radarr:6.4.4.10685-ls323
+    #image: lscr.io/linuxserver/radarr:6.4.4.10685-ls323
+    image: lscr.io/linuxserver/radarr:6.4.4.10685-ls325
     container_name: radarr
     restart: unless-stopped
 
@@ -534,7 +537,8 @@ services:
     #image: lscr.io/linuxserver/lidarr:3.1.0.4875-ls40
     #image: lscr.io/linuxserver/lidarr:3.1.0.4875-ls41
     #image: lscr.io/linuxserver/lidarr:3.1.0.4875-ls42
-    image: lscr.io/linuxserver/lidarr:3.1.0.4875-ls45
+    #image: lscr.io/linuxserver/lidarr:3.1.0.4875-ls45
+    image: lscr.io/linuxserver/lidarr:3.1.6.5079-ls46
     container_name: lidarr
     restart: unless-stopped
 
@@ -579,7 +583,8 @@ services:
     #image:          ghcr.io/lklynet/aurral:2.8.0
     #image:          ghcr.io/lklynet/aurral:2.9.0
     #image:          ghcr.io/lklynet/aurral:2.10.0
-    image:          ghcr.io/lklynet/aurral:2.11.0
+    #image:          ghcr.io/lklynet/aurral:2.11.0
+    image:          ghcr.io/lklynet/aurral:2.12.0
     container_name: aurral
     restart:        unless-stopped
 
