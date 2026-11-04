@@ -1,0 +1,32 @@
+---
+services:
+
+  # ------------------------------------------------
+  # Setup dockhand 
+  #
+  # https://hub.docker.com/r/fnsys/dockhand/
+  # https://github.com/Finsys/dockhand
+  # ------------------------------------------------
+  dockhand:
+    image:          fnsys/dockhand:${ENV_DOCKHAND_VERSION:?dockhand version required}
+    container_name: dockhand
+    restart:        unless-stopped
+
+    networks:
+      - dockhand-net
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      PUID: ${ENV_DOCKER_UID:?err}
+      PGID: ${ENV_DOCKER_GID:?err}
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/host/data:/app/data
+
+networks:
+  dockhand-net:
+    name: dockhand-net
+    driver: bridge

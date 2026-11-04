@@ -29,6 +29,10 @@ docker/dns-server/data/host/logs/*
 docker/docker-volume-backup/data/host/backups/*
 !docker/docker-volume-backup/data/host/backups/.gitkeep
 
+# dockhand host specific
+docker/dockhand/data/host/data/*
+!docker/dockhand/data/host/data/.gitkeep
+
 # finns-page host specific
 docker/finns-page/data/host/certs/*
 !docker/finns-page/data/host/certs/.gitkeep
@@ -38,6 +42,10 @@ docker/frigate/data/host/db/*
 docker/frigate/data/host/config/*
 !docker/frigate/data/host/db/.gitkeep
 !docker/frigate/data/host/config/.gitkeep
+
+# hawser host specific
+docker/hawser/data/host/stacks/*
+!docker/hawser/data/host/stacks/.gitkeep
 
 # arr host specific
 docker/arr/data/host/aurral/config/*
