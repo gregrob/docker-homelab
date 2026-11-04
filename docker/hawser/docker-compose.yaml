@@ -1,0 +1,32 @@
+---
+services:
+
+  # ------------------------------------------------
+  # Setup hawser 
+  #
+  # https://github.com/Finsys/hawser
+  # ------------------------------------------------
+  hawser:
+    image:          ghcr.io/finsys/hawser:${ENV_HAWSER_VERSION:?hawser version required}
+    container_name: hawser
+    restart:        unless-stopped
+
+    networks:
+      - hawser-net
+
+    ports:
+      - "2376:2376"
+
+    environment:
+      STACKS_DIR: ${ENV_HAWSER_CONTAINER_PATH_STACKS:?stacks path required}
+      TOKEN: ${ENV_HAWSER_TOKEN:?haswer token required}
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${ENV_HAWSER_CONTAINER_PATH_STACKS:?stacks path required}:${ENV_HAWSER_CONTAINER_PATH_STACKS:?stacks path required}
+      - ${ENV_HAWSER_CONTAINER_PATH_STACKS:?stacks path required}:/data/stacks
+
+networks:
+  hawser-net:
+    name: hawser-net
+    driver: bridge
