@@ -19,6 +19,7 @@ load_container_env() {
     export_secret ENV_HOMEPAGE_VAR_LIDARR_KEY "apps/homepage/homepage-lidarr-key.secret.age"
     export_secret ENV_HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD "apps/homepage/homepage-frigate-homepage-user-password.secret.age"
     export_secret ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY "apps/homepage/homepage-technitium-dns-server-key.secret.age"
+    export_secret ENV_HOMEPAGE_VAR_DOCKHAND_KEY "apps/homepage/homepage-dockhand-key.secret.age"
 
     echo ""
 }

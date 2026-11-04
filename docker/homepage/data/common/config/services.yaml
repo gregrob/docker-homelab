@@ -45,6 +45,18 @@
         siteMonitor: *technitium_003_url
         statusStyle: "dot"
 
+    - Dockhand:
+        icon: dockhand-svg.png
+        href: &dockhand_url http://tools-001.mgmt.gregrob.net:3000/
+        description: Docker container and stack management
+        siteMonitor: *dockhand_url
+        statusStyle: "dot"
+        widget:           
+            type: dockhand
+            url: *dockhand_url
+            #environment: dns-001.dns.gregrob.net # optional: name or id; aggregates all when omitted
+            key: "{{HOMEPAGE_VAR_DOCKHAND_KEY}}"
+
     - Semaphore UI:
         icon: semaphore.png
         href: &semaphore_url http://ansible.mgmt.gregrob.net:3000/
