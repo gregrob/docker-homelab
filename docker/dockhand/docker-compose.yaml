@@ -2,10 +2,12 @@
 services:
 
   # ------------------------------------------------
-  # Setup dockhand 
+  # Setup dockhand (Docker management UI)
   #
   # https://hub.docker.com/r/fnsys/dockhand/
   # https://github.com/Finsys/dockhand
+  #
+  # Manages all hosts through Hawser agents (see the hawser stack).
   # ------------------------------------------------
   dockhand:
     image:          fnsys/dockhand:${ENV_DOCKHAND_VERSION:?dockhand version required}
@@ -23,7 +25,12 @@ services:
       PGID: ${ENV_DOCKER_GID:?err}
 
     volumes:
+      # Full control of the host's Docker; protect access to the UI.
       - /var/run/docker.sock:/var/run/docker.sock
+
+      # Database (SQLite), stacks, git repos and cache all live in /app/data.
+      # The host directory must exist and be owned by PUID:PGID before first
+      # start, otherwise Docker creates it as root and Dockhand can't write.
       - ./data/host/data:/app/data
 
 networks:
