@@ -127,7 +127,7 @@
 
     - NUT:
         icon: nut.png
-        href: &nut_url http://nut-002.mgmt.gregrob.net/
+        href: &nut_url http://nut-002.mgmt.gregrob.net/cgi-bin/nut/upsstats.cgi
         description: UPS status and shutdown monitoring
         siteMonitor: *nut_url
         statusStyle: "dot"
