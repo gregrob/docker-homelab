@@ -6,11 +6,7 @@ services:
   # https://hub.docker.com/r/louislam/uptime-kuma
   # ---------------------------------------------
   uptime-kuma:
-    #image:          louislam/uptime-kuma:2.5.0
-    #image:          louislam/uptime-kuma:2.5.3
-    #image:          louislam/uptime-kuma:2.5.4
-    #image:          louislam/uptime-kuma:2.5.5
-    image:          louislam/uptime-kuma:2.5.6
+    image:          louislam/uptime-kuma:${ENV_UPTIME_KUMA_VERSION:?uptime-kuma version required}
 
     container_name: uptime-kuma
     restart:        unless-stopped
