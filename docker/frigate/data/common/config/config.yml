@@ -7,9 +7,9 @@ mqtt:
 
 # Detectors configuration
 detectors:
-  #ov_0:
-  #  type: openvino
-  #  device: GPU # or NPU
+  ov_0:
+    type: openvino
+    device: GPU # or NPU
 
   # M.2 Coral
   #coral-pci1:
@@ -17,10 +17,11 @@ detectors:
   #  device: pci
 
   # USB Coral
-  coral-usb1:
-    type: edgetpu
-    device: usb
+  #coral-usb1:
+  #  type: edgetpu
+  #  device: usb
 
+# Default model for openvino
 #model:
 #  width: 300
 #  height: 300
@@ -28,6 +29,15 @@ detectors:
 #  input_pixel_format: bgr
 #  path: /openvino-model/ssdlite_mobilenet_v2.xml
 #  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+model:
+  model_type: yolo-generic
+  width: 320 # <--- should match the imgsize set during model export
+  height: 320 # <--- should match the imgsize set during model export
+  input_tensor: nchw
+  input_dtype: float
+  path: /config/model_cache/yolov9_t_320/yolov9-t-320.onnx
+  labelmap_path: /labelmap/coco-80.txt
 
 # Database configuration
 database:
@@ -60,9 +70,9 @@ detect:
   height: 360
   # desired fps for your camera for the input with the detect role (default: 5)
   # NOTE: Recommended value of 5. Ideally, try and reduce your FPS on the camera.
-  #fps: 5
+  fps: 5
   # Droped from 5 to save CPU
-  fps: 4
+  #fps: 4
   # Optional: enables detection for the camera (default: True)
   # This value can be set via MQTT and will be updated in startup based on retained value
   enabled: true
