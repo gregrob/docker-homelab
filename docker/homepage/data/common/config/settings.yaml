@@ -24,8 +24,8 @@ layout:
   Monitoring:
     #icon: mdi-pulse-#FFFFFF # Example - This forces white
     icon: mdi-pulse
-  Proxmox Cluster:
-    icon: mdi-lan
+  Compute & Storage:    
+    icon: mdi-developer-board
   Portal:
     icon: mdi-view-dashboard
  
