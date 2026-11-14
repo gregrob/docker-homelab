@@ -95,7 +95,7 @@
     
     - Flashstor NAS:
         icon: /icons/flashstor.png
-        href: &flashstor_url http://flashstor.gregrob.net:8000/
+        href: &flashstor_url http://flashstor.host.gregrob.net:8000/
         description: Web UI for network attached storage settings
         siteMonitor: *flashstor_url
         statusStyle: "dot"
