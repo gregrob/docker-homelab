@@ -268,13 +268,13 @@
 - Media & Video:
     - Jellyfin:
         icon: jellyfin.png
-        href: &jellyfin_url http://jellyfin.home.gregrob.net:8096/
+        href: &jellyfin_home_url http://jellyfin.home.gregrob.net:8096/
         description: Media server and streaming
-        siteMonitor: *jellyfin_url
+        siteMonitor: &jellyfin_apps_url http://jellyfin.apps.gregrob.net:8096/
         statusStyle: "dot"
         widget:
             type: jellyfin
-            url: *jellyfin_url
+            url: *jellyfin_apps_url
             key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
             version: 2
             enableBlocks: true
@@ -287,13 +287,13 @@
 
     - Frigate:
         icon: frigate.png
-        href: &frigate_url https://frigate.home.gregrob.net:8971/
+        href: &frigate_home_url https://frigate.home.gregrob.net:8971/
         description: NVR and object detection
-        siteMonitor: *frigate_url
+        siteMonitor: &frigate_apps_url http://frigate.apps.gregrob.net:5000/
         statusStyle: "dot"
         widget:
             type: frigate
-            url: *frigate_url
+            url: *frigate_apps_url
             enableRecentEvents: true
             username: homepage
             password: "{{HOMEPAGE_VAR_FRIGATE_HOMEPAGE_USER_PASSWORD}}"
