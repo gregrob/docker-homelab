@@ -35,7 +35,8 @@ load_container_env() {
     #export_var ENV_QBITTORRENT_VERSION "5.2.3_v2.0.14-ls476"
     #export_var ENV_QBITTORRENT_VERSION "5.2.4_v2.0.15-ls479"
     #export_var ENV_QBITTORRENT_VERSION "5.3.0_v2.1.2-ls484"
-    export_var ENV_QBITTORRENT_VERSION "5.3.0_v2.1.2-ls486"
+    #export_var ENV_QBITTORRENT_VERSION "5.3.0_v2.1.2-ls486"
+    export_var ENV_QBITTORRENT_VERSION "5.3.1_v2.1.3-ls490"
 
     #export_var ENV_PROWLARR_VERSION "2.3.5.5327-ls141"
     #export_var ENV_PROWLARR_VERSION "2.5.2.5491-ls156"
@@ -43,7 +44,8 @@ load_container_env() {
     #export_var ENV_PROWLARR_VERSION "2.5.2.5491-ls159"
     #export_var ENV_PROWLARR_VERSION "2.6.5.5623-ls162"
     #export_var ENV_PROWLARR_VERSION "2.6.5.5623-ls165"
-    export_var ENV_PROWLARR_VERSION "2.7.0.5723-ls166"
+    #export_var ENV_PROWLARR_VERSION "2.7.0.5723-ls166"
+    export_var ENV_PROWLARR_VERSION "3.1.0.5799-ls170"
 
     #export_var ENV_FLARESOLVERR_VERSION "v3.4.6"
     #export_var ENV_FLARESOLVERR_VERSION "v3.5.0"
@@ -60,27 +62,33 @@ load_container_env() {
     #export_var ENV_RADARR_VERSION "6.3.0.10514-ls316"
     #export_var ENV_RADARR_VERSION "6.4.4.10685-ls318"
     #export_var ENV_RADARR_VERSION "6.4.4.10685-ls323"
-    export_var ENV_RADARR_VERSION "6.4.4.10685-ls325"
+    #export_var ENV_RADARR_VERSION "6.4.4.10685-ls325"
+    export_var ENV_RADARR_VERSION "7.0.3.10918-ls328"
 
     #export_var ENV_ALPINE_VERSION "3.24.1"
     #export_var ENV_ALPINE_VERSION "3.24.2"
-    export_var ENV_ALPINE_VERSION "3.24.3"
+    #export_var ENV_ALPINE_VERSION "3.24.3"
+    export_var ENV_ALPINE_VERSION "3.24.4"
 
     #export_var ENV_SEERR_VERSION "v3.4.1"
     #export_var ENV_SEERR_VERSION "v3.5.0"
-    export_var ENV_SEERR_VERSION "v3.5.1"
+    #export_var ENV_SEERR_VERSION "v3.5.1"
+    export_var ENV_SEERR_VERSION "v3.5.2"
 
     #export_var ENV_LIDARR_VERSION "3.1.0.4875-ls40"
     #export_var ENV_LIDARR_VERSION "3.1.0.4875-ls41"
     #export_var ENV_LIDARR_VERSION "3.1.0.4875-ls42"
     #export_var ENV_LIDARR_VERSION "3.1.0.4875-ls45"
-    export_var ENV_LIDARR_VERSION "3.1.6.5079-ls46"
+    #export_var ENV_LIDARR_VERSION "3.1.6.5079-ls46"
+    export_var ENV_LIDARR_VERSION "3.1.6.5079-ls49"
 
     #export_var ENV_AURRAL_VERSION "2.8.0"
     #export_var ENV_AURRAL_VERSION "2.9.0"
     #export_var ENV_AURRAL_VERSION "2.10.0"
     #export_var ENV_AURRAL_VERSION "2.11.0"
-    export_var ENV_AURRAL_VERSION "2.12.0"
+    #export_var ENV_AURRAL_VERSION "2.12.0"
+    #export_var ENV_AURRAL_VERSION "2.13.0"
+    export_var ENV_AURRAL_VERSION "3.1.0"
 
     export_var ENV_AUTOHEAL_VERSION "1.2.0"
 
