@@ -134,5 +134,9 @@ docker/uptime-kuma/data/host/*
 # wiki host specific
 docker/wiki/data/host/postgres/*
 docker/wiki/data/host/wiki/content/*
+docker/wiki/data/host/wiki/repo/*
+docker/wiki/data/host/backup/*
 !docker/wiki/data/host/postgres/.gitkeep
 !docker/wiki/data/host/wiki/content/.gitkeep
+!docker/wiki/data/host/wiki/repo/.gitkeep
+!docker/wiki/data/host/backup/.gitkeep
