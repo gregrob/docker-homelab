@@ -18,7 +18,8 @@ load_container_env() {
     
     export_secret ENV_HAWSER_TOKEN "apps/hawser/hawser-token.secret.age"
 
-    export_var ENV_HAWSER_VERSION "0.2.53"
+    #export_var ENV_HAWSER_VERSION "0.2.53"
+    export_var ENV_HAWSER_VERSION "0.2.54"
 
     echo ""
 }
