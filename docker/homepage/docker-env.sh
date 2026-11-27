@@ -21,6 +21,14 @@ load_container_env() {
     export_secret ENV_HOMEPAGE_VAR_TECHNITIUM_DNS_SERVER_KEY "apps/homepage/homepage-technitium-dns-server-key.secret.age"
     export_secret ENV_HOMEPAGE_VAR_DOCKHAND_KEY "apps/homepage/homepage-dockhand-key.secret.age"
 
+    #export_var ENV_HOMEPAGE_VERSION "v1.1.2"
+    #export_var ENV_HOMEPAGE_VERSION "v2.1.2"
+    #export_var ENV_HOMEPAGE_VERSION "v2.2.0"
+    #export_var ENV_HOMEPAGE_VERSION "v2.3.0"
+    #export_var ENV_HOMEPAGE_VERSION "v2.4.0"
+    #export_var ENV_HOMEPAGE_VERSION "v2.6.0"
+    export_var ENV_HOMEPAGE_VERSION "v2.8.0"
+
     echo ""
 }
 
