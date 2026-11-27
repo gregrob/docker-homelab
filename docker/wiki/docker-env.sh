@@ -9,8 +9,23 @@ load_container_env() {
     echo "Setting up SPECIFIC environment for docker ..."
     echo "----------------------------------------------"
 
+    export_secret ENV_WIKI_ADMIN_USER "apps/wiki/wiki-admin-user.secret.age"
+    export_secret ENV_WIKI_ADMIN_PASSWORD "apps/wiki/wiki-admin-password.secret.age"
+
     export_secret ENV_WIKI_POSTGRES_USER "apps/wiki/wiki-postgres-user.secret.age"
     export_secret ENV_WIKI_POSTGRES_PASSWORD "apps/wiki/wiki-postgres-password.secret.age"
+
+    #export_var ENV_ALPINE_VERSION "3.24.1"
+    #export_var ENV_ALPINE_VERSION "3.24.2"
+    #export_var ENV_ALPINE_VERSION "3.24.3"
+    export_var ENV_ALPINE_VERSION "3.24.4"
+
+    #export_var ENV_WIKI_VERSION "2.5.314"
+    #export_var ENV_WIKI_VERSION "2.5.317"
+    export_var ENV_WIKI_VERSION "3.6.1"
+
+    #export_var ENV_POSTGRES_VERSION "18.6-alpine3.24"
+    export_var ENV_POSTGRES_VERSION "18.7-alpine3.24"
 
     echo ""
     echo "The mounted volume /wiki/data/content is owned by node:node inside the container (1000:1000)."

@@ -21,21 +21,20 @@ services:
   
   # 1. The temporary init container to fix /wiki/data/content permissions
   permissions-fixer:
-    #image:          alpine:3.24.1
-    #image:          alpine:3.24.2
-    image:          alpine:3.24.3
+    image:          alpine:${ENV_ALPINE_VERSION:?alpine version required}
     container_name: wiki-permissions-fixer
     network_mode:   none
 
     volumes:
       - ./data/host/wiki/content:/wiki/data/content
+      - ./data/host/wiki/repo:/wiki/data/repo
     
-    command: chown 1000:1000 /wiki/data/content # Run the chown (node:node, 1000:1000) command and exit, removed -R for recursive
+    # Run chown (node:node, 1000:1000) on both mount points and exit (non-recursive)
+    command: chown 1000:1000 /wiki/data/content /wiki/data/repo
 
   # 2. Main wiki and database
   wiki:
-    #image:          ghcr.io/requarks/wiki:2.5.314
-    image:          ghcr.io/requarks/wiki:2.5.316
+    image:          ghcr.io/requarks/wiki:${ENV_WIKI_VERSION:?wiki version required}
     container_name: wiki
     restart:        unless-stopped
 
@@ -62,8 +61,12 @@ services:
       DB_PASS: *postgres-password
       DB_NAME: *postgres-db
 
+      ADMIN_EMAIL: ${ENV_WIKI_ADMIN_USER:?admin user email required}  # Only used during first setup
+      ADMIN_PASS: ${ENV_WIKI_ADMIN_PASSWORD:?admin password required} # Only used during first setup
+
     volumes:
       - ./data/host/wiki/content:/wiki/data/content
+      - ./data/host/wiki/repo:/wiki/data/repo
   
   # ------------------------------------------------
   # Setup postgres
@@ -71,7 +74,7 @@ services:
   # https://hub.docker.com/_/postgres
   # ------------------------------------------------
   postgres:
-    image:          docker.io/library/postgres:18.6-alpine3.24
+    image:          docker.io/library/postgres:${ENV_POSTGRES_VERSION:?postgres version required}
     container_name: wiki-postgres
     restart:        unless-stopped
 
