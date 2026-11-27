@@ -80,7 +80,8 @@ load_container_env() {
     #export_var ENV_LIDARR_VERSION "3.1.0.4875-ls42"
     #export_var ENV_LIDARR_VERSION "3.1.0.4875-ls45"
     #export_var ENV_LIDARR_VERSION "3.1.6.5079-ls46"
-    export_var ENV_LIDARR_VERSION "3.1.6.5079-ls49"
+    #export_var ENV_LIDARR_VERSION "3.1.6.5079-ls49"
+    export_var ENV_LIDARR_VERSION "3.1.6.5079-ls50"
 
     #export_var ENV_AURRAL_VERSION "2.8.0"
     #export_var ENV_AURRAL_VERSION "2.9.0"
