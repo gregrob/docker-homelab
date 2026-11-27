@@ -13,7 +13,8 @@ load_container_env() {
     echo "Setting up environment with container versions ..."
     echo "--------------------------------------------------" 
 
-    export_var ENV_DOCKHAND_VERSION "v1.0.56"
+    #export_var ENV_DOCKHAND_VERSION "v1.0.56"
+    export_var ENV_DOCKHAND_VERSION "v1.0.59"
 
     echo ""
 }
