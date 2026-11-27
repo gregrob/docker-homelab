@@ -11,6 +11,18 @@ load_container_env() {
 
     export_secret ENV_SEMAPHOREUI_ADMIN_PASSWORD "apps/semaphoreui/semaphoreui-admin-password.secret.age"
 
+    #export_var ENV_SEMAPHORE_VERSION "v2.19.8"
+    #export_var ENV_SEMAPHORE_VERSION "v2.19.11"
+    #export_var ENV_SEMAPHORE_VERSION "v2.19.12"
+    #export_var ENV_SEMAPHORE_VERSION "v2.19.14"
+    #export_var ENV_SEMAPHORE_VERSION "v2.19.17"
+    export_var ENV_SEMAPHORE_VERSION "v2.20.24"
+    
+    #export_var ENV_ALPINE_VERSION "3.24.1"
+    #export_var ENV_ALPINE_VERSION "3.24.2"
+    #export_var ENV_ALPINE_VERSION "3.24.3"
+    export_var ENV_ALPINE_VERSION "3.24.4"
+
     echo ""
     echo "Volumes for SemaphoreUI need to have the correct owner and group set - 1001:root"
     echo "Please execute the following commands to set up volume permissions:"

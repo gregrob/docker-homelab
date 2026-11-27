@@ -10,9 +10,7 @@ services:
   #   https://hub.docker.com/_/alpine
   # ---------------------------------------------
   permissions-fixer:
-    #image:          alpine:3.24.1
-    #image:          alpine:3.24.2
-    image:          alpine:3.24.3
+    image:          alpine:${ENV_ALPINE_VERSION:?alpine version required}
     container_name: semaphoreui-permissions-fixer
     network_mode:   none
     volumes:
@@ -24,11 +22,7 @@ services:
     command: chown 1001:root /semaphoreui/config /semaphoreui/data /semaphoreui/keys /semaphoreui/tmp
 
   semaphoreui:
-    #image:          semaphoreui/semaphore:v2.19.8
-    #image:          semaphoreui/semaphore:v2.19.11
-    #image:          semaphoreui/semaphore:v2.19.12
-    #image:          semaphoreui/semaphore:v2.19.14
-    image:          semaphoreui/semaphore:v2.19.17
+    image:          semaphoreui/semaphore:${ENV_SEMAPHORE_VERSION:?semaphoreui version required}
     container_name: semaphoreui
     restart:        unless-stopped
 
