@@ -17,7 +17,8 @@ load_container_env() {
     # export_var ENV_UPTIME_KUMA_VERSION "2.5.3"
     # export_var ENV_UPTIME_KUMA_VERSION "2.5.4"
     # export_var ENV_UPTIME_KUMA_VERSION "2.5.5"
-    export_var ENV_UPTIME_KUMA_VERSION "2.5.6"
+    #export_var ENV_UPTIME_KUMA_VERSION "2.5.6"
+    export_var ENV_UPTIME_KUMA_VERSION "2.5.12"
 
     echo ""
 }
