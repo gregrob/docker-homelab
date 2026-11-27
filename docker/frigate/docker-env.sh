@@ -16,6 +16,24 @@ load_container_env() {
     export_secret ENV_FRIGATE_HOST_MQTT_USER "apps/frigate/frigate-mqtt-user.secret.age"
     export_secret ENV_FRIGATE_HOST_MQTT_PASSWORD "apps/frigate/frigate-mqtt-password.secret.age"
 
+    #export_var ENV_FRIGATE_VERSION "0.11.1"
+    #export_var ENV_FRIGATE_VERSION "0.12.0"
+    #export_var ENV_FRIGATE_VERSION "0.12.1"
+    #export_var ENV_FRIGATE_VERSION "0.13.1"
+    #export_var ENV_FRIGATE_VERSION "0.14.0-rc2"
+    #export_var ENV_FRIGATE_VERSION "0.14.0"
+    #export_var ENV_FRIGATE_VERSION "0.14.1"
+    #export_var ENV_FRIGATE_VERSION "0.15.0"
+    #export_var ENV_FRIGATE_VERSION "0.15.1"
+    #export_var ENV_FRIGATE_VERSION "0.16.0"
+    #export_var ENV_FRIGATE_VERSION "0.16.1"
+    #export_var ENV_FRIGATE_VERSION "0.16.3"
+    #export_var ENV_FRIGATE_VERSION "0.17.1"
+    #export_var ENV_FRIGATE_VERSION "0.17.2"
+    #export_var ENV_FRIGATE_VERSION "0.18.0"
+    #export_var ENV_FRIGATE_VERSION "0.18.2"
+    export_var ENV_FRIGATE_VERSION "0.18.3"
+
     echo ""
 }
 
