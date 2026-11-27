@@ -7,17 +7,7 @@ services:
   # https://github.com/jellyfin/jellyfin
   # ------------------------------------------------
   jellyfin:
-    #image:          jellyfin/jellyfin:10.8.9
-    #image:          jellyfin/jellyfin:10.8.10
-    #image:          jellyfin/jellyfin:10.9.10
-    #image:          jellyfin/jellyfin:10.9.11
-    #image:          jellyfin/jellyfin:10.10.3
-    #image:          jellyfin/jellyfin:10.10.7
-    #image:          jellyfin/jellyfin:10.11.6
-    #image:          jellyfin/jellyfin:10.11.11
-    #image:          jellyfin/jellyfin:12.1
-    #image:          jellyfin/jellyfin:12.2
-    image:          jellyfin/jellyfin:12.3
+    image:          jellyfin/jellyfin:${ENV_JELLYFIN_VERSION:?jellyfin version required}
     container_name: jellyfin
     restart:        unless-stopped
     network_mode:   host # host for DLNA
