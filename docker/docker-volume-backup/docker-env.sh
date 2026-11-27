@@ -17,6 +17,15 @@ load_container_env() {
     export_secret ENV_DOCKER_VOLUME_BACKUP_RSYNC_SYNC_NAS_MODULE "apps/docker-volume-backup/docker-volume-backup-rsync-nas-module.secret.age"
     export_secret ENV_DOCKER_VOLUME_BACKUP_GPG_PASSPHRASE "apps/docker-volume-backup/docker-volume-backup-gpg-passphrase.secret.age"
 
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.43.0"
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.43.4"
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.47.0"
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.48.2"
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.49.0"
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.49.1"
+    #export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.49.3"
+    export_var ENV_DOCKER_VOLUME_BACKUP_VERSION "v2.50.2"
+
     echo ""
     echo "Please run 'docker exec docker-volume-backup backup' to perform an immediate manual backup"
 
