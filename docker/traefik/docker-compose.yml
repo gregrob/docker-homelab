@@ -1,0 +1,74 @@
+---
+services:
+
+  # ---------------------------------------------
+  # Setup traefik
+  #
+  # https://hub.docker.com/_/traefik
+  # https://github.com/traefik/traefik
+  # ---------------------------------------------
+  traefik:
+    image:          traefik:${ENV_TRAEFIK_VERSION:?traefik version required}
+    container_name: traefik
+    restart:        unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "80:80"      # http-local    -> redirects to https-local
+      - "443:443"    # https-local   -> internal clients (LAN) and old-Traefik passthrough
+      - "9443:9443"  # https-public  -> Cloudflare-proxied traffic (router forward / old-Traefik passthrough)
+
+    networks:
+      - proxy-net
+
+    environment:
+      - CF_API_EMAIL=${ENV_TRAEFIK_CF_DNS_API_EMAIL:?cloudflare dns api email required}
+      - CF_DNS_API_TOKEN=${ENV_TRAEFIK_CF_DNS_API_TOKEN:?cloudflare dns api token required}
+
+    volumes:
+      - ./data/common/traefik.yml:/traefik.yml:ro
+      - ./data/common/configurations:/configurations:ro
+
+      - ${ENV_TRAEFIK_CERTIFICATE_STORE:?certificate store required}:/acme.json # must exist with chmod 600 (see README)
+
+    healthcheck:
+      test:         ["CMD", "traefik", "healthcheck", "--ping"]
+      interval:     30s
+      timeout:      5s
+      retries:      3
+      start_period: 20s
+
+    # Keep the access log from filling the disk
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Example backend for the example site (data/.../http_app_whoami.yml).
+  # Prints the request it received, so you can see the client IP, headers and
+  # which Traefik hop it came through. Remove this service (and its route file)
+  # once you no longer need a test target.
+  #
+  # https://hub.docker.com/r/traefik/whoami
+  # ---------------------------------------------------------------------------
+  whoami:
+    image:          traefik/whoami:${ENV_WHOAMI_VERSION:?whoami version required}
+    container_name: whoami
+    restart:        unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - proxy-net
+    
+    # No ports: only reachable by Traefik, over the proxy network, as http://whoami:80
+
+networks:
+  proxy-net:
+    name: proxy-net
+    driver: bridge

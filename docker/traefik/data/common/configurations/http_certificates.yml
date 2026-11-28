@@ -1,0 +1,40 @@
+# =============================================================================
+# WILDCARD CERTIFICATE - owns the Let's Encrypt request for gregrob.net
+#
+# Traefik only requests a certificate when a router asks for one (tls.certResolver
+# + tls.domains). This router exists for that and nothing else, so the request is
+# not tied to the dashboard or to any app. It serves no content: its service is
+# noop@internal.
+#
+# How it works:
+#   - Traefik requests ONE certificate covering gregrob.net and *.gregrob.net,
+#     using the "cloudflare" resolver (DNS challenge, defined in traefik.yml).
+#   - The certificate goes into the shared store (acme.json) and is served to
+#     every route by hostname (SNI). All other route files therefore only need
+#     "tls: {}".
+#
+# Notes:
+#   - certificates.gregrob.net is a placeholder hostname. It never needs a DNS
+#     record and nothing is ever served on it.
+#   - Don't delete this file without moving the tls block to another router, or
+#     the certificate will stop being renewed.
+#   - The dashboard router (http_app_traefik.yml) should use plain "tls: {}".
+# =============================================================================
+http:
+
+  routers:
+
+    wildcard-certificate:
+      entryPoints:
+        - "https-local"
+      rule: "Host(`certificates.gregrob.net`)"
+      middlewares:
+        - internal-app # harmless, keeps it internal-only if anything ever did reach it
+      tls:
+        certResolver: cloudflare
+        domains:
+          - main: "gregrob.net"
+            sans:
+              - "*.gregrob.net"
+
+      service: noop@internal

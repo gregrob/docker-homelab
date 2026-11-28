@@ -1,0 +1,29 @@
+# =============================================================================
+# EXAMPLE SITE - whoami.gregrob.net  (live test target, backend is the "whoami"
+# container in docker-compose.yml)
+#
+# This is the pattern every app follows: one file, one router, one service.
+# To add an app: copy this file (or _template_app.yml.example), rename it
+# http_app_<name>.yml, change the three things marked CHANGE, save. Traefik
+# picks it up within a second or two - no restart.
+# =============================================================================
+http:
+
+  routers:
+
+    whoami:                                    # CHANGE: unique router name
+      entryPoints:
+        - "https-local"                        # internal only. Add "https-public" to expose via Cloudflare
+      rule: "Host(`whoami.gregrob.net`)"       # CHANGE: hostname
+      middlewares:
+        - internal-app                         # chain from http_middleware.yml
+      tls: {}                                  # certificate comes from the entrypoint wildcard
+      service: whoami
+
+  services:
+
+    whoami:                                    # CHANGE: service name (usually same as router)
+      loadBalancer:
+        servers:
+          - url: "http://whoami:80"            # CHANGE: backend (here: container on the proxy network)
+        passHostHeader: true

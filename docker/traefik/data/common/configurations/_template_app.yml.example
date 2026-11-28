@@ -1,0 +1,44 @@
+# =============================================================================
+# TEMPLATE - copy to http_app_<name>.yml (the .example suffix keeps Traefik from
+# loading this file). Delete the variants you don't need.
+#
+# Backend URL: prefer the aliases from the DNS strategy so a move is a DNS
+# change, not a Traefik edit:
+#     http://hawkbit.cntr.gregrob.net:8090      (container that may move)
+#     https://pve.host.gregrob.net:8006         (VM / LXC / appliance)
+# or a raw IP if you prefer the proxy not to depend on DNS for that backend.
+# =============================================================================
+http:
+
+  routers:
+
+    myapp:                                     # CHANGE
+      entryPoints:
+        - "https-local"                        # internal only (default)
+        #- "https-public"                      # also public via Cloudflare (use public-app / public-sso, never internal-*)
+      rule: "Host(`myapp.gregrob.net`)"        # CHANGE
+      middlewares:
+        - internal-app                         # internal-app | internal-sso | public-app | public-sso
+      tls: {}
+      service: myapp
+
+  services:
+
+    myapp:                                     # CHANGE
+      loadBalancer:
+        servers:
+          - url: "http://myapp.cntr.gregrob.net:8080"   # CHANGE
+        passHostHeader: true
+        #serversTransport: insecure-backend    # variant: https backend with a self-signed cert (Proxmox, UniFi, NAS)
+                                               #   use together with e.g.  url: "https://pve.host.gregrob.net:8006"
+        # variant: several backends - just list more servers, Traefik round-robins:
+        #   - url: "http://myapp-1.cntr.gregrob.net:8080"
+        #   - url: "http://myapp-2.cntr.gregrob.net:8080"
+
+# --- variant: app needs a path redirect (e.g. Pi-hole "/" -> "/admin/") ---------
+#   middlewares:
+#     myapp-redirect:
+#       redirectRegex:
+#         regex: "^https://myapp.gregrob.net/$"
+#         replacement: "https://myapp.gregrob.net/admin/"
+#   ...then list myapp-redirect in the router's middlewares.

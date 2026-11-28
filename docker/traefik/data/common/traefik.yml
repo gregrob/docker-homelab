@@ -1,0 +1,136 @@
+# =============================================================================
+# Traefik static configuration - ingress-002
+# (changes to this file need a container restart; routes/middlewares in
+#  ./configurations are hot-reloaded)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Traefik 3.8+: drop request headers that merely alias a header Traefik/the
+# auth layer manages (X_Auth_User, X.Auth.User ...). Without this, backends that
+# derive names from headers (PHP, CGI, WSGI, nginx) could be fed spoofed
+# X-authentik-* style headers. Applies to every entrypoint.
+# -----------------------------------------------------------------------------
+global:
+  aliasHeadersStrategy: delete
+
+# -----------------------------------------------------------------------------
+# Dashboard / API
+# The dashboard is exposed by a router in configurations/http_app_traefik.yml
+# (internal-only). No insecure :8080 listener, and no api.debug (that exposes
+# /debug/pprof on the API).
+# -----------------------------------------------------------------------------
+api:
+  dashboard: true
+
+# Used only by the container healthcheck (served on the internal "traefik"
+# entrypoint :8080, which is not published)
+ping: {}
+
+log:
+  level: INFO
+
+# Access log to stdout as JSON (docker logs traefik). Headers are dropped by
+# default. To debug real-client-IP problems (e.g. Home Assistant) uncomment the
+# headers block and keep only the ones you need.
+accessLog:
+  format: json
+  bufferingSize: 100
+  #fields:
+  #  headers:
+  #    defaultMode: drop
+  #    names:
+  #      X-Forwarded-For: keep
+  #      CF-Connecting-IP: keep
+
+# -----------------------------------------------------------------------------
+# Entry points (names kept identical to the old instance so existing route
+# files can be moved over without editing entryPoints)
+#
+#   http-local   :80    redirect to https-local
+#   https-local  :443   internal clients. Routes are internal-only by default.
+#   https-public :9443  Cloudflare-proxied traffic. A route is only public if it
+#                       explicitly lists this entrypoint.
+#
+# proxyProtocol: while the OLD Traefik passes gregrob.net traffic through to this
+# host (TCP/TLS passthrough) it sends a PROXY protocol v2 header, so the real
+# client IP survives the hop. Only the old instance is trusted to send it.
+# Connections without a PROXY header (direct LAN clients, later the router)
+# are still accepted. Remove proxyProtocol once the old instance is retired.
+# -----------------------------------------------------------------------------
+entryPoints:
+
+  http-local:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https-local
+          scheme: https
+
+  https-local:
+    address: ":443"
+    proxyProtocol:
+      trustedIPs:
+        - "10.24.53.2/32"   # IP of the OLD Traefik instance
+
+  https-public:
+    address: ":9443"
+    proxyProtocol:
+      trustedIPs:
+        - "10.24.53.2/32"   # IP of the OLD Traefik instance
+    forwardedHeaders:
+      trustedIPs:
+        # Trust the client-IP headers Cloudflare sets (needed so Home Assistant
+        # sees the real client, which broke after the v3 upgrade on the old box).
+        # List goes stale occasionally: https://www.cloudflare.com/en-au/ips/
+        # Cloudflare IPv4
+        - "173.245.48.0/20"
+        - "103.21.244.0/22"
+        - "103.22.200.0/22"
+        - "103.31.4.0/22"
+        - "141.101.64.0/18"
+        - "108.162.192.0/18"
+        - "190.93.240.0/20"
+        - "188.114.96.0/20"
+        - "197.234.240.0/22"
+        - "198.41.128.0/17"
+        - "162.158.0.0/15"
+        - "104.16.0.0/13"
+        - "104.24.0.0/14"
+        - "172.64.0.0/13"
+        - "131.0.72.0/22"
+        # Cloudflare IPv6
+        - "2400:cb00::/32"
+        - "2606:4700::/32"
+        - "2803:f800::/32"
+        - "2405:b500::/32"
+        - "2405:8100::/32"
+        - "2a06:98c0::/29"
+        - "2c0f:f248::/32"
+
+# -----------------------------------------------------------------------------
+# Providers: file only.
+# -----------------------------------------------------------------------------
+providers:
+  file:
+    directory: /configurations
+    watch: true
+
+# -----------------------------------------------------------------------------
+# Certificates: wildcard via Cloudflare DNS challenge.
+#
+# STAGING IS ON. Certificates will be issued by the Let's Encrypt *staging* CA
+# (browsers will not trust them) until you switch - see README "Go live".
+# -----------------------------------------------------------------------------
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: gregrob@mac.com
+      storage: acme.json
+      #caServer: https://acme-staging-v02.api.letsencrypt.org/directory   # REMOVE this line for production certs
+      dnsChallenge:
+        provider: cloudflare
+        #disablePropagationCheck: true # uncomment if certificate requests time out waiting for the TXT record
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"

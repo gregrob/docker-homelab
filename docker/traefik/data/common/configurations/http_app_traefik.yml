@@ -1,0 +1,17 @@
+# Traefik dashboard (internal only).
+# TODO(authentik): swap internal-app for internal-sso once Authentik is wired in.
+http:
+
+  routers:
+
+    traefik-dashboard:
+      entryPoints:
+        - "https-local"
+      rule: "Host(`traefik.gregrob.net`)"
+      middlewares:
+        - internal-app
+      # Certificates for the whole zone, requested once, for every router on
+      # this entrypoint (and served from the shared cert store to
+      # https-public too). Individual route files then only need "tls: {}".
+      tls: {}
+      service: api@internal

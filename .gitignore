@@ -127,6 +127,10 @@ docker/speedtest-tracker/data/host/config/*
 docker/spoolman/data/host/spoolman/*
 !docker/spoolman/data/host/spoolman/.gitkeep
 
+# traefik host specific
+docker/traefik/data/host/*
+!docker/traefik/data/host/.gitkeep
+
 # uptime-kuma host specific
 docker/uptime-kuma/data/host/*
 !docker/uptime-kuma/data/host/.gitkeep

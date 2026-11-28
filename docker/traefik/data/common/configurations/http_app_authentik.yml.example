@@ -1,0 +1,37 @@
+# =============================================================================
+# PLACEHOLDER - Authentik UI behind this proxy. Not loaded (.example).
+# Rename to http_app_authentik.yml when Authentik exists and you are ready.
+#
+# Authentik is intended to run on its own VM(s) (+ shared Postgres), not on this
+# host - ingress stays thin. Two separate things to wire later:
+#   1. this route, so authentik.gregrob.net resolves to the Authentik UI
+#   2. the "authentik" forwardAuth middleware in http_middleware.yml (set its
+#      address), then switch routes from internal-app/public-app to
+#      internal-sso/public-sso. Apps with native OIDC (Open WebUI, Proxmox,
+#      Grafana...) should use OIDC directly instead of forwardAuth.
+#
+# Break-glass: keep Authentik itself and the Proxmox UIs reachable WITHOUT
+# forward-auth, otherwise an Authentik outage locks you out of the tools you
+# would use to fix it. Note the Authentik UI route must NOT use *-sso.
+# =============================================================================
+http:
+
+  routers:
+
+    authentik:
+      entryPoints:
+        - "https-local"
+        #- "https-public"
+      rule: "Host(`authentik.gregrob.net`)"
+      middlewares:
+        - internal-app          # NOT internal-sso
+      tls: {}
+      service: authentik
+
+  services:
+
+    authentik:
+      loadBalancer:
+        servers:
+          - url: "http://authentik.CHANGEME.gregrob.net:9000"   # CHANGEME
+        passHostHeader: true
